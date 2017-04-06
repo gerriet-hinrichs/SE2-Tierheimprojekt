@@ -43,8 +43,10 @@ def getIsDebug = { ->
     try {
         return Boolean.parseBoolean("$debug")
     }
-    catch (Exception) {
+    catch (Exception e) {
         // debug is enabled on default
+        System.out.println("Could not parse debug flag: " + e.getLocalizedMessage())
+        System.out.println("Switching to debug mode.")
         return true
     }
 }
@@ -59,8 +61,8 @@ def getVersionFromGit = { ->
             standardOutput = stdout
         }
         return stdout.toString().trim()
-    } catch (Exception) {
-        System.out.println("Loading version from git failed, git is not available.")
+    } catch (Exception e) {
+        System.out.println("Loading version from git failed: " + e.getLocalizedMessage())
         return "SNAPSHOT"
     }
 }
@@ -134,8 +136,8 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
 
     // compiler options
     args = [
-            "--project", "${project.projectDir}/ts",
-            "--outDir", "${project.buildDir}/tsc"
+            "--project", "${project.projectDir}/src/main/ts",
+            "--outDir", "${project.projectDir}/static-files/js"
     ]
 }
 
@@ -148,22 +150,27 @@ task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
     args = [
             "--source-map",
             "--no-js",
-            "${project.projectDir}/less/app.less",
-            "${rootProject.projectDir}/static-files/app.css",
+            "${project.projectDir}/src/main/less/app.less",
+            "${project.projectDir}/static-files/app.css",
     ]
 }
 
 // copy resources
 task copyResources(type: Copy) {
-    from "${project.projectDir}/res/"
-    into "${rootProject.projectDir}/static-files"
+    from "${project.projectDir}/src/main/static-files/"
+    into "${project.projectDir}/static-files"
 }
-
 
 // combined build task
 build.dependsOn buildTypeScript
 build.dependsOn buildLessFiles
 build.dependsOn copyResources
+
+// client task
+task client {}
+client.dependsOn buildTypeScript
+client.dependsOn buildLessFiles
+client.dependsOn copyResources
 
 // clear static files task
 task cleanStaticFiles(type: Delete) {
@@ -220,4 +227,4 @@ dependencies {
 }
 
 // Add system.ini generation task to build
-build.dependsOn rootProject.tasks.generateSystemIni
+build.dependsOn generateSystemIni

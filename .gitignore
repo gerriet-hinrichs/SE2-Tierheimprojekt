@@ -125,3 +125,4 @@ local.properties
 
 ### Custom ignore stuff
 system.ini
+/static-files/
