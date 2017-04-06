@@ -90,7 +90,7 @@ public final class SystemConfig {
      * @return Loaded value or the given default if the specified value does not exist.
      */
     @NotNull
-    public static <T> T getDefault(@NotNull String section, @NotNull String key, @NotNull Class<T> type, @NotNull T defaultValue) {
+    public static <T> T get(@NotNull String section, @NotNull String key, @NotNull Class<T> type, @NotNull T defaultValue) {
         T value = get(section, key, type);
         return value != null ? value : defaultValue;
     }
