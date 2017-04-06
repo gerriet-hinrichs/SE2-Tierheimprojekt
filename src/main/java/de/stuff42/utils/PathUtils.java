@@ -1,11 +1,11 @@
 package de.stuff42.utils;
 
-import de.stuff42.utils.data.Lazy;
-
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Path related utility functions.
@@ -37,11 +37,20 @@ public final class PathUtils {
             // so application root is the parent directory
             path = path.getParent();
         }
-        else if(path.endsWith("libs") && path.getParent().endsWith("build")) {
+        else if(path.getParent().endsWith("build")) {
 
             // we're in gradle environment within temporary build directory
-            // so the application root is three levels above
-            path = path.getParent().getParent().getParent();
+            if (path.endsWith("libs")) {
+
+                // this class is packed into a dependency jar
+                // so the application root is three levels above
+                path = path.getParent().getParent().getParent();
+            } else if (path.endsWith("classes")) {
+
+                // this class is not jet bundled into a jar
+                // so the application root is two levels above
+                path = path.getParent().getParent();
+            }
         }
 
         // return detected path
