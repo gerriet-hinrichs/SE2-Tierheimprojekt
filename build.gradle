@@ -89,7 +89,7 @@ task generateSystemIni {
     builder.append(System.lineSeparator())
 
     // write stuff to file
-    def file = new File("${rootProject.projectDir}/system.ini")
+    def file = new File("${project.projectDir}/system.ini")
     file.write(builder.toString())
 }
 
@@ -132,7 +132,7 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
     script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
 
     // for watcher task register source files
-    inputs.files fileTree("ts").include("**/*.ts")
+    inputs.files fileTree("${project.projectDir}/src/main/ts").include("**/*.ts")
 
     // compiler options
     args = [
@@ -145,7 +145,7 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
 task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
     script = new File(node.nodeModulesDir, 'node_modules/less/bin/lessc')
 
-    inputs.files fileTree("less").include("**/*.less")
+    inputs.files fileTree("${project.projectDir}/src/main/less").include("**/*.less")
 
     args = [
             "--source-map",
