@@ -124,3 +124,4 @@ local.properties
 .worksheet
 
 ### Custom ignore stuff
+system.ini
