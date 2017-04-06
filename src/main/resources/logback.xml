@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="de.stuff42.utils.logging.ExtendedPatternLayout">
+                <pattern>
+                    %d{yyyy-MM-dd HH:mm:ss} %highlight([%level]) %simpleLogger: %white(%msg){}%n%simpleException
+                </pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <logger name="de.stuff42.se2tierheimprojekt" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="warn">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "locale": "en-us",
+    "target": "es5",
+    "module": "AMD",
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "sourceRoot": ".",
+    "rootDir": "."
+  }
+}

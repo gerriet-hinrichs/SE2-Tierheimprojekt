@@ -1,0 +1,3 @@
+Files and and folders within this directory will be copied to "/static" on the web-server.
+
+Drop images and other static resources here.
