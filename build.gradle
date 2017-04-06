@@ -1,0 +1,223 @@
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+
+/*************************
+ * General configuration *
+ *************************/
+
+// Build script plugins
+plugins {
+
+    // node integration
+    id "com.moowork.node" version "1.0.1"
+
+    // spring boot support
+    id "org.springframework.boot" version "1.4.3.RELEASE"
+}
+
+// add IDE support
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+// add java support
+apply plugin: "java"
+
+// add node support (for typescript and less compile)
+apply plugin: "com.moowork.node"
+
+// add spring boot support
+apply plugin: 'org.springframework.boot'
+
+// dependency repositories
+repositories {
+    mavenCentral()
+}
+
+/******************************
+ * Build-script configuration *
+ ******************************/
+
+// Build script magic to detect debug mode.
+// Call build tasks with -Pdebug=false to disable debug.
+def getIsDebug = { ->
+    try {
+        return Boolean.parseBoolean("$debug")
+    }
+    catch (Exception) {
+        // debug is enabled on default
+        return true
+    }
+}
+final DEBUG = getIsDebug()
+
+// Git magic to get the actual version
+def getVersionFromGit = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (Exception) {
+        System.out.println("Loading version from git failed, git is not available.")
+        return "SNAPSHOT"
+    }
+}
+final currentVersion = getVersionFromGit()
+
+// Task that generates the system.ini file that contains basic system config
+task generateSystemIni {
+    def builder = new StringBuilder()
+
+    // generate stuff
+    builder.append("[BUILD]")
+    builder.append(System.lineSeparator())
+
+    builder.append("Version=")
+    builder.append(currentVersion)
+    builder.append(System.lineSeparator())
+
+    builder.append("Timestamp=")
+    builder.append(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+    builder.append(System.lineSeparator())
+
+    builder.append("Debug=")
+    builder.append(DEBUG)
+    builder.append(System.lineSeparator())
+
+    // write stuff to file
+    def file = new File("${rootProject.projectDir}/system.ini")
+    file.write(builder.toString())
+}
+
+/*******************************************************
+ * Configuration for the client (containing ts / less) *
+ *******************************************************/
+
+// node configuration
+node {
+
+    // version of node to use.
+    version = '7.4.0'
+
+    // version of npm to use.
+    npmVersion = '4.1.1'
+
+    // version of yarn to use.
+    yarnVersion = '0.18.1'
+
+    // base url for fetching node distributions (change if you have a mirror).
+    distBaseUrl = 'https://nodejs.org/dist'
+
+    // download node using above parameters.
+    download = true
+
+    // set the work directory for unpacking node
+    workDir = file("${project.buildDir}/node/nodejs")
+
+    // set the work directory for npm
+    npmWorkDir = file("${project.buildDir}/node/npm")
+
+    // set the work directory for yarn
+    yarnWorkDir = file("${project.buildDir}/node/yarn")
+
+    // versions for less & typescript can be found within "package.json" file
+}
+
+// build typescript
+task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
+    script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
+
+    // for watcher task register source files
+    inputs.files fileTree("ts").include("**/*.ts")
+
+    // compiler options
+    args = [
+            "--project", "${project.projectDir}/ts",
+            "--outDir", "${project.buildDir}/tsc"
+    ]
+}
+
+// build less files
+task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
+    script = new File(node.nodeModulesDir, 'node_modules/less/bin/lessc')
+
+    inputs.files fileTree("less").include("**/*.less")
+
+    args = [
+            "--source-map",
+            "--no-js",
+            "${project.projectDir}/less/app.less",
+            "${rootProject.projectDir}/static-files/app.css",
+    ]
+}
+
+// copy resources
+task copyResources(type: Copy) {
+    from "${project.projectDir}/res/"
+    into "${rootProject.projectDir}/static-files"
+}
+
+
+// combined build task
+build.dependsOn buildTypeScript
+build.dependsOn buildLessFiles
+build.dependsOn copyResources
+
+// clear static files task
+task cleanStaticFiles(type: Delete) {
+    delete fileTree("${project.projectDir}/static-files")
+}
+
+// combined cleanup task
+clean.dependsOn cleanStaticFiles
+
+/****************************************************************
+ * Configuration for the server (containing server application) *
+ ****************************************************************/
+
+// use java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// enable recommended java warnings
+compileJava.options.compilerArgs = ["-Xlint"]
+
+// project group and version
+group 'de.stuff42'
+version currentVersion
+
+dependencies {
+
+    // Logging API
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.8'
+
+    // Idea type annotations
+    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
+
+    // *.ini file parsing library
+    compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
+
+    // Apache java utilities (extended standard library)
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+
+    // spring
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.3.RELEASE') {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: '1.4.3.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.5.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.3.RELEASE'
+
+    // template engine for views
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.23'
+}
+
+// Add system.ini generation task to build
+build.dependsOn rootProject.tasks.generateSystemIni
