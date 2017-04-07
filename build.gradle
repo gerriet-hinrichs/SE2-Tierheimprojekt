@@ -229,7 +229,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.3.RELEASE'
 
     // database drivers (add your own required drivers as runtime dependency here)
-    runtime group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 }
 
 // Add system.ini generation task to build
