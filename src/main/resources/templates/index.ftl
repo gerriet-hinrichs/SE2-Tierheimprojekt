@@ -9,6 +9,13 @@
 <div class="box">
     <p>Spring works!</p>
     <p id="requireWorks">RequireJS does not work.</p>
+    <p text="{{knockoutWorkingMessage}}">Knockout does not work.</p>
+</div>
+<div class="box">
+    {{#foreach itemList}}
+    <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
+    {{/foreach}}
+    <p><input type="text" value="{{textInput}}" /><button click="{{sentText}}">Send</button></p>
 </div>
 <script type="application/javascript">
     window["BuildVersion"] = ${model.buildVersionJS};
@@ -17,6 +24,6 @@
 </script>
 <script type="application/javascript"
         src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require<#if !model.isDebug>.min</#if>.js"
-        data-main="static/js/config"></script>
+        data-main="static/view/config"></script>
 </body>
 </html>

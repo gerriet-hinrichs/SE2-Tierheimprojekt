@@ -132,12 +132,12 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
     script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
 
     // for watcher task register source files
-    inputs.files fileTree("${project.projectDir}/src/main/ts").include("**/*.ts")
+    inputs.files fileTree("${project.projectDir}/src/main/view").include("**/*.ts")
 
     // compiler options
     args = [
-            "--project", "${project.projectDir}/src/main/ts",
-            "--outDir", "${project.projectDir}/static-files/js"
+            "--project", "${project.projectDir}/src/main/view",
+            "--outDir", "${project.projectDir}/static-files/view"
     ]
 }
 
@@ -145,12 +145,12 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
 task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
     script = new File(node.nodeModulesDir, 'node_modules/less/bin/lessc')
 
-    inputs.files fileTree("${project.projectDir}/src/main/less").include("**/*.less")
+    inputs.files fileTree("${project.projectDir}/src/main/style").include("**/*.less")
 
     args = [
             "--source-map",
             "--no-js",
-            "${project.projectDir}/src/main/less/app.less",
+            "${project.projectDir}/src/main/style/app.less",
             "${project.projectDir}/static-files/app.css",
     ]
 }
@@ -224,6 +224,12 @@ dependencies {
 
     // template engine for views
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.23'
+
+    // database framework integration (has hibernate framework as dependency)
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.3.RELEASE'
+
+    // database drivers (add your own required drivers as runtime dependency here)
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 }
 
 // Add system.ini generation task to build

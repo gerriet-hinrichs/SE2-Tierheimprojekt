@@ -59,8 +59,8 @@ gradle-app.setting
 .gradletasknamecache
 
 ### Configuration Stuff (Only include default config files)
-config/**/*.yaml
-!config/**/*.default.yaml
+database/**/*.yaml
+!database/**/*.default.yaml
 
 ### Gitignore
 !.gitignore
@@ -126,3 +126,4 @@ local.properties
 ### Custom ignore stuff
 system.ini
 /static-files/
+/database/
