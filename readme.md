@@ -10,6 +10,7 @@
     - IntelliJ: `./gradlew idea`
     - Eclipse: `./gradlew eclipse` 
 - Erstelltes Projekt über die IDE öffnen (nicht importieren, etc.)
+- Konfiguration für die Datenbank findet sich in den Dateien im Ordner `database`. Dort befinden sich Beispieldateien für die Konfiguration.
 
 # Laufende Entwicklung
 ## Server bauen & starten
