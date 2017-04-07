@@ -224,6 +224,12 @@ dependencies {
 
     // template engine for views
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.23'
+
+    // database framework integration (has hibernate framework as dependency)
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.3.RELEASE'
+
+    // database drivers (add your own required drivers as runtime dependency here)
+    runtime group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 }
 
 // Add system.ini generation task to build
