@@ -1,10 +1,7 @@
 package de.stuff42.se2tierheimprojekt.controller.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
 import de.stuff42.se2tierheimprojekt.db.TestEntity;
@@ -28,8 +25,9 @@ public class TestController extends BaseController<TestService> {
         return service.getList();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/test")
-    public TestEntity add(@RequestBody String text) {
+    @RequestMapping(method = RequestMethod.POST, value = "/test/{text}")
+    public TestEntity add(@PathVariable String text) {
+        logger.info(text);
         return service.add(text);
     }
 }
