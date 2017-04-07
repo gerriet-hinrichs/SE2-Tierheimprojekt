@@ -2,7 +2,7 @@
 requirejs.config({
 
     // base uri for script files
-    baseUrl: "static/js/",
+    baseUrl: "static/view/",
     paths: {
 
         // for libraries we explicitly use CDNs and have to list them here

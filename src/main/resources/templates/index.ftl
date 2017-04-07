@@ -17,6 +17,6 @@
 </script>
 <script type="application/javascript"
         src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require<#if !model.isDebug>.min</#if>.js"
-        data-main="static/js/config"></script>
+        data-main="static/view/config"></script>
 </body>
 </html>
