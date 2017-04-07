@@ -8,6 +8,6 @@ export class TestApi {
     }
 
     public static add(text: string): JQueryDeferred<TestEntity> {
-        return <any>$.post("/test/" + encodeURI(text), "", null, "json");
+        return <any>$.post("/test/" + encodeURIComponent(text), "", null, "json");
     }
 }
