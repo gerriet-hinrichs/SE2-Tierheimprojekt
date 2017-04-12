@@ -178,12 +178,12 @@ task cleanStaticFiles(type: Delete) {
 }
 
 // remove generated system.ini task
-task cleanStaticFiles(type: Delete) {
+task cleanSystemINI(type: Delete) {
     delete "${project.projectDir}/system.ini"
 }
 
 // combined cleanup task
-clean.dependsOn cleanStaticFiles
+clean.dependsOn cleanSystemINI
 
 /****************************************************************
  * Configuration for the server (containing server application) *
