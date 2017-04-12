@@ -177,6 +177,11 @@ task cleanStaticFiles(type: Delete) {
     delete fileTree("${project.projectDir}/static-files")
 }
 
+// remove generated system.ini task
+task cleanStaticFiles(type: Delete) {
+    delete "${project.projectDir}/system.ini"
+}
+
 // combined cleanup task
 clean.dependsOn cleanStaticFiles
 
@@ -229,7 +234,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.3.RELEASE'
 
     // database drivers (add your own required drivers as runtime dependency here)
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 }
 
 // Add system.ini generation task to build
