@@ -127,3 +127,5 @@ local.properties
 system.ini
 /static-files/
 /database/
+!/database/database.template.ini
+!/database/example.template.ini
