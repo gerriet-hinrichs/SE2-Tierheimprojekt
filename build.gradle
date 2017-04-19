@@ -182,6 +182,24 @@ task buildTypescriptTests(type: NodeTask) {
 buildTypescriptTests.dependsOn buildTypescriptForTests
 buildTypescriptTests.dependsOn copyTypescriptDefinitionFilesForTests
 
+// run client test task
+task testClient(type: NodeTask, dependsOn:  buildTypescriptTests) {
+    script = new File(node.nodeModulesDir, 'node_modules/mocha/bin/mocha')
+
+    // compiler options
+    args = [
+            "--reporter", "list",
+            "--recursive"
+    ]
+
+    // add directories containing tests
+    new File(project.buildDir, "view-test").eachDir() { dir ->
+        if (dir.getName() != "uut") {
+            args += dir.getPath()
+        }
+    }
+}
+
 // build less files
 task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
     script = new File(node.nodeModulesDir, 'node_modules/less/bin/lessc')

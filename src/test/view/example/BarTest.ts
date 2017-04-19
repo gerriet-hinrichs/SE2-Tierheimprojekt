@@ -1,7 +1,7 @@
 // enable chai assertion syntax
 let chai: Chai.ChaiStatic = require("chai");
 
-// nodeJS libraries have to be imported this way
+// load proxyquire that allows stub injection
 let proxyquire: Proxyquire = require("proxyquire");
 
 // import Bar type definitions. Since we want to use a stub for Bar's dependency, we have to import
@@ -17,13 +17,16 @@ class FooStub {
 }
 
 // import Bar with a changed import (the import path here is the same as for type definitions)
-let UUT = proxyquire("../uut/example/Bar", {
+let BarExports = proxyquire("../uut/example/Bar", {
 
     // the key has to be exactly the import as used in the Bar class.
     // since a relative import is used there we need to specify that here too.
     // NOTE: The FooStub has to be defined before using it here
     "./Foo": FooStub,
 });
+
+// since above function returns the exports object we need to access the proper element
+let UUT = BarExports.Bar;
 
 // test suite
 describe("Component: example/Bar", () => {
@@ -33,7 +36,7 @@ describe("Component: example/Bar", () => {
         chai.expect(bar.getName()).to.be.equal("Bar");
     });
 
-    it("Test #2: Stub injection worked", () => {
+    it("Test #2: Stub injection", () => {
         let bar: Bar = new UUT();
         chai.expect(bar.getSentence()).to.be.equal("Me, Bar, and my friend Foo-Stub.")
     });
