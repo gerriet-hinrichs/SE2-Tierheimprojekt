@@ -129,3 +129,4 @@ system.ini
 /database/
 !/database/database.template.ini
 !/database/example.template.ini
+/src/test/view/uut/

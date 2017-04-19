@@ -137,9 +137,50 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
     // compiler options
     args = [
             "--project", "${project.projectDir}/src/main/view",
-            "--outDir", "${project.projectDir}/static-files/view"
+            "--outDir", "${project.projectDir}/static-files/view",
     ]
 }
+
+// build typescript into the test directory (so unit tests can find those files)
+// and also generate interface definitions from source
+task buildTypescriptForTests(type: NodeTask, dependsOn: npmInstall) {
+    script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
+
+    // compiler options
+    args = [
+            "--project", "${project.projectDir}/src/main/view",
+            "--outDir", "${project.buildDir}/view-test/uut",
+
+            // change module system to CommonJS to work in node environment
+            "--module", "CommonJS",
+
+            // also generate interface definitions to provide correct typings in unit-tests
+            "--declaration",
+            "--declarationDir", "${project.projectDir}/src/test/view/uut"
+    ]
+}
+
+// copy definition files to be available in tests
+task copyTypescriptDefinitionFilesForTests(type: Copy) {
+    from("${project.projectDir}/src/main/view/") {
+        include "**/*.d.ts"
+        exclude "vendor/requireJS.d.ts"
+    }
+    into "${project.projectDir}/src/test/view/uut"
+}
+
+// compile tests
+task buildTypescriptTests(type: NodeTask) {
+    script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
+
+    // compiler options
+    args = [
+            "--project", "${project.projectDir}/src/test/view",
+            "--outDir", "${project.buildDir}/view-test"
+    ]
+}
+buildTypescriptTests.dependsOn buildTypescriptForTests
+buildTypescriptTests.dependsOn copyTypescriptDefinitionFilesForTests
 
 // build less files
 task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
