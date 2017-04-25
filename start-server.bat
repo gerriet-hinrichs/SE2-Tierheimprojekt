@@ -1,1 +1,1 @@
-gradlew.bat test integrationTest bootRun
+gradlew.bat bootRun

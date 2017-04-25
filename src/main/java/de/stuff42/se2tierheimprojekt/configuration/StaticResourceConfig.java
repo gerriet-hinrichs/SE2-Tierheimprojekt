@@ -1,4 +1,4 @@
-package de.stuff42.se2tierheimprojekt;
+package de.stuff42.se2tierheimprojekt.configuration;
 
 import de.stuff42.utils.PathUtils;
 
@@ -10,12 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * Resource handler for static files.
  */
 @Configuration
-public class StaticResourceConfiguration extends WebMvcConfigurerAdapter {
+public class StaticResourceConfig extends WebMvcConfigurerAdapter {
 
     /**
      * Url of static files on the server.
      */
-    public static final String STATIC_FILES_URL = "/static";
+    private static final String STATIC_FILES_URL = "/static";
 
     /**
      * Path to static files on disk.

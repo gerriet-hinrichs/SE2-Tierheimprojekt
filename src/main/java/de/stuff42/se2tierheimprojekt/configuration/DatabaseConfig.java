@@ -1,4 +1,4 @@
-package de.stuff42.se2tierheimprojekt;
+package de.stuff42.se2tierheimprojekt.configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.utils.PathUtils;
 
 import org.ini4j.Ini;
@@ -17,12 +18,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Configuration class providing database system configuration.
  */
-class DatabaseConfiguration {
+public class DatabaseConfig {
 
     /**
      * Logger instance to be used.
      */
-    private final Logger logger = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
 
     /**
      * Cache for loaded ini files.
