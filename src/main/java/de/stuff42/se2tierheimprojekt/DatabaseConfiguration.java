@@ -6,17 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import de.stuff42.utils.PathUtils;
+
 import org.ini4j.Ini;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.stuff42.utils.PathUtils;
-
 /**
  * Configuration class providing database system configuration.
  */
-public class DatabaseConfiguration {
+class DatabaseConfiguration {
 
     /**
      * Logger instance to be used.
@@ -27,6 +28,11 @@ public class DatabaseConfiguration {
      * Cache for loaded ini files.
      */
     private Map<String, Ini> iniInstances = new HashMap<>();
+
+    /**
+     * Configuration prefix for the values loaded from <code>database.ini</code>.
+     */
+    static String configurationPrefix = "";
 
     /**
      * Loads database config file with the given name.
@@ -60,7 +66,9 @@ public class DatabaseConfiguration {
     @NotNull
     private Ini getSelectedDatabaseConfiguration() {
         Ini databaseIni = getIni("database");
-        String configurationName = databaseIni.get("Database", "Configuration");
+
+        // add configuration prefix here to load the correct field
+        String configurationName = databaseIni.get("Database", configurationPrefix + "Configuration");
         return getIni(configurationName);
     }
 
@@ -70,7 +78,7 @@ public class DatabaseConfiguration {
      * @return Property value.
      */
     @NotNull
-    public String getDataSourceUrl() {
+    private String getDataSourceUrl() {
         Ini ini = getSelectedDatabaseConfiguration();
         return "jdbc:" + ini.get("Configuration", "driver")
                 + "://" + ini.get("Connection", "host")
@@ -84,7 +92,7 @@ public class DatabaseConfiguration {
      * @return Property value.
      */
     @NotNull
-    public String getDataSourceUsername() {
+    private String getDataSourceUsername() {
         return getSelectedDatabaseConfiguration().get("Login", "user");
     }
 
@@ -94,7 +102,7 @@ public class DatabaseConfiguration {
      * @return Property value.
      */
     @NotNull
-    public String getDataSourcePassword() {
+    private String getDataSourcePassword() {
         return getSelectedDatabaseConfiguration().get("Login", "password");
     }
 
@@ -103,7 +111,8 @@ public class DatabaseConfiguration {
      *
      * @return Property value.
      */
-    public boolean getDataSourceTestWhileIdle() {
+    @Contract(pure = true)
+    private boolean getDataSourceTestWhileIdle() {
         return true;
     }
 
@@ -112,8 +121,9 @@ public class DatabaseConfiguration {
      *
      * @return Property value.
      */
+    @Contract(pure = true)
     @NotNull
-    public String getDataSourceValidationQuery() {
+    private String getDataSourceValidationQuery() {
         return "SELECT 1";
     }
 
@@ -122,7 +132,7 @@ public class DatabaseConfiguration {
      *
      * @return Property value.
      */
-    public boolean getJpsShowSql() {
+    private boolean getJpsShowSql() {
         return Boolean.getBoolean(getSelectedDatabaseConfiguration().get("Configuration", "logging"));
     }
 
@@ -132,7 +142,7 @@ public class DatabaseConfiguration {
      * @return Property value.
      */
     @NotNull
-    public String getJpaHibernateDdlAuto() {
+    private String getJpaHibernateDdlAuto() {
         return getSelectedDatabaseConfiguration().get("Configuration", "mode");
     }
 
@@ -141,8 +151,9 @@ public class DatabaseConfiguration {
      *
      * @return Property value.
      */
+    @Contract(pure = true)
     @NotNull
-    public String getJpaHibernateNamingStrategy() {
+    private String getJpaHibernateNamingStrategy() {
         return "org.hibernate.cfg.ImprovedNamingStrategy";
     }
 
@@ -152,7 +163,7 @@ public class DatabaseConfiguration {
      * @return Property value.
      */
     @NotNull
-    public String getJpaPropertiesHibernateDialect() {
+    private String getJpaPropertiesHibernateDialect() {
         return "org.hibernate.dialect." +
                 getSelectedDatabaseConfiguration().get("Configuration", "dialect")
                 + "Dialect";
@@ -163,7 +174,7 @@ public class DatabaseConfiguration {
      *
      * @param properties Properties instance to be updated.
      */
-    public void updateConfigurationProperties(Properties properties) {
+    void updateConfigurationProperties(Properties properties) {
         properties.put("spring.datasource.url", getDataSourceUrl());
         properties.put("spring.datasource.username", getDataSourceUsername());
         properties.put("spring.datasource.password", getDataSourcePassword());
