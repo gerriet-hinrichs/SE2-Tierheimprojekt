@@ -1,5 +1,5 @@
 // enable chai assertion syntax
-let chai: Chai.ChaiStatic = require("chai");
+var chai: Chai.ChaiStatic = require("chai");
 
 // load proxyquire that allows stub injection
 let proxyquire: Proxyquire = require("proxyquire");
@@ -21,8 +21,11 @@ let BarExports = proxyquire("../uut/example/Bar", {
 
     // the key has to be exactly the import as used in the Bar class.
     // since a relative import is used there we need to specify that here too.
+    // Keep in mind that we have to give proxyquire the faked exports of the foo "module"
+    // (which should only be the class itself.
+
     // NOTE: The FooStub has to be defined before using it here
-    "./Foo": FooStub,
+    "./Foo": { Foo: FooStub },
 });
 
 // since above function returns the exports object we need to access the proper element
