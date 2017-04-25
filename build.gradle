@@ -41,12 +41,13 @@ repositories {
 // Call build tasks with -Pdebug=false to disable debug.
 def getIsDebug = { ->
     try {
-        return Boolean.parseBoolean("$debug")
+        def debug = Boolean.parseBoolean("$debug")
+        System.out.println("Building in " + (debug ? "debug" : "production") + " mode.")
+        return debug
     }
     catch (Exception e) {
         // debug is enabled on default
-        System.out.println("Could not parse debug flag: " + e.getLocalizedMessage())
-        System.out.println("Switching to debug mode.")
+        System.out.println("Building in debug mode.")
         return true
     }
 }
