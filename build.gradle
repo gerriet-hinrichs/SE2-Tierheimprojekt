@@ -13,6 +13,9 @@ plugins {
 
     // spring boot support
     id "org.springframework.boot" version "1.4.3.RELEASE"
+
+    // sonarqube integration
+    id "org.sonarqube" version "2.3"
 }
 
 // add IDE support
@@ -28,9 +31,19 @@ apply plugin: "com.moowork.node"
 // add spring boot support
 apply plugin: 'org.springframework.boot'
 
+// add sonarqube support
+apply plugin: 'org.sonarqube'
+
 // dependency repositories
 repositories {
     mavenCentral()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "SE2-Tierheimprojekt"
+        property "sonar.projectKey", "se2tierheimprojekt"
+    }
 }
 
 /******************************
@@ -235,6 +248,9 @@ dependencies {
 
     // database drivers (add your own required drivers as runtime dependency here)
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+
+    // sonarqube
+    compile group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '2.2'
 }
 
 // Add system.ini generation task to build
