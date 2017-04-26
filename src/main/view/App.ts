@@ -4,8 +4,8 @@ import * as ko from "knockout";
 import "knockout.punches";
 import {TestApi} from "./api/TestApi";
 
-// private (not exported) app class
-class App {
+// app class
+export class App {
 
     public knockoutWorkingMessage: string = "Knockout is working!";
 
