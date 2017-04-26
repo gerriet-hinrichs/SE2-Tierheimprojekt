@@ -235,6 +235,10 @@ dependencies {
 
     // database drivers (add your own required drivers as runtime dependency here)
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+	
+	//REST Assured
+	testCompile 'junit:junit:4.12'
+	testCompile 'io.rest-assured:rest-assured:3.0.2'
 }
 
 // Add system.ini generation task to build
