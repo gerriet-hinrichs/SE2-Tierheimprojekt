@@ -126,6 +126,7 @@ local.properties
 ### Custom ignore stuff
 system.ini
 /static-files/
-/database/
+/database/**/*.ini
 !/database/database.template.ini
 !/database/example.template.ini
+/src/test/view/uut/

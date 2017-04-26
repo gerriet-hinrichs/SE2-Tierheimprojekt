@@ -1,40 +1,40 @@
 package de.stuff42.se2tierheimprojekt;
 
-import java.util.Properties;
+import de.stuff42.se2tierheimprojekt.configuration.ApplicationInitializer;
+import de.stuff42.utils.UtilsConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import de.stuff42.utils.PathUtils;
-import de.stuff42.utils.UtilsConfig;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Application entry point. This class also gives access to root context configuration.
  */
 @SpringBootApplication
+@ComponentScan
 public class Application {
 
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
-
+    /**
+     * Active application context.
+     */
     private static ConfigurableApplicationContext context;
 
+    /**
+     * Application startup main class.
+     *
+     * @param args Application arguments.
+     */
     public static void main(String[] args) {
         UtilsConfig.setRelevantPackages("de.stuff42.se2tierheimprojekt");
         SpringApplication application = new SpringApplication(Application.class);
-        Properties properties = new Properties();
-
-        // database settings
-        new DatabaseConfiguration().updateConfigurationProperties(properties);
-
-        // start application
-        application.setDefaultProperties(properties);
+        application.addInitializers(new ApplicationInitializer());
         context = application.run(args);
-        logger.info("Working directory: {}", PathUtils.getApplicationRoot().toString());
     }
 
+    /**
+     * Stops the currently active application context.
+     */
     public static void stop() {
         context.stop();
     }

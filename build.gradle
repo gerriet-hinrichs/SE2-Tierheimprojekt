@@ -13,6 +13,9 @@ plugins {
 
     // spring boot support
     id "org.springframework.boot" version "1.4.3.RELEASE"
+
+    // sonarqube integration
+    id "org.sonarqube" version "2.3"
 }
 
 // add IDE support
@@ -28,9 +31,19 @@ apply plugin: "com.moowork.node"
 // add spring boot support
 apply plugin: 'org.springframework.boot'
 
+// add sonarqube support
+apply plugin: 'org.sonarqube'
+
 // dependency repositories
 repositories {
     mavenCentral()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "SE2-Tierheimprojekt"
+        property "sonar.projectKey", "se2tierheimprojekt"
+    }
 }
 
 /******************************
@@ -41,12 +54,13 @@ repositories {
 // Call build tasks with -Pdebug=false to disable debug.
 def getIsDebug = { ->
     try {
-        return Boolean.parseBoolean("$debug")
+        def debug = Boolean.parseBoolean("$debug")
+        System.out.println("Building in " + (debug ? "debug" : "production") + " mode.")
+        return debug
     }
     catch (Exception e) {
         // debug is enabled on default
-        System.out.println("Could not parse debug flag: " + e.getLocalizedMessage())
-        System.out.println("Switching to debug mode.")
+        System.out.println("Building in debug mode.")
         return true
     }
 }
@@ -137,8 +151,67 @@ task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
     // compiler options
     args = [
             "--project", "${project.projectDir}/src/main/view",
-            "--outDir", "${project.projectDir}/static-files/view"
+            "--outDir", "${project.projectDir}/static-files/view",
     ]
+}
+
+// build typescript into the test directory (so unit tests can find those files)
+// and also generate interface definitions from source
+task buildTypescriptForTests(type: NodeTask, dependsOn: npmInstall) {
+    script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
+
+    // compiler options
+    args = [
+            "--project", "${project.projectDir}/src/main/view",
+            "--outDir", "${project.buildDir}/view-test/uut",
+
+            // change module system to CommonJS to work in node environment
+            "--module", "CommonJS",
+
+            // also generate interface definitions to provide correct typings in unit-tests
+            "--declaration",
+            "--declarationDir", "${project.projectDir}/src/test/view/uut"
+    ]
+}
+
+// copy definition files to be available in tests
+task copyTypescriptDefinitionFilesForTests(type: Copy) {
+    from("${project.projectDir}/src/main/view/") {
+        include "**/*.d.ts"
+        exclude "vendor/requireJS.d.ts"
+    }
+    into "${project.projectDir}/src/test/view/uut"
+}
+
+// compile tests
+task buildTypescriptTests(type: NodeTask) {
+    script = new File(node.nodeModulesDir, 'node_modules/typescript/bin/tsc')
+
+    // compiler options
+    args = [
+            "--project", "${project.projectDir}/src/test/view",
+            "--outDir", "${project.buildDir}/view-test"
+    ]
+}
+buildTypescriptTests.dependsOn buildTypescriptForTests
+buildTypescriptTests.dependsOn copyTypescriptDefinitionFilesForTests
+
+// run client test task
+task testClient(type: NodeTask, dependsOn:  buildTypescriptTests) {
+    script = new File(node.nodeModulesDir, 'node_modules/mocha/bin/mocha')
+
+    // compiler options
+    args = [
+            "--reporter", "list",
+            "--recursive"
+    ]
+
+    // add directories containing tests
+    new File(project.buildDir, "view-test").eachDir() { dir ->
+        if (dir.getName() != "uut") {
+            args += dir.getPath()
+        }
+    }
 }
 
 // build less files
