@@ -129,4 +129,5 @@ system.ini
 /database/**/*.ini
 !/database/database.template.ini
 !/database/example.template.ini
+!/database/travis.ini
 /src/test/view/uut/

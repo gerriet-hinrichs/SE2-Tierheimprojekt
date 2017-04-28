@@ -83,28 +83,32 @@ def getVersionFromGit = { ->
 final currentVersion = getVersionFromGit()
 
 // Task that generates the system.ini file that contains basic system config
-task generateSystemIni {
-    def builder = new StringBuilder()
+task generateSystemIni() {
+    doLast {
+        def builder = new StringBuilder()
 
-    // generate stuff
-    builder.append("[BUILD]")
-    builder.append(System.lineSeparator())
+        // generate stuff
+        builder.append("[BUILD]")
+        builder.append(System.lineSeparator())
 
-    builder.append("Version=")
-    builder.append(currentVersion)
-    builder.append(System.lineSeparator())
+        builder.append("Version=")
+        builder.append(currentVersion)
+        builder.append(System.lineSeparator())
 
-    builder.append("Timestamp=")
-    builder.append(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-    builder.append(System.lineSeparator())
+        builder.append("Timestamp=")
+        builder.append(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+        builder.append(System.lineSeparator())
 
-    builder.append("Debug=")
-    builder.append(DEBUG)
-    builder.append(System.lineSeparator())
+        builder.append("Debug=")
+        builder.append(DEBUG)
+        builder.append(System.lineSeparator())
 
-    // write stuff to file
-    def file = new File("${project.projectDir}/system.ini")
-    file.write(builder.toString())
+        // write stuff to file
+        def file = new File("${project.projectDir}/system.ini")
+        file.write(builder.toString())
+    }
+
+    outputs.upToDateWhen { false }
 }
 
 /*******************************************************
@@ -140,6 +144,13 @@ node {
 
     // versions for less & typescript can be found within "package.json" file
 }
+
+// copy package json so node can find it
+task copyPackageJson(type: Copy) {
+    from "${project.projectDir}/package.json"
+    into "${project.buildDir}/node/npm"
+}
+npmSetup.dependsOn copyPackageJson
 
 // build typescript
 task buildTypeScript(type: NodeTask, dependsOn: npmInstall) {
@@ -197,7 +208,7 @@ buildTypescriptTests.dependsOn buildTypescriptForTests
 buildTypescriptTests.dependsOn copyTypescriptDefinitionFilesForTests
 
 // run client test task
-task testClient(type: NodeTask, dependsOn:  buildTypescriptTests) {
+task testClient(type: NodeTask, dependsOn: buildTypescriptTests) {
     script = new File(node.nodeModulesDir, 'node_modules/mocha/bin/mocha')
 
     // compiler options
@@ -233,11 +244,6 @@ task copyResources(type: Copy) {
     from "${project.projectDir}/src/main/static-files/"
     into "${project.projectDir}/static-files"
 }
-
-// combined build task
-build.dependsOn buildTypeScript
-build.dependsOn buildLessFiles
-build.dependsOn copyResources
 
 // client task
 task client {}
@@ -308,11 +314,46 @@ dependencies {
 
     // database drivers (add your own required drivers as runtime dependency here)
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-	
-	//REST Assured
-	testCompile 'junit:junit:4.12'
-	testCompile 'io.rest-assured:rest-assured:3.0.2'
+
+    //REST Assured
+    testCompile 'junit:junit:4.12'
+    testCompile 'io.rest-assured:rest-assured:3.0.2'
 }
 
 // Add system.ini generation task to build
-build.dependsOn generateSystemIni
+compileJava.dependsOn generateSystemIni
+
+/*
+ * Stuff required for travis to work properly
+ */
+task createDatabaseIniForTravis() {
+    doLast {
+        def builder = new StringBuilder()
+
+        // generate stuff
+        builder.append("[Database]")
+        builder.append(System.lineSeparator())
+
+        builder.append("Configuration=travis")
+        builder.append(System.lineSeparator())
+
+        builder.append("TestConfiguration=travis")
+        builder.append(System.lineSeparator())
+
+        // write stuff to file
+        def file = new File("${project.projectDir}/database/database.ini")
+        file.write(builder.toString())
+    }
+
+    outputs.upToDateWhen { false }
+}
+
+// travis executes the assemble task for setup and compile
+assemble.dependsOn createDatabaseIniForTravis
+assemble.dependsOn client
+assemble.dependsOn buildTypescriptTests
+
+// travis executes the check task for test execution
+check.dependsOn assemble
+check.dependsOn test
+check.dependsOn testClient
