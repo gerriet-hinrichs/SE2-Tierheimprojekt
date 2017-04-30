@@ -20,4 +20,17 @@ public class GreeterServiceTests {
 
     }
 
+    @Test
+    public void databaseManipulatorTest() {
+
+        DatabaseManipulator manipulator = new DatabaseManipulator();
+
+        manipulator.cleanDb();
+
+        manipulator.fillDb();
+
+        manipulator.cleanDb();
+
+    }
+
 }
