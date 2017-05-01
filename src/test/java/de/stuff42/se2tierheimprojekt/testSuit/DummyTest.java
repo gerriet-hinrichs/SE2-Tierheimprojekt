@@ -29,7 +29,7 @@ public class DummyTest {
     @Test
     public void databaseDummyTest() {
 
-        Logger logger = LoggerFactory.getLogger(Application.class);
+        Logger logger = LoggerFactory.getLogger(this.getClass());
 
         logger.info("Delate all:");
         logger.info("-------------------------------");
@@ -49,13 +49,13 @@ public class DummyTest {
             logger.info(dummy.toString());
         }
         logger.info("");
-
+/*
         logger.info("Customer found with id 1L:");
         logger.info("--------------------------------");
         DummyDataSet dummy1 = dummyRepo.findOne(1L);
         logger.info(dummy1.toString());
         logger.info("");
-
+*/
         logger.info("DummyDataSet found with findByName('name'):");
         logger.info("--------------------------------------------");
         for (DummyDataSet dummy : dummyRepo.findByName("Nr2")) {
