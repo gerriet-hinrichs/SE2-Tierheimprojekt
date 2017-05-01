@@ -2,7 +2,10 @@ package de.stuff42.se2tierheimprojekt.testSuit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.stuff42.se2tierheimprojekt.db.*;
+import de.stuff42.utils.SystemConfig;
 import org.junit.Test;
+import org.slf4j.*;
 
 public class GreeterServiceTests {
 
@@ -17,19 +20,6 @@ public class GreeterServiceTests {
 
         // Then
         assertThat(greeting).isEqualTo("Hello World, Duke");
-
-    }
-
-    @Test
-    public void databaseManipulatorTest() {
-
-        DatabaseManipulator manipulator = new DatabaseManipulator();
-
-        manipulator.cleanDb();
-
-        manipulator.fillDb();
-
-        manipulator.cleanDb();
 
     }
 
