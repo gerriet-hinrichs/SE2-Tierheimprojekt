@@ -207,9 +207,10 @@ task testClient(type: NodeTask, dependsOn:  buildTypescriptTests) {
     ]
 
     // add directories containing tests
-    new File(project.buildDir, "view-test").eachDir() { dir ->
-        if (dir.getName() != "uut") {
-            args += dir.getPath()
+    new File(project.projectDir, "src/test/view").eachDir() { dir ->
+        def name = dir.getName()
+        if (name != "uut" && name != "vendor") {
+            args += "${project.buildDir}/view-test/" + name
         }
     }
 }
