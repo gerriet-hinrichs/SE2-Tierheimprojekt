@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
-import de.stuff42.se2tierheimprojekt.db.TestEntity;
-import de.stuff42.se2tierheimprojekt.service.test.TestService;
+import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
+import de.stuff42.se2tierheimprojekt.service.FakeService;
 
 @RestController
-public class TestController extends BaseController<TestService> {
+public class TestController extends BaseController<FakeService> {
 
     /**
      * Creates instance for the given service.
@@ -16,17 +16,17 @@ public class TestController extends BaseController<TestService> {
      * @param serviceInstance Service instance.
      */
     @Autowired
-    public TestController(TestService serviceInstance) {
+    public TestController(FakeService serviceInstance) {
         super(serviceInstance);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/test")
-    public Iterable<TestEntity> getList() {
+    public Iterable<FakeTableEntry> getList() {
         return service.getList();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test/{text}")
-    public TestEntity add(@PathVariable String text) {
+    public FakeTableEntry add(@PathVariable String text) {
         logger.info(text);
         return service.add(text);
     }
