@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
 @Transactional
-// @TransactionConfiguration(defaultRollback = true)
 public class SpringDatabase {
 
     @Autowired
@@ -31,18 +30,16 @@ public class SpringDatabase {
     private OtherFakeTable otherFakeTable;
 
     private Logger logger;
-    public SpringDatabase(){
-        this.logger = LoggerFactory.getLogger(this.getClass());
-    }
 
     @Before
-    public void before(){
+    public void setUp(){
+        this.logger = LoggerFactory.getLogger(this.getClass());
         logger.info("");
         logger.info("=============== Test Start ================");
     }
 
     @After
-    public void after(){
+    public void cleanUp(){
         logger.info("=============== Test End ================");
         logger.info("");
     }
@@ -57,7 +54,6 @@ public class SpringDatabase {
         logger.info("");
     }
 
-
     /***
      * Testing Spring connection to Database with Autowired.
      * Testing FakeTable connection with OtherFakeTable.
@@ -67,6 +63,13 @@ public class SpringDatabase {
         Long numberOfEntries = 5L;
         String name = "Nr";
         String nameOther = "Other";
+
+        logger.info("Clean Database:");
+        logger.info("-------------------------------");
+        fakeTable.deleteAll();
+        otherFakeTable.deleteAll();
+        logger.info("check");
+        logger.info("");
 
         logger.info("Create and Save Data:");
         logger.info("-------------------------------");
@@ -81,10 +84,10 @@ public class SpringDatabase {
         logger.info("Read and Check:");
         logger.info("-------------------------------");
         logger.info("Entry number FakeTable:");
-        assertEquals(java.util.Optional.ofNullable(fakeTable.count()).get(), numberOfEntries);
+        assertEquals(java.util.Optional.ofNullable(fakeTable.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry number OtherFakeTable:");
-        assertEquals(java.util.Optional.ofNullable(otherFakeTable.count()).get(), numberOfEntries);
+        assertEquals(java.util.Optional.ofNullable(otherFakeTable.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry Attributes:");
         for (FakeTableEntry entry : fakeTable.findAll()) {

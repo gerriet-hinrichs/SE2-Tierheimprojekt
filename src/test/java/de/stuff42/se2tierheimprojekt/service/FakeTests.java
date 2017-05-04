@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
 @Transactional
-// @TransactionConfiguration(defaultRollback = true)
 public class FakeTests {
 
     @Autowired
