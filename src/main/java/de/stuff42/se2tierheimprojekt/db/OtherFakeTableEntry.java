@@ -21,13 +21,12 @@ public class OtherFakeTableEntry {
 
     public OtherFakeTableEntry(String name) {
         this.name = name;
-
     }
 
     @Override
     public String toString() {
         return String.format(
-                "OtherFakeTableEntry[id=%d, Name=%s]",
-                id, name);
+                "<%s>[id=%d, Name=%s]",
+                this.getClass().getSimpleName(), id, name);
     }
 }

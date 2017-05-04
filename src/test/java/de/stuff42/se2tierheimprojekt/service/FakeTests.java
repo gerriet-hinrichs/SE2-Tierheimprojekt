@@ -4,8 +4,11 @@ package de.stuff42.se2tierheimprojekt.service;
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FakeTests {
 
     @Autowired
-    FakeService mockService;
+    private FakeService fakeService;
 
     /***
      * Testing:
@@ -32,9 +35,21 @@ public class FakeTests {
     @Test
     public void fakeServiceTest() {
 
-        FakeTableEntry entry = mockService.add("Test");
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        String name = "Test";
+        String nameReverse = StringUtils.reverse(name);
 
-        assertThat(entry.name).isEqualTo("Test");
-        assertThat(entry.other.name).isEqualTo("tseT");
+        logger.info("Use FakeService:");
+        logger.info("-------------------------------");
+        FakeTableEntry entry = fakeService.add(name);
+        logger.info("check");
+        logger.info("");
+
+        logger.info("Check Entry:");
+        logger.info("-------------------------------");
+        assertThat(entry.name).isEqualTo(name);
+        assertThat(entry.other.name).isEqualTo(nameReverse);
+        logger.info("check");
+        logger.info("");
     }
 }

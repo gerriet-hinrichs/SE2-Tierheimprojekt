@@ -3,6 +3,8 @@ package de.stuff42.se2tierheimprojekt.IntegrationTests;
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.db.*;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,32 +30,68 @@ public class SpringDatabase {
     @Autowired
     private OtherFakeTable otherFakeTable;
 
+    private Logger logger;
+    public SpringDatabase(){
+        this.logger = LoggerFactory.getLogger(this.getClass());
+    }
+
+    @Before
+    public void before(){
+        logger.info("");
+        logger.info("=============== Test Start ================");
+    }
+
+    @After
+    public void after(){
+        logger.info("=============== Test End ================");
+        logger.info("");
+    }
+
+    @Test
+    public void spring(){
+        logger.info("Spring Autowired:");
+        logger.info("-------------------------------");
+        assertNotNull(fakeTable);
+        assertNotNull(otherFakeTable);
+        logger.info("check");
+        logger.info("");
+    }
+
+
     /***
      * Testing Spring connection to Database with Autowired.
      * Testing FakeTable connection with OtherFakeTable.
      */
     @Test
-    public void fakeTableTests() {
+    public void database() {
+        Long numberOfEntries = 5L;
+        String name = "Nr";
+        String nameOther = "Other";
 
-        Logger logger = LoggerFactory.getLogger(this.getClass());
-
-        logger.info("Save Data:");
+        logger.info("Create and Save Data:");
         logger.info("-------------------------------");
-        new FakeTableEntry("Nr1",new OtherFakeTableEntry("OtherNr1"));
-        new FakeTableEntry("Nr2",new OtherFakeTableEntry("OtherNr2"));
-        new FakeTableEntry("Nr3",new OtherFakeTableEntry("OtherNr3"));
+        for (Long i = 0L; i < numberOfEntries; i++) {
+            logger.info(
+                    fakeTable.save(new FakeTableEntry(name + i,
+                            otherFakeTable.save(new OtherFakeTableEntry(nameOther + name + i))))
+                            .toString());
+        }
         logger.info("");
 
-        logger.info("Read all FakeTable:");
+        logger.info("Read and Check:");
         logger.info("-------------------------------");
+        logger.info("Entry number FakeTable:");
+        assertEquals(java.util.Optional.ofNullable(fakeTable.count()).get(), numberOfEntries);
+        logger.info("check");
+        logger.info("Entry number OtherFakeTable:");
+        assertEquals(java.util.Optional.ofNullable(otherFakeTable.count()).get(), numberOfEntries);
+        logger.info("check");
+        logger.info("Entry Attributes:");
         for (FakeTableEntry entry : fakeTable.findAll()) {
+            assertEquals(nameOther + entry.name, entry.other.name);
             logger.info(entry.toString());
-        }//TODO: Ergebnisse checken!
-
-        logger.info("Read all OtherFakeTable:");
-        logger.info("-------------------------------");
-        for (OtherFakeTableEntry entry : otherFakeTable.findAll()) {
-            logger.info(entry.toString());
-        }//TODO: Ergebnisse checken!
+        }
+        logger.info("check");
+        logger.info("");
     }
 }

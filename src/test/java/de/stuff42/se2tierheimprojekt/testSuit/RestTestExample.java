@@ -26,14 +26,14 @@ import static io.restassured.RestAssured.get;
     initializers = {TestApplicationInitializer.class})
 //@WebAppConfiguration
 public class RestTestExample {
-  RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
+  private RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
 
   /**
    * 
    */
 
   @LocalServerPort
-  int port;
+  private int port;
 
   @Before
   public void setupConnection() {

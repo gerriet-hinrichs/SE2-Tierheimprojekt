@@ -29,7 +29,7 @@ public class FakeTableEntry {
     @Override
     public String toString() {
         return String.format(
-                "FakeTableEntry[id=%d, Name=%s, other=%s]",
-                id, name, other);
+                "<%s>[id=%d, Name=%s, other=%s]",
+                this.getClass().getSimpleName(), id, name, other);
     }
 }
