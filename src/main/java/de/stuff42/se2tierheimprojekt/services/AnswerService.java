@@ -5,30 +5,35 @@ import java.util.List;
 import de.stuff42.se2tierheimprojekt.datatypes.AnswerInterface;
 import de.stuff42.se2tierheimprojekt.datatypes.QuestionInterface;
 
-public class AnswerService implements AnswerServiceInterface {
-
-  @Override
-  public List<AnswerInterface> getAnswers(long questionID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public boolean create(QuestionInterface data) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean update(QuestionInterface data) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public boolean delete(long id) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
+//TODO
+//Check if the name is ok
+public interface AnswerService {
+ 
+  /**
+   * Returns a List with all answers of the question with the specified ID
+   * @param questionID ID of the question
+   * @return List with all answers of the question or null if the question doesn't exist
+   */
+  public List<AnswerInterface> getAnswers(long questionID);
+  
+  /**
+   * Creates a new answer in the database
+   * @param data to be created answer
+   * @return true if answer was successfully created if not false
+   */
+  public boolean create(QuestionInterface data);
+  
+  /**
+   * Updates an existing answer in the database, which is equal to data
+   * @param data 
+   * @return true if update was successful
+   */
+  public boolean update(QuestionInterface data);
+  
+  /**
+   * Deletes the answer with the ID from the database
+   * @param id the id of the to be deleted question
+   * @return true if answer was successfully deleted
+   */
+  public boolean delete(long id);
 }
