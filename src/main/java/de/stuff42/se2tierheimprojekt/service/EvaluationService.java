@@ -21,18 +21,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.services;
+package de.stuff42.se2tierheimprojekt.service;
 
-//TODO
-//Check if the name is ok
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
+
 public interface EvaluationService {
-  //TODO
-  //Check if the ID is really demanded or if a question object has to be returned
   /**
    * Returns the next question for the given answer in the questionnaire
    * @param questionID ID of the answered question
    * @param answerID ID of the answer of the last question
    * @return ID of the next question
    */
-  public long getNextforAnswer(long questionID, long answerID);
+  public Question getNextforAnswer(long questionID, long answerID);
 }

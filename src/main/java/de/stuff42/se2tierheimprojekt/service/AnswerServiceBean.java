@@ -21,14 +21,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.services;
+package de.stuff42.se2tierheimprojekt.service;
 
-public class EvaluationServiceBean implements EvaluationService {
+import java.util.List;
+
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
+
+public class AnswerServiceBean implements AnswerService {
 
   @Override
-  public long getNextforAnswer(long questionID, long answerID) {
+  public List<Answer> getAnswers(long questionID) {
     // TODO Auto-generated method stub
-    return 0;
+    return null;
+  }
+
+  @Override
+  public boolean create(Question data) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean update(Question data) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean delete(long id) {
+    // TODO Auto-generated method stub
+    return false;
   }
 
 }

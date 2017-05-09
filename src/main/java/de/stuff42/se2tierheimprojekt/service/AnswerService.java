@@ -21,15 +21,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.services;
+package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.List;
 
-import de.stuff42.se2tierheimprojekt.datatypes.AnswerInterface;
-import de.stuff42.se2tierheimprojekt.datatypes.QuestionInterface;
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
 
-//TODO
-//Check if the name is ok
 public interface AnswerService {
  
   /**
@@ -37,21 +35,21 @@ public interface AnswerService {
    * @param questionID ID of the question
    * @return List with all answers of the question or null if the question doesn't exist
    */
-  public List<AnswerInterface> getAnswers(long questionID);
+  public List<Answer> getAnswers(long questionID);
   
   /**
    * Creates a new answer in the database
    * @param data to be created answer
    * @return true if answer was successfully created if not false
    */
-  public boolean create(QuestionInterface data);
+  public boolean create(Question data);
   
   /**
    * Updates an existing answer in the database, which is equal to data
    * @param data 
    * @return true if update was successful
    */
-  public boolean update(QuestionInterface data);
+  public boolean update(Question data);
   
   /**
    * Deletes the answer with the ID from the database

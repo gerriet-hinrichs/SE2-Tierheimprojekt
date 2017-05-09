@@ -21,10 +21,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.datatypes;
+package de.stuff42.se2tierheimprojekt.service;
 
-//TODO
-//Check if the name is ok or if interface is needed
-public interface QuestionInterface {
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
+
+public class EvaluationServiceBean implements EvaluationService {
+
+  @Override
+  public Question getNextforAnswer(long questionID, long answerID) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }
