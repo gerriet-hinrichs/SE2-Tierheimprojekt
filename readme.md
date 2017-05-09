@@ -1,28 +1,11 @@
-# Setup
-- Git-Repository clonen
-- Git-Flow initialisieren: [Git-Flow Cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)
-  - Standart-Konfiguration verwenden (alles default)
-- IDE-Projekt über Gradle erstellen
-  - Windows:
-    - IntelliJ: `gradlew.bat idea`
-    - Eclipse: `gradlew.bat eclipse`
-  - Linux / Unix:
-    - IntelliJ: `./gradlew idea`
-    - Eclipse: `./gradlew eclipse` 
-- Erstelltes Projekt über die IDE öffnen (nicht importieren, etc.)
-- Konfiguration für die Datenbank findet sich in den Dateien im Ordner `database`. Dort befinden sich Beispieldateien für die Konfiguration.
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-# Laufende Entwicklung
-## Server bauen & starten
-- Script dafür:
-  - Windows: `start-server.bat`
-  - Linux / Unix: `./start-server`
-- Das Script kann über `Ctrl + C` beendet werden und stoppt dann auch den laufenden Server
-  - Hinweis dazu: Unter Cygwin auf Windows wird der Server beim Beenden des Scripts nicht gestoppt. Unter Windows sollte daher die Bat-Datei verwendet werden.
-- Der Server ist über [Port 8080 auf localhost](http://localhost:8080) erreichbar.
-## Client bauen
-- Script dafür:
-  - Windows: `build-client.bat`
-  - Linux / Unix: `./build-client`
-- Solange das Script läuft werden Änderungen erkannt und direkt compiled. Es ist nicht nötig den Server neu zu starten, ein Refresh der Website reicht aus.
-- Das Script kann über `Ctrl + C` beendet werden.
+# Web-Application zur Tiervermittlung
+Dieses Projekt entsteht im Ramen des Praktikums zum Kurs Software Engineering 2 an der Hochschule für angewandte Wissenschaften (HAW) Hamburg.
+
+Es handelt sich hierbei um eine Web-Application die das Finden von passenden Tieren aus der Vermittlung unterstützen und vereinfachen soll.
+
+Weitere Infos dazu im Wiki: [/wiki/Anforderungen](https://github.com/gerriet-hinrichs/SE2-Tierheimprojekt/wiki/Anforderungen)
+
+#### Setup
+Informationen zum Projekt-Setup im Wiki: [/wiki/Setup](https://github.com/gerriet-hinrichs/SE2-Tierheimprojekt/wiki/Setup)
