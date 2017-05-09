@@ -18,7 +18,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public FreeMarkerConfigurer freemarkerConfig() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("/resources/templates/");
+        configurer.setTemplateLoaderPath("classpath:templates");
         return configurer;
     }
 
@@ -30,6 +30,8 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         resolver.setCache(!SystemConfig.get("BUILD", "Debug", Boolean.class, true));
         resolver.setPrefix("");
         resolver.setSuffix(".ftl");
+        resolver.setContentType("text/html; charset=UTF-8");
+
         return resolver;
     }
 }
