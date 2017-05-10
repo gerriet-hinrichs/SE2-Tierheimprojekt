@@ -25,6 +25,7 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
 import de.stuff42.se2tierheimprojekt.datatypes.Question;
 
 public class QuestionServiceBean implements QuestionService {
@@ -48,21 +49,16 @@ public class QuestionServiceBean implements QuestionService {
   }
 
   @Override
-  public boolean create(Question data) {
+  public Question getNextforAnswer(long questionID, long answerID) {
     // TODO Auto-generated method stub
-    return false;
+    return null;
   }
 
   @Override
-  public boolean update(Question data) {
+  public List<Answer> getAnswers(long questionID) {
     // TODO Auto-generated method stub
-    return false;
+    return null;
   }
 
-  @Override
-  public boolean delete(long id) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 
 }

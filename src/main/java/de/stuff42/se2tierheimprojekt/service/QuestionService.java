@@ -25,6 +25,7 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
 import de.stuff42.se2tierheimprojekt.datatypes.Question;
 
 public interface QuestionService {
@@ -49,24 +50,18 @@ public interface QuestionService {
   public List<Question> getList();
   
   /**
-   * Creates a new question in the database
-   * @param data to be created question
-   * @return true if question was successfully created if not false
+   * Returns the next question for the given answer in the questionnaire
+   * @param questionID ID of the answered question
+   * @param answerID ID of the answer of the last question
+   * @return ID of the next question
    */
-  public boolean create(Question data);
+  public Question getNextforAnswer(long questionID, long answerID);
   
   /**
-   * Updates an existing question in the database, which is equal to data
-   * @param data 
-   * @return true if update was successful
+   * Returns a List with all answers of the question with the specified ID
+   * @param questionID ID of the question
+   * @return List with all answers of the question or null if the question doesn't exist
    */
-  public boolean update(Question data);
-  
-  /**
-   * Deletes the question with the ID from the database
-   * @param id the id of the to be deleted question
-   * @return true if question was successfully deleted
-   */
-  public boolean delete(long id);
+  public List<Answer> getAnswers(long questionID);
 
 }
