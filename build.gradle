@@ -73,22 +73,6 @@ sonarqube {
  * Build-script configuration *
  ******************************/
 
-// Build script magic to detect debug mode.
-// Call build tasks with -Pdebug=false to disable debug.
-def getIsDebug = { ->
-    try {
-        def debug = Boolean.parseBoolean("$debug")
-        System.out.println("Building in " + (debug ? "debug" : "production") + " mode.")
-        return debug
-    }
-    catch (Exception e) {
-        // debug is enabled on default
-        System.out.println("Building in debug mode.")
-        return true
-    }
-}
-final DEBUG = getIsDebug()
-
 // Git magic to get the actual version
 def getVersionFromGit = { ->
     try {
@@ -120,10 +104,6 @@ task generateSystemIni() {
 
         builder.append("Timestamp=")
         builder.append(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-        builder.append(System.lineSeparator())
-
-        builder.append("Debug=")
-        builder.append(DEBUG)
         builder.append(System.lineSeparator())
 
         // write stuff to file
