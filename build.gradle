@@ -285,22 +285,8 @@ version currentVersion
 
 dependencies {
 
-    // Logging API
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.8'
-
-    // Idea type annotations
-    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
-
-    // *.ini file parsing library
-    compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
-
-    // Apache java utilities (extended standard library)
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+    // utils project
+    compile project(':utils')
 
     // spring
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.3.RELEASE') {
@@ -319,9 +305,9 @@ dependencies {
     // database drivers (add your own required drivers as runtime dependency here)
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
-    //REST Assured
-    testCompile 'junit:junit:4.12'
-    testCompile 'io.rest-assured:rest-assured:3.0.2'
+    // REST Assured and jUnit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.2'
 }
 
 // Add system.ini generation task to build
