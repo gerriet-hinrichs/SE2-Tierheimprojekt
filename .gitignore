@@ -129,4 +129,8 @@ system.ini
 /database/**/*.ini
 !/database/database.template.ini
 !/database/example.template.ini
+!/database/travis.ini
 /src/test/view/uut/
+classes/production/se2tierheimprojekt/logback\.xml
+classes/production/se2tierheimprojekt/templates/index\.ftl
+classes/test/se2tierheimprojekt/logback-test\.xml
