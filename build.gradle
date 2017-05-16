@@ -265,8 +265,15 @@ task cleanSystemINI(type: Delete) {
     delete "${project.projectDir}/system.ini"
 }
 
+// remove generated api files
+task cleanGeneratedApi(type: Delete) {
+    delete fileTree("${project.projectDir}/src/main/view/clientApi")
+}
+
 // combined cleanup task
 clean.dependsOn cleanSystemINI
+clean.dependsOn cleanStaticFiles
+clean.dependsOn cleanGeneratedApi
 
 /****************************************************************
  * Configuration for the server (containing server application) *
@@ -282,6 +289,23 @@ compileJava.options.compilerArgs = ["-Xlint"]
 // project group and version
 group 'de.stuff42'
 version currentVersion
+
+// task that generates client api
+task generateClientAPI(type: JavaCompile) {
+    source = sourceSets.main.java // input source set
+    classpath = sourceSets.main.compileClasspath // classpath
+
+    // specify javac arguments
+    options.compilerArgs = [
+            "-proc:only", // only do processing
+            "-processor", "de.stuff42.apigenerator.processor.RestControllerProcessor"
+    ]
+
+    // set output directory
+    destinationDir = new File(project.projectDir, "/src/main/view/clientApi")
+}
+// run api generation whenever the main source set is compiled
+compileJava.dependsOn generateClientAPI
 
 dependencies {
 
@@ -308,6 +332,9 @@ dependencies {
     // REST Assured and jUnit
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.2'
+
+    // add compile only dependency for client api generator
+    compileOnly project(":apigenerator")
 }
 
 // Add system.ini generation task to build

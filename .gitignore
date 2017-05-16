@@ -134,3 +134,4 @@ system.ini
 classes/production/se2tierheimprojekt/logback\.xml
 classes/production/se2tierheimprojekt/templates/index\.ftl
 classes/test/se2tierheimprojekt/logback-test\.xml
+/src/main/view/clientApi/
