@@ -11,6 +11,7 @@ interface ISidebarParams {
 
 export class sidebar {
 
+    // fetch dom element here
     public sidebar = $('#sidebar');
     public icon = this.sidebar.find('sidebar-icon').toggleClass('rotate-icon');
 
