@@ -1,4 +1,4 @@
-<#--
+/*
  * Application to help putting pets from animal shelter across.
  * Copyright (C) 2017
  *     Felix Koch <felix.koch@haw-hamburg.de>,
@@ -20,33 +20,45 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+ */
+package de.stuff42.se2tierheimprojekt.service;
 
-<#-- @ftlvariable name="model" type="de.stuff42.se2tierheimprojekt.model.AppStartModel" -->
-<!Doctype html>
-<html>
-<head>
-    <title>SE 2 Tierheimprojekt</title>
-    <link rel="stylesheet" type="text/css" href="static/app.css">
-</head>
-<body>
-<div class="box">
-    <p>Spring works!</p>
-    <p id="requireWorks">RequireJS does not work.</p>
-    <p text="{{knockoutWorkingMessage}}">Knockout does not work.</p>
-</div>
-<div class="box">
-    {{#foreach itemList}}
-    <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
-    {{/foreach}}
-    <p><input type="text" value="{{textInput}}" /><button click="{{sentText}}">Send</button></p>
-</div>
-<script type="application/javascript">
-    window["BuildVersion"] = ${model.buildVersionJS};
-    window["BuildTime"] = ${model.buildTimeJS};
-</script>
-<script type="application/javascript"
-        src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"
-        data-main="static/view/config"></script>
-</body>
-</html>
+import java.util.List;
+
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
+
+public class QuestionServiceBean implements QuestionService {
+
+  @Override
+  public Question getFirstWithAnswers() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Question getByIDWithAnswers(long id) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Question> getList() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Question getNextforAnswer(long questionID, long answerID) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Answer> getAnswers(long questionID) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+}

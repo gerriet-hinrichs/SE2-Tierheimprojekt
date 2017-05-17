@@ -26,6 +26,7 @@
 import "jquery";
 import * as ko from "knockout";
 import "knockout.punches";
+import "knockout-amd-helpers";
 import {TestApi} from "./api/TestApi";
 
 // app class
