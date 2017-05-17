@@ -1,0 +1,77 @@
+/*
+ * Utilities for use in various applications.
+ * Copyright (C) 2017
+ *     Adrian Bostelmann <Adrian.Bostelmann@HAW-Hamburg.de>,
+ *     Gerriet Hinrichs <gerriet.hinrichs@haw-hamburg.de>.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+// dependency repositories
+repositories {
+    mavenCentral()
+}
+
+// Git magic to get the actual version
+def getVersionFromGit = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (Exception e) {
+        System.out.println("Loading version from git failed: " + e.getLocalizedMessage())
+        return "SNAPSHOT"
+    }
+}
+final currentVersion = getVersionFromGit()
+
+// add IDE support
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+// add java support
+apply plugin: "java"
+
+// use java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// enable recommended java warnings
+compileJava.options.compilerArgs = ["-Xlint"]
+
+// project group and version
+group 'de.stuff42'
+version currentVersion
+
+dependencies {
+
+    // Logging API
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.8'
+
+    // Idea type annotations
+    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
+
+    // *.ini file parsing library
+    compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
+
+    // Apache java utilities (extended standard library)
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.4'
+}
