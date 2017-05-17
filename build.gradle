@@ -249,11 +249,20 @@ task copyResources(type: Copy) {
     into "${project.projectDir}/static-files"
 }
 
+// copy templates
+task copyTemplates(type: Copy) {
+    from("${project.projectDir}/src/main/view/") {
+        include "**/*.html"
+    }
+    into "${project.projectDir}/static-files/view"
+}
+
 // client task
 task client {}
 client.dependsOn buildTypeScript
 client.dependsOn buildLessFiles
 client.dependsOn copyResources
+client.dependsOn copyTemplates
 
 // clear static files task
 task cleanStaticFiles(type: Delete) {
