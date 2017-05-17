@@ -1,19 +1,17 @@
 package de.stuff42.se2tierheimprojekt.db;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class AnswerEntry {
 
-    public String text;
-
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
-    // TODO: welcher datentyp?
-    //public ? sortOrder;
+    public int sortOrder;
+
+    public String text;
 
     @ManyToOne // TODO: evtl @OneToMany
     public QuestionEntry question;
@@ -23,8 +21,8 @@ public class AnswerEntry {
         // this one is protected since it shouldn't be used directly
     }
 
-    public AnswerEntry(long id, String text, QuestionEntry question) {
-        this.id = id;
+    public AnswerEntry(int sortOrder, String text, QuestionEntry question) {
+        this.sortOrder = sortOrder;
         this.text = text;
         this.question = question;
     }
@@ -32,7 +30,7 @@ public class AnswerEntry {
     @Override
     public String toString() {
         return String.format(
-                "<%s>[id=%d, Name=%s, QuestionId=%s]",
-                this.getClass().getSimpleName(), id, text, question.id);
+                "<%s>[id=%d, SortOrder=%s, Name=%s, QuestionId=%s]",
+                this.getClass().getSimpleName(), id, sortOrder, text, question.id);
     }
 }
