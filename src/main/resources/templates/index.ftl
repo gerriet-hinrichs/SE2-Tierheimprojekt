@@ -30,19 +30,7 @@
     <link rel="stylesheet" type="text/css" href="static/app.css">
 </head>
 <body>
-<div class="box">
-    <p>Spring works!</p>
-    <p id="requireWorks">RequireJS does not work.</p>
-    <p text="{{knockoutWorkingMessage}}">Knockout does not work.</p>
-</div>
-<div class="box">
-    {{#foreach itemList}}
-    <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
-    {{/foreach}}
-    <p><input type="text" value="{{textInput}}"/>
-        <button click="{{sentText}}">Send</button>
-    </p>
-</div>
+<div class="app-body" data-bind="template: 'App'"></div>
 <script type="application/javascript">
     window["BuildVersion"] = ${model.buildVersionJS};
     window["BuildTime"] = ${model.buildTimeJS};
@@ -50,6 +38,5 @@
 <script type="application/javascript"
         src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"
         data-main="static/view/config"></script>
-<div data-bind="module: 'components/sidebar'"></div>
 </body>
 </html>
