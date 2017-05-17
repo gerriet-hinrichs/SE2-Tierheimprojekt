@@ -39,7 +39,9 @@
     {{#foreach itemList}}
     <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
     {{/foreach}}
-    <p><input type="text" value="{{textInput}}" /><button click="{{sentText}}">Send</button></p>
+    <p><input type="text" value="{{textInput}}"/>
+        <button click="{{sentText}}">Send</button>
+    </p>
 </div>
 <script type="application/javascript">
     window["BuildVersion"] = ${model.buildVersionJS};

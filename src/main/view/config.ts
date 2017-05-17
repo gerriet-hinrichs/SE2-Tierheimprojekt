@@ -25,7 +25,7 @@
 // configure module loading
 requirejs.config({
 
-    // base uri for script files
+    // base uri for script files20
     baseUrl: "static/view/",
     paths: {
 
