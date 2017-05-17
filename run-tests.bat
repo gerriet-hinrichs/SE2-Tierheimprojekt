@@ -1,1 +1,1 @@
-gradlew.bat test testClient
+gradlew.bat test testClient & PAUSE

@@ -1,1 +1,1 @@
-gradlew.bat client --continuous
+gradlew.bat client --continuous & PAUSE
