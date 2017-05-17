@@ -1,19 +1,31 @@
 /**
  *  Sidebar component
  */
-import "jquery";
+export type SidebarItem = {
+    displayTitle: string;
+    displaySubTitle: string;
+};
 
-interface ISidebarParams {
+export interface ISidebarParams {
+    title: string;
     right?: boolean;
     large?: boolean;
+    items?: KnockoutObservableArray<SidebarItem>;
 }
 ;
 
-export class sidebar {
+export class Sidebar {
 
     // fetch dom element here
     public sidebar = $('#sidebar');
     public icon = this.sidebar.find('sidebar-icon').toggleClass('rotate-icon');
+
+    public items = ko.observableArray<SidebarItem>();
+    public numberOfItems = ko.pureComputed(() =>{
+        return this.items.Count;
+    });
+
+    public title = ko.observable<string>("");
 
     private _isOpen = ko.observable<boolean>(true);
     public isOpen = ko.pureComputed({
@@ -26,7 +38,8 @@ export class sidebar {
     }).extend({deffered: true, notify: 'always'});
 
     constructor(params: ISidebarParams) {
-        console.log("sidebar with: ", params);
+        this.title(params.title);
+        this.items = params.items;
 
         this.isOpen.subscribe(s => {
             this.toggleVisibility(s);

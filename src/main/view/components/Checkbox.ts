@@ -2,19 +2,17 @@
  * Created by adria on 17.05.2017.
  */
 /**
- *  Radiobutton component
+ *  Checkbox component
  */
-import "jquery";
-
-interface IRadioButtonParams {
+export interface ICheckBoxParams {
 
 }
 ;
 
-export class radiobutton {
+export class Checkbox {
 
     // fetch dom element here
-    //public radiobutton = $('#radiobutton');
+    //public checkbox = $('#checkbox');
 
     private _isChecked = ko.observable<boolean>(true);
     public isChecked = ko.pureComputed({
@@ -26,7 +24,7 @@ export class radiobutton {
         }
     }).extend({deffered: true, notify: 'always'});
 
-    constructor(params: IRadioButtonParams) {
+    constructor(params: ICheckBoxParams) {
 
         this.isChecked.subscribe(c => {
             // TODO
