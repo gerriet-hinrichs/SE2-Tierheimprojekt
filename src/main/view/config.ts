@@ -31,9 +31,10 @@ requirejs.config({
 
         // for libraries we explicitly use CDNs and have to list them here
         // (we only choose the minified version if we are not on debug)
-        "jquery": "//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery" + (DEBUG ? "" : ".min"),
-        "knockout": "//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout" + (DEBUG ? "-debug" : "-min"),
-        "knockout.punches": "//mbest.github.io/knockout.punches/knockout.punches" + (DEBUG ? "" : ".min"),
+        "jquery": "//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min",
+        "knockout": "//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min",
+        "knockout.punches": "//mbest.github.io/knockout.punches/knockout.punches.min",
+        "knockout-amd-helpers": "//raw.githubusercontent.com/rniemeyer/knockout-amd-helpers/v1.0.0/build/knockout-amd-helpers.min"
     }
 });
 
