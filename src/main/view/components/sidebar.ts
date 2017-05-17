@@ -1,6 +1,7 @@
 /**
  *  Sidebar component
  */
+import "jquery";
 
 interface ISidebarParams {
     right?: boolean;
@@ -8,7 +9,7 @@ interface ISidebarParams {
 }
 ;
 
-class sidebar {
+export class sidebar {
 
     public sidebar = $('#sidebar');
     public icon = this.sidebar.find('sidebar-icon').toggleClass('rotate-icon');
@@ -44,8 +45,6 @@ class sidebar {
     }
 
     private rotateIcon() {
-
+        // TODO
     }
 }
-
-export = sidebar;

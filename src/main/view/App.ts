@@ -64,5 +64,8 @@ export let app = new App();
 
 // get knockout to work
 (<any>window)['ko'] = ko;
+(<any>ko).amdTemplateEngine.defaultSuffix = ".html";
+(<any>ko).amdTemplateEngine.defaultPath = "";
+(<any>ko).amdTemplateEngine.defaultRequireTextPluginName = "require-text";
 (<any>ko).punches.enableAll();
 ko.applyBindings(app);
