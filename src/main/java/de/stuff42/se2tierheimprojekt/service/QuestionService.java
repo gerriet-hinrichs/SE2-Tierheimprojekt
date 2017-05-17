@@ -21,54 +21,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.services;
+package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.List;
 
-import de.stuff42.se2tierheimprojekt.datatypes.QuestionInterface;
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
 
-//TODO
-//Check if the name is ok
 public interface QuestionService {
   /**
    * Returns the first question of the questionnaire
    * with all of its answers.
    * @return Returns the first question or null if there isn't a first question
    */
-  public QuestionInterface getFirstWithAnswers();
+  public Question getFirstWithAnswers();
   
   /**
    * Returns the question with the ID and all of its answers
    * @param id the ID of the wanted question
    * @return the question with the ID or null if there is no question with this ID
    */
-  public QuestionInterface getByIDWithAnswers(long id);
+  public Question getByIDWithAnswers(long id);
   
   /**
    * Returns a list with all questions of the questionnaire
    * @return List with all questions
    */
-  public List<QuestionInterface> getList();
+  public List<Question> getList();
   
   /**
-   * Creates a new question in the database
-   * @param data to be created question
-   * @return true if question was successfully created if not false
+   * Returns the next question for the given answer in the questionnaire
+   * @param questionID ID of the answered question
+   * @param answerID ID of the answer of the last question
+   * @return ID of the next question
    */
-  public boolean create(QuestionInterface data);
+  public Question getNextforAnswer(long questionID, long answerID);
   
   /**
-   * Updates an existing question in the database, which is equal to data
-   * @param data 
-   * @return true if update was successful
+   * Returns a List with all answers of the question with the specified ID
+   * @param questionID ID of the question
+   * @return List with all answers of the question or null if the question doesn't exist
    */
-  public boolean update(QuestionInterface data);
-  
-  /**
-   * Deletes the question with the ID from the database
-   * @param id the id of the to be deleted question
-   * @return true if question was successfully deleted
-   */
-  public boolean delete(long id);
+  public List<Answer> getAnswers(long questionID);
 
 }
