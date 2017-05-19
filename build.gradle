@@ -88,6 +88,7 @@ def getVersionFromGit = { ->
     }
 }
 final currentVersion = getVersionFromGit()
+System.out.println("Build version: " + currentVersion)
 
 // Task that generates the system.ini file that contains basic system config
 task generateSystemIni() {
