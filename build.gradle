@@ -311,9 +311,11 @@ task generateClientAPI(type: JavaCompile) {
             "-processor", "de.stuff42.apigenerator.processor.RestControllerProcessor"
     ]
 
-    // set output directory
+    // set output directory (so gradle knows when to rebuild)
     destinationDir = new File(project.projectDir, "/src/main/view/clientApi")
 }
+generateClientAPI.dependsOn generateSystemIni
+
 // run api generation whenever the main source set is compiled
 compileJava.dependsOn generateClientAPI
 
