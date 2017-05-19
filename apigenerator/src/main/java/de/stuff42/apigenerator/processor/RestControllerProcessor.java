@@ -26,6 +26,7 @@ package de.stuff42.apigenerator.processor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.nio.charset.Charset;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -37,12 +38,17 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 
-import de.stuff42.apigenerator.Config;
-import de.stuff42.apigenerator.annotation.GenerateClientApi;
-import de.stuff42.utils.PathUtils;
-
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RestController;
+
+import de.stuff42.apigenerator.Config;
+import de.stuff42.apigenerator.annotation.GenerateClientApi;
+import de.stuff42.apigenerator.data.Controller;
+import de.stuff42.apigenerator.data.type.TypeDataElement;
+import de.stuff42.utils.PathUtils;
+import de.stuff42.utils.UtilsConfig;
+import de.stuff42.utils.exception.ExceptionPrinter;
 
 /**
  * Processor that generates client API for controller classes.
@@ -60,6 +66,11 @@ public class RestControllerProcessor extends AbstractProcessor {
      * Annotation to be processed by this class.
      */
     private final static Class<? extends Annotation> ANNOTATION = GenerateClientApi.class;
+
+    // setup before processing start
+    static {
+        UtilsConfig.setRelevantPackages("de.stuff42.apigenerator");
+    }
 
     /**
      * Called before the object processing starts.
@@ -96,12 +107,25 @@ public class RestControllerProcessor extends AbstractProcessor {
      */
     private void processObject(@NotNull RoundEnvironment environment, @NotNull Element element) {
         try {
-            message(Kind.NOTE, "Processing " + element.asType().toString());
+            if (element.getKind().isClass() && element instanceof TypeElement && element.getAnnotation(RestController.class) != null) {
+                message(Kind.NOTE, "Processing " + element.asType().toString());
 
-            // TODO @gerriet ADD PROCESSING HERE
+                // process object
+                Controller controller = new Controller((TypeElement) element, this);
 
+                // generate typescript code
+                StringBuilder sb = new StringBuilder();
+                controller.generateTypescript(sb);
+
+                // write to file
+                File outputFile = new File(OUTPUT_DIRECTORY, controller.getName() + ".ts");
+                FileUtils.writeStringToFile(outputFile, sb.toString(), Charset.forName("UTF-8"));
+            } else {
+                message(Kind.WARNING, "Skipping " + element.asType().toString());
+            }
         } catch (Throwable t) {
-            message(Kind.ERROR, "Failed to process controller '" + element.asType().toString() + "': " + t.getMessage());
+            message(Kind.ERROR, "Failed to process controller '" + element.asType().toString() + "': " + t.getMessage()
+                    + System.lineSeparator() + ExceptionPrinter.printThrowable(t));
         }
     }
 
@@ -182,5 +206,18 @@ public class RestControllerProcessor extends AbstractProcessor {
      */
     public void message(@NotNull Diagnostic.Kind kind, @NotNull String message) {
         processingEnv.getMessager().printMessage(kind, message);
+    }
+
+    /**
+     * Hook to initiate data type processing.
+     *
+     * @param element Type element to be processed as data type.
+     *
+     * @return Created type data element instance.
+     */
+    public TypeDataElement<?> processDataType(TypeElement element) {
+
+        // TODO @gerriet
+        return null;
     }
 }
