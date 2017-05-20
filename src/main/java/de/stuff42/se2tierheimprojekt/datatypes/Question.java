@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class Question implements QuestionI, Comparable {
+public class Question implements QuestionI, Comparable<Question> {
 
     private final int sortOrder;
     private final String questionText;
@@ -106,9 +106,7 @@ public class Question implements QuestionI, Comparable {
     }
 
     @Override
-    public int compareTo(@NotNull Object other) {
-        Question otherQuestion = (Question)other;
-
+    public int compareTo(@NotNull Question otherQuestion) {
         if(this.sortOrder > otherQuestion.sortOrder){
             return 1;
         }

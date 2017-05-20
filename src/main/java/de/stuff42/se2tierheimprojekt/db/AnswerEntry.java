@@ -13,8 +13,10 @@ public class AnswerEntry {
 
     public String text;
 
+    /* //TODO: Funktionier warum auch immer nicht
     @ManyToOne
     public QuestionEntry question;
+    */
 
     protected AnswerEntry() {
         // no-args constructor required by JPA spec
@@ -24,13 +26,7 @@ public class AnswerEntry {
     public AnswerEntry(int sortOrder, String text, QuestionEntry question) {
         this.sortOrder = sortOrder;
         this.text = text;
-        this.question = question;
+        //this.question = question;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "<%s>[id=%d, SortOrder=%s, Name=%s, QuestionId=%s]",
-                this.getClass().getSimpleName(), id, sortOrder, text, question.id);
-    }
 }

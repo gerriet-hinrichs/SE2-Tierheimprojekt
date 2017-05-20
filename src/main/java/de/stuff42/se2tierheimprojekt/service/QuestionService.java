@@ -109,7 +109,7 @@ public class QuestionService implements QuestionServiceI {
       return answers;
   }
 
-  private Answer[] getAnswersFromQuestionEntry(QuestionEntry questionEntry){
+  private Answer[] getAnswersFromQuestionEntry(QuestionEntry questionEntry){/*
       // Get answers from Question
       AnswerEntry[] answerEntry = questionEntry.answers;
       Answer[] answers = new Answer[answerEntry.length];
@@ -118,6 +118,6 @@ public class QuestionService implements QuestionServiceI {
       }
       // Sort Questions
       Arrays.sort(answers);
-      return answers;
+      return answers;*/ return null;
   }
 }

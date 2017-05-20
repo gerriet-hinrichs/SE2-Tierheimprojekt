@@ -25,7 +25,7 @@ package de.stuff42.se2tierheimprojekt.datatypes;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Answer implements AnswerI, Comparable{
+public class Answer implements AnswerI, Comparable<Answer>{
 
     private final int sortOrder;
     private final String answerText;
@@ -63,9 +63,7 @@ public class Answer implements AnswerI, Comparable{
     }
 
     @Override
-    public int compareTo(@NotNull Object other) {
-        Answer otherAnswer = (Answer)other;
-
+    public int compareTo(@NotNull Answer otherAnswer) {
         // "Pre sort" for Questions
         if(this.questionSortOrder > otherAnswer.questionSortOrder){
             return 1;

@@ -13,8 +13,10 @@ public class QuestionEntry {
 
     public String text;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    /* //TODO: Funktionier warum auch immer nicht + Array könnte auch probleme machen
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question_entry")
     public AnswerEntry[] answers;
+    */
 
     protected QuestionEntry() {
         // no-args constructor required by JPA spec
@@ -26,10 +28,4 @@ public class QuestionEntry {
         this.text = text;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "<%s>[id=%d, SortOrder=%s, Name=%s]",
-                this.getClass().getSimpleName(), id, sortOrder, text);
-    }
 }
