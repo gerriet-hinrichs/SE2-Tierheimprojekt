@@ -23,9 +23,11 @@
  */
 package de.stuff42.se2tierheimprojekt.datatypes;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
-public class Question implements QuestionI{
+public class Question implements QuestionI, Comparable {
 
     private final int sortOrder;
     private final String questionText;
@@ -104,6 +106,19 @@ public class Question implements QuestionI{
     }
 
     @Override
+    public int compareTo(@NotNull Object other) {
+        Question otherQuestion = (Question)other;
+
+        if(this.sortOrder > otherQuestion.sortOrder){
+            return 1;
+        }
+        if(this.sortOrder < otherQuestion.sortOrder){
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -117,7 +132,12 @@ public class Question implements QuestionI{
     }
 
     @Override
-    public int hashCode() { return sortOrder; }
+    public int hashCode() {
+        int result = sortOrder;
+        result = 31 * result + questionText.hashCode();
+        result = 31 * result + Arrays.hashCode(answers);
+        return result;
+    }
 
     @Override
     public String toString() {
