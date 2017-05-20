@@ -21,29 +21,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.datatypes;
+package de.stuff42.se2tierheimprojekt.model.rest;
+
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntry;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
- * This class stores an answer.
+ * Data model for sending answer information to the client side.
  */
-public interface AnswerI {
+public class AnswerModel {
 
     /**
-     * Getter for the SortId
-     * @return SortOrder.
+     * Answer text.
      */
-    int getSortOrder();
+    @NotNull
+    public String text;
 
     /**
-     * Getter for the text of the question.
-     * @return QuestionText.
+     * Sorting order.
      */
-    String getAnswerText();
+    public int sortOrder;
 
     /**
-     * Getter for the SortId of the Question from these answer
-     * @return
+     * Belonging question's id.
      */
-    int getQuestionSortOrder();
+    public long questionId;
 
+    /**
+     * Creates rest model from database entity.
+     *
+     * @param entity Database entity.
+     */
+    public AnswerModel(AnswerEntry entity) {
+        text = entity.text;
+        sortOrder = entity.sortOrder;
+        questionId = entity.question.id;
+    }
 }
