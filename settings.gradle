@@ -1,1 +1,3 @@
 rootProject.name = "se2tierheimprojekt"
+include "utils"
+include "apigenerator"

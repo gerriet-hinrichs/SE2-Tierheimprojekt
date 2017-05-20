@@ -23,6 +23,7 @@
  */
 package de.stuff42.se2tierheimprojekt.controller.test;
 
+import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
 import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
 import de.stuff42.se2tierheimprojekt.service.FakeService;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@GenerateClientApi
 public class TestController extends BaseController<FakeService> {
 
     /**
