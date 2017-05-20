@@ -23,6 +23,7 @@
  */
 
 @import "sidebar";
+@import "flexbox";
 
 @border-color: lighten(black, 40%);
 @font-color: lighten(black, 20%);
@@ -31,15 +32,39 @@
 
 html {
   background-color: @background-color;
+  height: 100%;
 }
 
-.box {
-  border: 1px solid @border-color;
-  color: @font-color;
-  padding: @global-padding;
-  background-color: white;
+div {
+  font-family: sans-serif;
 
-  &:not(:first-child) {
-    margin-top: 20px;
+  &:not(.app-body) {
+    padding: @global-padding;
   }
+}
+
+html, body, div.header, div.content, div.footer, div.app-body {
+  .flex-display();
+}
+
+body, div.content, div.app-body {
+  .flex-grow(1);
+}
+
+div.app-body {
+  .flex-direction(column);
+}
+
+div.header {
+  .justify-content(center);
+  background-color: aqua;
+}
+
+div.content {
+  background-color: cadetblue;
+}
+
+div.footer {
+  .justify-content(flex-end);
+  background-color: aquamarine;
 }
