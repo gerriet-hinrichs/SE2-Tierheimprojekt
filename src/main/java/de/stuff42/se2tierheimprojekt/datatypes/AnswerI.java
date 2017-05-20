@@ -40,4 +40,10 @@ public interface AnswerI {
      */
     String getAnswerText();
 
+    /**
+     * Getter for the SortId of the Question from these answer
+     * @return
+     */
+    int getQuestionSortOrder();
+
 }

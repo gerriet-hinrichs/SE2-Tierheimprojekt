@@ -33,9 +33,10 @@ public class Question implements QuestionI{
 
     /**
      * Creates a question with all answers.
+     * Answers will be created automated.
      * @param sortOrder SortId  > 0.
      * @param questionText Text of questions.
-     * @param answersText Array of all answers text, first position = first answer ... .
+     * @param answersText Array of all answers text, first position = first answer ... , must have at least one.
      * @throws IllegalArgumentException if constructor arguments are illegal.
      */
     public Question(int sortOrder, String questionText, String[] answersText) throws IllegalArgumentException{
@@ -45,12 +46,37 @@ public class Question implements QuestionI{
 
         this.sortOrder = sortOrder;
         this.questionText = questionText;
-
         answers = new Answer[answersText.length];
 
         for (int i = 0; i < answersText.length; i++) {
+            if(answersText[i] != null){
+                throw new IllegalArgumentException();
+            }
             answers[i] = new Answer(i+1, answersText[i], sortOrder);
         }
+    }
+
+    /**
+     * Creates a question with all answers.
+     * @param sortOrder SortId  > 0.
+     * @param questionText Text of questions.
+     * @param answers Array of all answers text, first position = answer sortOrder 1 ... , must have at least one.
+     * @throws IllegalArgumentException if constructor arguments are illegal.
+     */
+    public Question(int sortOrder, String questionText, AnswerI[] answers) throws IllegalArgumentException{
+        if(sortOrder <= 0 || questionText == null || answers == null){
+            throw new IllegalArgumentException();
+        }
+
+        for (int i = 0; i < answers.length; i++) {
+            if(answers[i] != null || sortOrder != answers[i].getQuestionSortOrder() || answers[i].getSortOrder() != i ){
+                throw new IllegalArgumentException();
+            }
+        }
+
+        this.sortOrder = sortOrder;
+        this.questionText = questionText;
+        this.answers = answers;
     }
 
     @Override
