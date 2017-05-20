@@ -13,7 +13,7 @@ public class AnswerEntry {
 
     public String text;
 
-    @ManyToOne // TODO: evtl @OneToMany
+    @ManyToOne
     public QuestionEntry question;
 
     protected AnswerEntry() {

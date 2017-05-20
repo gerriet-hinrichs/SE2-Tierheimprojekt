@@ -1,9 +1,6 @@
 package de.stuff42.se2tierheimprojekt.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class QuestionEntry {
@@ -15,6 +12,9 @@ public class QuestionEntry {
     public int sortOrder;
 
     public String text;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    public AnswerEntry[] answers;
 
     protected QuestionEntry() {
         // no-args constructor required by JPA spec
