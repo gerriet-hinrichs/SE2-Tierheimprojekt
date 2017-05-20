@@ -35,24 +35,21 @@ public class Question implements QuestionI{
      * Creates a question with all answers.
      * @param sortOrder SortId  > 0.
      * @param questionText Text of questions.
-     * @param answers Array of all answers, needs to be sorted by lowest sortOrder firs.
+     * @param answersText Array of all answers text, first position = first answer ... .
      * @throws IllegalArgumentException if constructor arguments are illegal.
      */
-    public Question(int sortOrder, String questionText, AnswerI[] answers) throws IllegalArgumentException{
-        if(sortOrder <= 0 || questionText == null || answers == null){
+    public Question(int sortOrder, String questionText, String[] answersText) throws IllegalArgumentException{
+        if(sortOrder <= 0 || questionText == null || answersText == null){
             throw new IllegalArgumentException();
         }
 
         this.sortOrder = sortOrder;
         this.questionText = questionText;
-        this.answers = answers;
 
-        if (answers.length > 1) {
-            for (int i = 1; i < answers.length; i++) {
-                if (answers[i - 1].getSortOrder() >= answers[i].getSortOrder()) {
-                    throw new IllegalArgumentException();
-                }
-            }
+        answers = new Answer[answersText.length];
+
+        for (int i = 0; i < answersText.length; i++) {
+            answers[i] = new Answer(i+1, answersText[i], sortOrder);
         }
     }
 

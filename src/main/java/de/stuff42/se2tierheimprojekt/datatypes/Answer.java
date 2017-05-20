@@ -27,6 +27,7 @@ public class Answer implements AnswerI{
 
     private final int sortOrder;
     private final String answerText;
+    private final int questionSortOrder;
 
     /**
      * Creates a answer.
@@ -34,13 +35,14 @@ public class Answer implements AnswerI{
      * @param answerText Text of questions.
      * @throws IllegalArgumentException if constructor arguments are illegal.
      */
-    public Answer(int sortOrder, String answerText) throws IllegalArgumentException{
+    public Answer(int sortOrder, String answerText, int questionSortOrder) throws IllegalArgumentException{
         if(sortOrder <= 0 || answerText == null){
             throw new IllegalArgumentException();
         }
 
         this.sortOrder = sortOrder;
         this.answerText = answerText;
+        this.questionSortOrder = questionSortOrder;
     }
 
     @Override
@@ -53,6 +55,10 @@ public class Answer implements AnswerI{
         return answerText;
     }
 
+    public int getQuestionSortOrder() {
+        return questionSortOrder;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,18 +67,21 @@ public class Answer implements AnswerI{
         Answer answer = (Answer) o;
 
         if (sortOrder != answer.sortOrder) return false;
+        if (questionSortOrder != answer.questionSortOrder) return false;
         return answerText.equals(answer.answerText);
     }
 
     @Override
     public int hashCode() {
-        return sortOrder;
+        int result = sortOrder;
+        result = 31 * result + questionSortOrder;
+        return result;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "<%s>[SortOrder=%d, AnswerText=%s]",
-                this.getClass().getSimpleName(), sortOrder, answerText);
+                "<%s>[SortOrder=%d, AnswerText=%s, QuestionSortOrder=%s]",
+                this.getClass().getSimpleName(), sortOrder, answerText, questionSortOrder);
     }
 }
