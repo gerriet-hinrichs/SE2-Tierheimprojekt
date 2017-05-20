@@ -23,100 +23,112 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.stuff42.se2tierheimprojekt.datatypes.Answer;
-import de.stuff42.se2tierheimprojekt.datatypes.AnswerI;
-import de.stuff42.se2tierheimprojekt.datatypes.Question;
-import de.stuff42.se2tierheimprojekt.datatypes.QuestionI;
 import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
-import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
+import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class QuestionService implements QuestionServiceI {
+public class QuestionService extends BaseService {
 
-  @Autowired
-  private AnswerDAO answerDAO;
+    @Autowired
+    private QuestionDAO questionDAO;
 
-  @Autowired
-  private QuestionDAO questionDAO;
+    @Autowired
+    private AnswerDAO answerDAO;
 
-  @Override
-  public QuestionI getFirstWithAnswers() {
-      return getByIDWithAnswers(1);
-  }
+    /**
+     * Returns the first question of the questionnaire with all of its answers.
+     *
+     * @return Returns the first question or null if there isn't a first question.
+     */
+    public QuestionModel getFirstWithAnswers() {
+        QuestionEntity questionEntity = questionDAO.getFirstQuestion();
+        if (questionEntity == null) {
+            return null;
+        }
+        return new QuestionModel(questionEntity);
+    }
 
-  @Override
-  public QuestionI getByIDWithAnswers(int sortOrder) {
-      // Find Question
-      Iterator<QuestionEntity> iterator = questionDAO.findAll().iterator();
-      QuestionEntity questionEntity = null;
-      boolean found = false;
-      while(iterator.hasNext() && !found){
-          questionEntity = iterator.next();
-          if(questionEntity.sortOrder == sortOrder){
-              found = true;
-          }
-      }
+    /**
+     * Returns the question with the ID and all of its answers.
+     *
+     * @param id the ID of the wanted question.
+     *
+     * @return the question with the ID or null if there is no question with this ID.
+     */
+    public QuestionModel getByIDWithAnswers(long id) {
+        QuestionEntity questionEntity = questionDAO.findOne(id);
+        if (questionEntity == null) {
+            return null;
+        }
+        return new QuestionModel(questionEntity);
+    }
 
-      // If no Question found
-      if(questionEntity == null){
-          return null;
-      }
-      return new Question(questionEntity.sortOrder, questionEntity.text, getAnswersFromQuestionEntry(questionEntity));
-  }
+    /**
+     * Returns the next question for the given answer in the questionnaire.
+     *
+     * @param questionId ID of the answered question.
+     * @param answerId   ID of the answer of the last question.
+     *
+     * @return Next question
+     */
+    public QuestionModel getNextforAnswer(long questionId, long answerId) {
 
-  @Override
-  public QuestionI[] getList() {
-      QuestionI[] questions = new QuestionI[(int) questionDAO.count()];
-      Iterator<QuestionEntity> iterator = questionDAO.findAll().iterator();
-      QuestionEntity questionEntity = null;
+        // TODO: Load next question based on answer and not only on sort order.
 
-      int i = 0;
-      while(iterator.hasNext()){
-          questionEntity = iterator.next();
-          questions[i] = new Question(questionEntity.sortOrder, questionEntity.text, getAnswersFromQuestionEntry(questionEntity));
-          i++;
-      }
+        QuestionEntity lastQuestionEntity = questionDAO.findOne(questionId);
+        if (lastQuestionEntity == null) {
+            return null;
+        }
 
-      // If no Question found
-      if(questionEntity == null){
-          return null;
-      }
-      return questions;
-  }
+        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
+        if (nextQuestionEntity == null) {
+            return null;
+        }
 
-  @Override
-  public QuestionI getNextforAnswer(int questionSortOrder, int answerSortOrder) {
-      // TODO: Wo sollen die Informationen hie zu stehen, in der Antort in der DB oder woanders(entscheidungslogik)?
-      return null;
-  }
+        return new QuestionModel(nextQuestionEntity);
+    }
 
-  @Override
-  public AnswerI[] getAnswers(int questionSortOrder) {
-      QuestionI question = getByIDWithAnswers(questionSortOrder);
-      // If no Question found
-      if(question == null){
-          return null;
-      }
-      AnswerI[] answers = question.getAnswerObjects();
-      Arrays.sort(answers);
-      return answers;
-  }
+    /**
+     * Returns a list with all questions of the questionnaire.
+     *
+     * @return List with all questions.
+     */
+    public List<QuestionModel> getList() {
+        List<QuestionEntity> questionEntities = questionDAO.getSortedList();
 
-  private Answer[] getAnswersFromQuestionEntry(QuestionEntity questionEntity){/*
-      // Get answers from Question
-      AnswerEntry[] answerEntry = questionEntry.answers;
-      Answer[] answers = new Answer[answerEntry.length];
-      for (int i = 0; i < answerEntry.length; i++) {
-          answers[i] = new Answer(answerEntry[i].sortOrder, answerEntry[i].text, answerEntry[i].question.sortOrder);
-      }
-      // Sort Questions
-      Arrays.sort(answers);
-      return answers;*/ return null;
-  }
+        List<QuestionModel> questionModels = new ArrayList<>(questionEntities.size());
+        for (QuestionEntity questionEntity : questionEntities) {
+            questionModels.add(new QuestionModel(questionEntity, false));
+        }
+
+        return questionModels;
+    }
+
+    /**
+     * Returns a List with all answers of the question with the specified ID
+     *
+     * @param questionId ID of the question
+     *
+     * @return List with all answers of the question or null if the question doesn't exist
+     */
+    public List<AnswerModel> getAnswersForQuestion(int questionId) {
+        List<AnswerEntity> answerEntities = answerDAO.getSortedListForQuestion(questionId);
+
+        List<AnswerModel> answerModels = new ArrayList<>(answerEntities.size());
+        for (AnswerEntity questionEntity : answerEntities) {
+            answerModels.add(new AnswerModel(questionEntity));
+        }
+
+        return answerModels;
+    }
 }
