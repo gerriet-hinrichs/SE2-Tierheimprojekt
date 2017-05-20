@@ -27,7 +27,7 @@ package de.stuff42.se2tierheimprojekt.entity;
 import javax.persistence.*;
 
 @Entity
-public class FakeEntry {
+public class FakeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,14 +37,14 @@ public class FakeEntry {
     public String name;
 
     @OneToOne
-    public OtherFakeEntry other;
+    public OtherFakeEntity other;
 
-    protected FakeEntry() {
+    protected FakeEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public FakeEntry(String name, OtherFakeEntry other) {
+    public FakeEntity(String name, OtherFakeEntity other) {
         this.name = name;
         this.other = other;
     }

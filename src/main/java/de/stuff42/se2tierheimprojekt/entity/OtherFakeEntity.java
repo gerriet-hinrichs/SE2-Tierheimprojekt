@@ -29,7 +29,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class OtherFakeEntry {
+public class OtherFakeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,12 +37,12 @@ public class OtherFakeEntry {
 
     public String name;
 
-    protected OtherFakeEntry() {
+    protected OtherFakeEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public OtherFakeEntry(String name) {
+    public OtherFakeEntity(String name) {
         this.name = name;
     }
 

@@ -98,8 +98,8 @@ public class SpringDatabase {
         logger.info("-------------------------------");
         for (Long i = 0L; i < numberOfEntries; i++) {
             logger.info(
-                    fakeTable.save(new FakeEntry(name + i,
-                            otherFakeDAO.save(new OtherFakeEntry(nameOther + name + i))))
+                    fakeTable.save(new FakeEntity(name + i,
+                            otherFakeDAO.save(new OtherFakeEntity(nameOther + name + i))))
                             .toString());
         }
         logger.info("");
@@ -113,7 +113,7 @@ public class SpringDatabase {
         assertEquals(java.util.Optional.ofNullable(otherFakeDAO.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry Attributes:");
-        for (FakeEntry entry : fakeTable.findAll()) {
+        for (FakeEntity entry : fakeTable.findAll()) {
             assertEquals(nameOther + entry.name, entry.other.name);
             logger.info(entry.toString());
         }

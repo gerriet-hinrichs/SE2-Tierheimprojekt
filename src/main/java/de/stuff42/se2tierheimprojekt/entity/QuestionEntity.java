@@ -4,7 +4,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-public class QuestionEntry {
+public class QuestionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,14 +15,14 @@ public class QuestionEntry {
     public String text;
 
     @OneToMany(mappedBy = "question")
-    public List<AnswerEntry> answers;
+    public List<AnswerEntity> answers;
 
-    protected QuestionEntry() {
+    protected QuestionEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public QuestionEntry(int sortOrder, String text) {
+    public QuestionEntity(int sortOrder, String text) {
         this.sortOrder = sortOrder;
         this.text = text;
     }

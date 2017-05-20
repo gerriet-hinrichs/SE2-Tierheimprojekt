@@ -23,7 +23,7 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
-import de.stuff42.se2tierheimprojekt.entity.AnswerEntry;
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +53,7 @@ public class AnswerModel {
      *
      * @param entity Database entity.
      */
-    public AnswerModel(AnswerEntry entity) {
+    public AnswerModel(AnswerEntity entity) {
         text = entity.text;
         sortOrder = entity.sortOrder;
         questionId = entity.question.id;

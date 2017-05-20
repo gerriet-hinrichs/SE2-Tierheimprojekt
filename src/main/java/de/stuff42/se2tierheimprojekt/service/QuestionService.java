@@ -31,7 +31,7 @@ import de.stuff42.se2tierheimprojekt.datatypes.AnswerI;
 import de.stuff42.se2tierheimprojekt.datatypes.Question;
 import de.stuff42.se2tierheimprojekt.datatypes.QuestionI;
 import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
-import de.stuff42.se2tierheimprojekt.entity.QuestionEntry;
+import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,38 +53,38 @@ public class QuestionService implements QuestionServiceI {
   @Override
   public QuestionI getByIDWithAnswers(int sortOrder) {
       // Find Question
-      Iterator<QuestionEntry> iterator = questionDAO.findAll().iterator();
-      QuestionEntry questionEntry = null;
+      Iterator<QuestionEntity> iterator = questionDAO.findAll().iterator();
+      QuestionEntity questionEntity = null;
       boolean found = false;
       while(iterator.hasNext() && !found){
-          questionEntry = iterator.next();
-          if(questionEntry.sortOrder == sortOrder){
+          questionEntity = iterator.next();
+          if(questionEntity.sortOrder == sortOrder){
               found = true;
           }
       }
 
       // If no Question found
-      if(questionEntry == null){
+      if(questionEntity == null){
           return null;
       }
-      return new Question(questionEntry.sortOrder, questionEntry.text, getAnswersFromQuestionEntry(questionEntry));
+      return new Question(questionEntity.sortOrder, questionEntity.text, getAnswersFromQuestionEntry(questionEntity));
   }
 
   @Override
   public QuestionI[] getList() {
       QuestionI[] questions = new QuestionI[(int) questionDAO.count()];
-      Iterator<QuestionEntry> iterator = questionDAO.findAll().iterator();
-      QuestionEntry questionEntry = null;
+      Iterator<QuestionEntity> iterator = questionDAO.findAll().iterator();
+      QuestionEntity questionEntity = null;
 
       int i = 0;
       while(iterator.hasNext()){
-          questionEntry = iterator.next();
-          questions[i] = new Question(questionEntry.sortOrder, questionEntry.text, getAnswersFromQuestionEntry(questionEntry));
+          questionEntity = iterator.next();
+          questions[i] = new Question(questionEntity.sortOrder, questionEntity.text, getAnswersFromQuestionEntry(questionEntity));
           i++;
       }
 
       // If no Question found
-      if(questionEntry == null){
+      if(questionEntity == null){
           return null;
       }
       return questions;
@@ -108,7 +108,7 @@ public class QuestionService implements QuestionServiceI {
       return answers;
   }
 
-  private Answer[] getAnswersFromQuestionEntry(QuestionEntry questionEntry){/*
+  private Answer[] getAnswersFromQuestionEntry(QuestionEntity questionEntity){/*
       // Get answers from Question
       AnswerEntry[] answerEntry = questionEntry.answers;
       Answer[] answers = new Answer[answerEntry.length];

@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import de.stuff42.se2tierheimprojekt.entity.AnswerEntry;
-import de.stuff42.se2tierheimprojekt.entity.QuestionEntry;
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
+import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
 
 public class QuestionModel {
 
@@ -52,7 +52,7 @@ public class QuestionModel {
      *
      * @param entity Database entity.
      */
-    public QuestionModel(QuestionEntry entity) {
+    public QuestionModel(QuestionEntity entity) {
         this(entity, true);
     }
 
@@ -62,14 +62,14 @@ public class QuestionModel {
      * @param entity         Database entity.
      * @param includeAnswers Flag if answers should be included.
      */
-    public QuestionModel(QuestionEntry entity, boolean includeAnswers) {
+    public QuestionModel(QuestionEntity entity, boolean includeAnswers) {
         text = entity.text;
         sortOrder = entity.sortOrder;
 
         if (includeAnswers) {
             // load answer model list
             answers = new ArrayList<>(entity.answers.size());
-            for (AnswerEntry answerEntity : entity.answers) {
+            for (AnswerEntity answerEntity : entity.answers) {
                 answers.add(new AnswerModel(answerEntity));
             }
 

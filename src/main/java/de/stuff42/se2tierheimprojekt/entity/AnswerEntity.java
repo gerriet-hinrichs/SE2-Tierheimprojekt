@@ -3,7 +3,7 @@ package de.stuff42.se2tierheimprojekt.entity;
 import javax.persistence.*;
 
 @Entity
-public class AnswerEntry {
+public class AnswerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,14 +14,14 @@ public class AnswerEntry {
     public String text;
 
     @ManyToOne
-    public QuestionEntry question;
+    public QuestionEntity question;
 
-    protected AnswerEntry() {
+    protected AnswerEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public AnswerEntry(int sortOrder, String text, QuestionEntry question) {
+    public AnswerEntity(int sortOrder, String text, QuestionEntity question) {
         this.sortOrder = sortOrder;
         this.text = text;
         this.question = question;
