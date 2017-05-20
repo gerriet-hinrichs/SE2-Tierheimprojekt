@@ -1,5 +1,6 @@
 package de.stuff42.se2tierheimprojekt.db;
 
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -13,10 +14,8 @@ public class QuestionEntry {
 
     public String text;
 
-    /* //TODO: Funktionier warum auch immer nicht + Array könnte auch probleme machen
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question_entry")
-    public AnswerEntry[] answers;
-    */
+    @OneToMany(mappedBy = "question")
+    public List<AnswerEntry> answers;
 
     protected QuestionEntry() {
         // no-args constructor required by JPA spec
