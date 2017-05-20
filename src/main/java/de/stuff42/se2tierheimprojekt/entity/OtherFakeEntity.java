@@ -21,10 +21,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.datatypes;
+package de.stuff42.se2tierheimprojekt.entity;
 
-//TODO
-//Check if the name is ok or if interface is needed
-public interface Question {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
+public class OtherFakeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+
+    public String name;
+
+    protected OtherFakeEntity() {
+        // no-args constructor required by JPA spec
+        // this one is protected since it shouldn't be used directly
+    }
+
+    public OtherFakeEntity(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "<%s>[id=%d, Name=%s]",
+                this.getClass().getSimpleName(), id, name);
+    }
 }
