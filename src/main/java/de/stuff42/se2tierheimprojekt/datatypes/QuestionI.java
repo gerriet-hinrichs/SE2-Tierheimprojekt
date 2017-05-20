@@ -21,44 +21,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.service;
+package de.stuff42.se2tierheimprojekt.datatypes;
 
-import java.util.List;
+public interface QuestionI {
 
-import de.stuff42.se2tierheimprojekt.datatypes.Answer;
-import de.stuff42.se2tierheimprojekt.datatypes.Question;
+    /**
+     * Getter for the SortId
+     * @return SortOrder.
+     */
+    int getSortOrder();
 
-public class QuestionServiceBean implements QuestionService {
+    /**
+     * Getter for the text of the question.
+     * @return QuestionText.
+     */
+    String getQuestionText();
 
-  @Override
-  public Question getFirstWithAnswers() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    /**
+     * Gives a array over all answers from these question.
+     * The answers are sorted by there SortOrder. (Lowest first)
+     * @return All answers objects of these question.
+     */
+    AnswerI[] getAnswerObjects();
 
-  @Override
-  public Question getByIDWithAnswers(long id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<Question> getList() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Question getNextforAnswer(long questionID, long answerID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<Answer> getAnswers(long questionID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+    /**
+     * Gives a array over all answers from these question.
+     * The answers are sorted by there SortOrder. (Lowest first)
+     * @return All answers strings of these question.
+     */
+    String[] getAnswerText();
 
 }

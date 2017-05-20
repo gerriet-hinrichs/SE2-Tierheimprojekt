@@ -27,49 +27,41 @@ import java.util.List;
 
 import de.stuff42.se2tierheimprojekt.datatypes.AnswerI;
 import de.stuff42.se2tierheimprojekt.datatypes.QuestionI;
-import de.stuff42.se2tierheimprojekt.db.AnswerTable;
-import de.stuff42.se2tierheimprojekt.db.QuestionTable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class QuestionService implements QuestionServiceI {
-
-  @Autowired
-  private AnswerTable answerTable;
-
-  @Autowired
-  private QuestionTable questionTable;
-
-  @Override
-  public QuestionI getFirstWithAnswers() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public QuestionI getByIDWithAnswers(long id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<QuestionI> getList() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public QuestionI getNextforAnswer(long questionID, long answerID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<AnswerI> getAnswers(long questionID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+public interface QuestionServiceI {
+  /**
+   * Returns the first question of the questionnaire
+   * with all of its answers.
+   * @return Returns the first question or null if there isn't a first question
+   */
+  public QuestionI getFirstWithAnswers();
+  
+  /**
+   * Returns the question with the ID and all of its answers
+   * @param id the ID of the wanted question
+   * @return the question with the ID or null if there is no question with this ID
+   */
+  public QuestionI getByIDWithAnswers(long id);
+  
+  /**
+   * Returns a list with all questions of the questionnaire
+   * @return List with all questions
+   */
+  public List<QuestionI> getList();
+  
+  /**
+   * Returns the next question for the given answer in the questionnaire
+   * @param questionID ID of the answered question
+   * @param answerID ID of the answer of the last question
+   * @return ID of the next question
+   */
+  public QuestionI getNextforAnswer(long questionID, long answerID);
+  
+  /**
+   * Returns a List with all answers of the question with the specified ID
+   * @param questionID ID of the question
+   * @return List with all answers of the question or null if the question doesn't exist
+   */
+  public List<AnswerI> getAnswers(long questionID);
 
 }
