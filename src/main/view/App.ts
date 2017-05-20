@@ -67,5 +67,6 @@ export let app = new App();
 (<any>ko).amdTemplateEngine.defaultSuffix = ".html";
 (<any>ko).amdTemplateEngine.defaultPath = "";
 (<any>ko).amdTemplateEngine.defaultRequireTextPluginName = "require-text";
+(<any>ko).bindingHandlers.module.multiExportHandling = true;
 (<any>ko).punches.enableAll();
 ko.applyBindings(app);
