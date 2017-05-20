@@ -1,7 +1,4 @@
 /**
- * Created by adria on 17.05.2017.
- */
-/**
  *  Radiobutton component
  */
 export interface IRadioButtonParams {

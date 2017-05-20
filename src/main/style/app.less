@@ -22,8 +22,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "sidebar";
 @import "flexbox";
+@import "sidebar";
+@import "navigation";
+@import "checkbox";
 
 @border-color: lighten(black, 40%);
 @font-color: lighten(black, 20%);
@@ -35,7 +37,12 @@ html {
   height: 100%;
 }
 
+h1, h2, h3, h4, h5 {
+  margin: 0;
+}
+
 div {
+  //.flex-shrink(0);
   font-family: sans-serif;
 
   &:not(.app-body) {
@@ -43,8 +50,13 @@ div {
   }
 }
 
-html, body, div.header, div.content, div.footer, div.app-body, div.navigation {
+html, body, div.header, div.content, div.footer, div.app-body, .row, .column {
   .flex-display();
+}
+
+// Components may not shrink
+div.header, div#navigation, div#sidebar, div.footer {
+  .flex-shrink(0);
 }
 
 body, div.content, div.app-body {
@@ -60,15 +72,24 @@ div.header {
   background-color: aqua;
 }
 
-div.navigation {
-  background-color: hotpink;
-}
-
 div.content {
   background-color: cadetblue;
+}
+
+div.inner-content {
+  .flex-grow(1);
+  overflow: auto;
 }
 
 div.footer {
   .justify-content(flex-end);
   background-color: aquamarine;
+}
+
+.row {
+  .flex-direction(row);
+}
+
+.column {
+  .flex-direction(column);
 }

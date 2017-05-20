@@ -1,13 +1,35 @@
 <div class="header">
     <h2>HEADER</h2>
 </div>
-<div class="navigation">
-    <span>NAVIGATION</span>
-</div>
+<div id="navigation" data-bind="module: 'components/navigation'"></div>
 <div class="content">
-    <p>
-        CONTENT
-    </p>
+    <div id="sidebar" class="column" data-bind="module: 'components/sidebar'"></div>
+    <div class="inner-content">
+        <h2>Content</h2>
+        <!-- Checkbox -->
+        <div class="row">
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+        </div>
+        <!-- Radiobutton -->
+        <div class="row">
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+        </div>
+        <!-- Scroll test -->
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+    </div>
 </div>
 <div class="footer">
     <span>FOOTER</span>
