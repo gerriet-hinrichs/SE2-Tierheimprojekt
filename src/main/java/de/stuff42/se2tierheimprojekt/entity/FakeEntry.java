@@ -21,13 +21,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.db;
+package de.stuff42.se2tierheimprojekt.entity;
 
-import javax.transaction.Transactional;
 
-import org.springframework.data.repository.CrudRepository;
+import javax.persistence.*;
 
-@Transactional
-public interface OtherFakeTable extends CrudRepository<OtherFakeTableEntry, Long> {
+@Entity
+public class FakeEntry {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+
+    // @Column(nullable = false)
+    public String name;
+
+    @OneToOne
+    public OtherFakeEntry other;
+
+    protected FakeEntry() {
+        // no-args constructor required by JPA spec
+        // this one is protected since it shouldn't be used directly
+    }
+
+    public FakeEntry(String name, OtherFakeEntry other) {
+        this.name = name;
+        this.other = other;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "<%s>[id=%d, Name=%s, other=%s]",
+                this.getClass().getSimpleName(), id, name, other);
+    }
 }

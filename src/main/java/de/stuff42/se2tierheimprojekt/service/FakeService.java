@@ -24,10 +24,10 @@
 package de.stuff42.se2tierheimprojekt.service;
 
 
-import de.stuff42.se2tierheimprojekt.db.FakeTable;
-import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
-import de.stuff42.se2tierheimprojekt.db.OtherFakeTable;
-import de.stuff42.se2tierheimprojekt.db.OtherFakeTableEntry;
+import de.stuff42.se2tierheimprojekt.entity.FakeDAO;
+import de.stuff42.se2tierheimprojekt.entity.FakeEntry;
+import de.stuff42.se2tierheimprojekt.entity.OtherFakeDAO;
+import de.stuff42.se2tierheimprojekt.entity.OtherFakeEntry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,21 +37,21 @@ import org.springframework.stereotype.Service;
 public class FakeService extends BaseService {
 
     @Autowired
-    private FakeTable fakeTable;
+    private FakeDAO fakeTable;
 
     @Autowired
-    private OtherFakeTable otherFakeTable;
+    private OtherFakeDAO otherFakeDAO;
 
-    public Iterable<FakeTableEntry> getList() {
+    public Iterable<FakeEntry> getList() {
         return fakeTable.findAll();
     }
 
-    public FakeTableEntry add(String text) {
-        OtherFakeTableEntry otherEntity = new OtherFakeTableEntry(StringUtils.reverse(text));
+    public FakeEntry add(String text) {
+        OtherFakeEntry otherEntity = new OtherFakeEntry(StringUtils.reverse(text));
 
-        FakeTableEntry entity = new FakeTableEntry(text, otherEntity);
+        FakeEntry entity = new FakeEntry(text, otherEntity);
 
-        otherFakeTable.save(otherEntity);
+        otherFakeDAO.save(otherEntity);
         fakeTable.save(entity);
 
         return entity;

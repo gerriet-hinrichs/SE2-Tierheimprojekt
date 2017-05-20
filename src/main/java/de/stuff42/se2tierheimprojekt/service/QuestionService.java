@@ -30,10 +30,9 @@ import de.stuff42.se2tierheimprojekt.datatypes.Answer;
 import de.stuff42.se2tierheimprojekt.datatypes.AnswerI;
 import de.stuff42.se2tierheimprojekt.datatypes.Question;
 import de.stuff42.se2tierheimprojekt.datatypes.QuestionI;
-import de.stuff42.se2tierheimprojekt.db.AnswerEntry;
-import de.stuff42.se2tierheimprojekt.db.AnswerTable;
-import de.stuff42.se2tierheimprojekt.db.QuestionEntry;
-import de.stuff42.se2tierheimprojekt.db.QuestionTable;
+import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
+import de.stuff42.se2tierheimprojekt.entity.QuestionEntry;
+import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +40,10 @@ import org.springframework.stereotype.Service;
 public class QuestionService implements QuestionServiceI {
 
   @Autowired
-  private AnswerTable answerTable;
+  private AnswerDAO answerDAO;
 
   @Autowired
-  private QuestionTable questionTable;
+  private QuestionDAO questionDAO;
 
   @Override
   public QuestionI getFirstWithAnswers() {
@@ -54,7 +53,7 @@ public class QuestionService implements QuestionServiceI {
   @Override
   public QuestionI getByIDWithAnswers(int sortOrder) {
       // Find Question
-      Iterator<QuestionEntry> iterator = questionTable.findAll().iterator();
+      Iterator<QuestionEntry> iterator = questionDAO.findAll().iterator();
       QuestionEntry questionEntry = null;
       boolean found = false;
       while(iterator.hasNext() && !found){
@@ -73,8 +72,8 @@ public class QuestionService implements QuestionServiceI {
 
   @Override
   public QuestionI[] getList() {
-      QuestionI[] questions = new QuestionI[(int)questionTable.count()];
-      Iterator<QuestionEntry> iterator = questionTable.findAll().iterator();
+      QuestionI[] questions = new QuestionI[(int) questionDAO.count()];
+      Iterator<QuestionEntry> iterator = questionDAO.findAll().iterator();
       QuestionEntry questionEntry = null;
 
       int i = 0;

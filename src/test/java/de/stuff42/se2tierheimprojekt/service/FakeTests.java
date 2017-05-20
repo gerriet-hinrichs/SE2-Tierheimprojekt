@@ -26,7 +26,8 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
+import de.stuff42.se2tierheimprojekt.entity.FakeEntry;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +52,8 @@ public class FakeTests {
 
     /***
      * Testing:
-     * MockService -> FakeTableEntry -> OtherFakeTableEntry
-     * Adds a string into FakeTableEntry and the same reverted string into OtherFakeTableEntry.
+     * MockService -> FakeEntry -> OtherFakeEntry
+     * Adds a string into FakeEntry and the same reverted string into OtherFakeEntry.
      */
     @Test
     public void fakeServiceTest() {
@@ -63,7 +64,7 @@ public class FakeTests {
 
         logger.info("Use FakeService:");
         logger.info("-------------------------------");
-        FakeTableEntry entry = fakeService.add(name);
+        FakeEntry entry = fakeService.add(name);
         logger.info("check");
         logger.info("");
 

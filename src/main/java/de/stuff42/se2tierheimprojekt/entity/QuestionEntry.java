@@ -1,4 +1,4 @@
-package de.stuff42.se2tierheimprojekt.db;
+package de.stuff42.se2tierheimprojekt.entity;
 
 import java.util.List;
 import javax.persistence.*;

@@ -25,7 +25,7 @@ package de.stuff42.se2tierheimprojekt.controller.test;
 
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
-import de.stuff42.se2tierheimprojekt.db.FakeTableEntry;
+import de.stuff42.se2tierheimprojekt.entity.FakeEntry;
 import de.stuff42.se2tierheimprojekt.service.FakeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +49,12 @@ public class TestController extends BaseController<FakeService> {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/test")
-    public Iterable<FakeTableEntry> getList() {
+    public Iterable<FakeEntry> getList() {
         return service.getList();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/test/{text}")
-    public FakeTableEntry add(@PathVariable String text) {
+    public FakeEntry add(@PathVariable String text) {
         logger.info(text);
         return service.add(text);
     }

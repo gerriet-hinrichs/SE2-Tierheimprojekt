@@ -25,7 +25,7 @@ package de.stuff42.se2tierheimprojekt.IntegrationTests;
 
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.db.*;
+import de.stuff42.se2tierheimprojekt.entity.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,10 +47,10 @@ import static org.junit.Assert.*;
 public class SpringDatabase {
 
     @Autowired
-    private FakeTable fakeTable;
+    private FakeDAO fakeTable;
 
     @Autowired
-    private OtherFakeTable otherFakeTable;
+    private OtherFakeDAO otherFakeDAO;
 
     private Logger logger;
 
@@ -72,14 +72,14 @@ public class SpringDatabase {
         logger.info("Spring Autowired:");
         logger.info("-------------------------------");
         assertNotNull(fakeTable);
-        assertNotNull(otherFakeTable);
+        assertNotNull(otherFakeDAO);
         logger.info("check");
         logger.info("");
     }
 
     /***
      * Testing Spring connection to Database with Autowired.
-     * Testing FakeTable connection with OtherFakeTable.
+     * Testing FakeDAO connection with OtherFakeDAO.
      */
     @Test
     public void database() {
@@ -90,7 +90,7 @@ public class SpringDatabase {
         logger.info("Clean Database:");
         logger.info("-------------------------------");
         fakeTable.deleteAll();
-        otherFakeTable.deleteAll();
+        otherFakeDAO.deleteAll();
         logger.info("check");
         logger.info("");
 
@@ -98,22 +98,22 @@ public class SpringDatabase {
         logger.info("-------------------------------");
         for (Long i = 0L; i < numberOfEntries; i++) {
             logger.info(
-                    fakeTable.save(new FakeTableEntry(name + i,
-                            otherFakeTable.save(new OtherFakeTableEntry(nameOther + name + i))))
+                    fakeTable.save(new FakeEntry(name + i,
+                            otherFakeDAO.save(new OtherFakeEntry(nameOther + name + i))))
                             .toString());
         }
         logger.info("");
 
         logger.info("Read and Check:");
         logger.info("-------------------------------");
-        logger.info("Entry number FakeTable:");
+        logger.info("Entry number FakeDAO:");
         assertEquals(java.util.Optional.ofNullable(fakeTable.count()).orElse(0L), numberOfEntries);
         logger.info("check");
-        logger.info("Entry number OtherFakeTable:");
-        assertEquals(java.util.Optional.ofNullable(otherFakeTable.count()).orElse(0L), numberOfEntries);
+        logger.info("Entry number OtherFakeDAO:");
+        assertEquals(java.util.Optional.ofNullable(otherFakeDAO.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry Attributes:");
-        for (FakeTableEntry entry : fakeTable.findAll()) {
+        for (FakeEntry entry : fakeTable.findAll()) {
             assertEquals(nameOther + entry.name, entry.other.name);
             logger.info(entry.toString());
         }
