@@ -23,6 +23,9 @@
  */
 package de.stuff42.se2tierheimprojekt.datatypes;
 
+/**
+ * This class stores an answer.
+ */
 public interface AnswerI {
 
     /**
