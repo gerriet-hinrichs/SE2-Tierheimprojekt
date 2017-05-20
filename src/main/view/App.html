@@ -1,16 +1,11 @@
-<div class="box">
-    <p>Spring works!</p>
-    <p id="requireWorks">RequireJS does not work.</p>
-    <p text="{{knockoutWorkingMessage}}">Knockout does not work.</p>
+<div class="header">
+    <h2>HEADER</h2>
 </div>
-<div class="box">
-    {{#foreach itemList}}
-    <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
-    {{/foreach}}
-    <p><input type="text" value="{{textInput}}"/>
-        <button click="{{sentText}}">Send</button>
+<div class="content">
+    <p>
+        CONTENT
     </p>
 </div>
-<div data-bind="module: 'components/Sidebar'"></div>
-<div data-bind="module: 'components/Checkbox'"></div>
-<div data-bind="module: 'components/Radiobutton'"></div>
+<div class="footer">
+    <span>FOOTER</span>
+</div>

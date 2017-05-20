@@ -21,13 +21,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.db;
+package de.stuff42.se2tierheimprojekt.entity;
 
 import javax.transaction.Transactional;
 
 import org.springframework.data.repository.CrudRepository;
 
 @Transactional
-public interface OtherFakeTable extends CrudRepository<OtherFakeTableEntry, Long> {
+public interface FakeDAO extends CrudRepository<FakeEntity, Long> {
 
 }
