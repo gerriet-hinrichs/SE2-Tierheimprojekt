@@ -21,38 +21,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.db;
+package de.stuff42.se2tierheimprojekt.entity;
 
+import java.util.List;
 
-import javax.persistence.*;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-@Entity
-public class FakeTableEntry {
+public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    @Query("select q from QuestionEntity q order by q.sortOrder")
+    QuestionEntity getFirstQuestion();
 
-    // @Column(nullable = false)
-    public String name;
+    @Query("select q from QuestionEntity q order by q.sortOrder")
+    List<QuestionEntity> getSortedList();
 
-    @OneToOne
-    public OtherFakeTableEntry other;
-
-    protected FakeTableEntry() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
-    public FakeTableEntry(String name, OtherFakeTableEntry other) {
-        this.name = name;
-        this.other = other;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "<%s>[id=%d, Name=%s, other=%s]",
-                this.getClass().getSimpleName(), id, name, other);
-    }
+    @Query("select q from QuestionEntity q where q.sortOrder > :lastQuestionSortOrder order by q.sortOrder")
+    QuestionEntity getNextQuestion(@Param("lastQuestionSortOrder") int lastQuestionSortOrder);
 }

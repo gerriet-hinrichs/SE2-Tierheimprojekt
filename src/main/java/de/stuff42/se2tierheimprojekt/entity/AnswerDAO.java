@@ -21,35 +21,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.db;
+package de.stuff42.se2tierheimprojekt.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
 
-@Entity
-public class OtherFakeTableEntry {
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+public interface AnswerDAO extends CrudRepository<AnswerEntity, Long> {
 
-    public String name;
-
-    protected OtherFakeTableEntry() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
-    public OtherFakeTableEntry(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "<%s>[id=%d, Name=%s]",
-                this.getClass().getSimpleName(), id, name);
-    }
+    @Query("select a from AnswerEntity a where a.question.id = :questionId order by a.sortOrder")
+    List<AnswerEntity> getSortedListForQuestion(@Param("questionId") long questionId);
 }
