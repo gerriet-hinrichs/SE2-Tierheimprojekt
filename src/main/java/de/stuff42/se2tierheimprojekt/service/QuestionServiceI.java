@@ -38,30 +38,30 @@ public interface QuestionServiceI {
   
   /**
    * Returns the question with the ID and all of its answers
-   * @param id the ID of the wanted question
+   * @param sortOrder the ID of the wanted question
    * @return the question with the ID or null if there is no question with this ID
    */
-  public QuestionI getByIDWithAnswers(long id);
+  public QuestionI getByIDWithAnswers(int sortOrder);
   
   /**
    * Returns a list with all questions of the questionnaire
    * @return List with all questions
    */
-  public List<QuestionI> getList();
+  public QuestionI[] getList();
   
   /**
    * Returns the next question for the given answer in the questionnaire
-   * @param questionID ID of the answered question
-   * @param answerID ID of the answer of the last question
+   * @param questionSortOrder ID of the answered question
+   * @param answerSortOrder ID of the answer of the last question
    * @return ID of the next question
    */
-  public QuestionI getNextforAnswer(long questionID, long answerID);
+  public QuestionI getNextforAnswer(int questionSortOrder, int answerSortOrder);
   
   /**
    * Returns a List with all answers of the question with the specified ID
-   * @param questionID ID of the question
+   * @param questionSortOrder ID of the question
    * @return List with all answers of the question or null if the question doesn't exist
    */
-  public List<AnswerI> getAnswers(long questionID);
+  public AnswerI[] getAnswers(int questionSortOrder);
 
 }

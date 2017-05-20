@@ -23,11 +23,16 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Iterator;
 
+import de.stuff42.se2tierheimprojekt.datatypes.Answer;
 import de.stuff42.se2tierheimprojekt.datatypes.AnswerI;
+import de.stuff42.se2tierheimprojekt.datatypes.Question;
 import de.stuff42.se2tierheimprojekt.datatypes.QuestionI;
+import de.stuff42.se2tierheimprojekt.db.AnswerEntry;
 import de.stuff42.se2tierheimprojekt.db.AnswerTable;
+import de.stuff42.se2tierheimprojekt.db.QuestionEntry;
 import de.stuff42.se2tierheimprojekt.db.QuestionTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,33 +48,76 @@ public class QuestionService implements QuestionServiceI {
 
   @Override
   public QuestionI getFirstWithAnswers() {
-    // TODO Auto-generated method stub
-    return null;
+      return getByIDWithAnswers(1);
   }
 
   @Override
-  public QuestionI getByIDWithAnswers(long id) {
-    // TODO Auto-generated method stub
-    return null;
+  public QuestionI getByIDWithAnswers(int sortOrder) {
+      // Find Question
+      Iterator<QuestionEntry> iterator = questionTable.findAll().iterator();
+      QuestionEntry questionEntry = null;
+      boolean found = false;
+      while(iterator.hasNext() && !found){
+          questionEntry = iterator.next();
+          if(questionEntry.sortOrder == sortOrder){
+              found = true;
+          }
+      }
+
+      // If no Question found
+      if(questionEntry == null){
+          return null;
+      }
+      return new Question(questionEntry.sortOrder, questionEntry.text, getAnswersFromQuestionEntry(questionEntry));
   }
 
   @Override
-  public List<QuestionI> getList() {
-    // TODO Auto-generated method stub
-    return null;
+  public QuestionI[] getList() {
+      QuestionI[] questions = new QuestionI[(int)questionTable.count()];
+      Iterator<QuestionEntry> iterator = questionTable.findAll().iterator();
+      QuestionEntry questionEntry = null;
+
+      int i = 0;
+      while(iterator.hasNext()){
+          questionEntry = iterator.next();
+          questions[i] = new Question(questionEntry.sortOrder, questionEntry.text, getAnswersFromQuestionEntry(questionEntry));
+          i++;
+      }
+
+      // If no Question found
+      if(questionEntry == null){
+          return null;
+      }
+      return questions;
   }
 
   @Override
-  public QuestionI getNextforAnswer(long questionID, long answerID) {
-    // TODO Auto-generated method stub
-    return null;
+  public QuestionI getNextforAnswer(int questionSortOrder, int answerSortOrder) {
+      // TODO: Wo sollen die Informationen hie zu stehen, in der Antort in der DB oder woanders(entscheidungslogik)?
+      return null;
   }
 
   @Override
-  public List<AnswerI> getAnswers(long questionID) {
-    // TODO Auto-generated method stub
-    return null;
+  public AnswerI[] getAnswers(int questionSortOrder) {
+      QuestionI question = getByIDWithAnswers(questionSortOrder);
+      // If no Question found
+      if(question == null){
+          return null;
+      }
+      AnswerI[] answers = question.getAnswerObjects();
+      Arrays.sort(answers);
+      return answers;
   }
 
-
+  private Answer[] getAnswersFromQuestionEntry(QuestionEntry questionEntry){
+      // Get answers from Question
+      AnswerEntry[] answerEntry = questionEntry.answers;
+      Answer[] answers = new Answer[answerEntry.length];
+      for (int i = 0; i < answerEntry.length; i++) {
+          answers[i] = new Answer(answerEntry[i].sortOrder, answerEntry[i].text, answerEntry[i].question.sortOrder);
+      }
+      // Sort Questions
+      Arrays.sort(answers);
+      return answers;
+  }
 }
