@@ -23,7 +23,6 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.entity.FakeEntity;

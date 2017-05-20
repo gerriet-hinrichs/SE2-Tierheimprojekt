@@ -23,7 +23,6 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-
 import de.stuff42.se2tierheimprojekt.entity.FakeDAO;
 import de.stuff42.se2tierheimprojekt.entity.FakeEntity;
 import de.stuff42.se2tierheimprojekt.entity.OtherFakeDAO;

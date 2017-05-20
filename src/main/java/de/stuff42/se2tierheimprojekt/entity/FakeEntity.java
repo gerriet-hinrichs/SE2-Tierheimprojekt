@@ -23,7 +23,6 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
-
 import javax.persistence.*;
 
 @Entity

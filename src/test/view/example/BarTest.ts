@@ -49,7 +49,7 @@ let BarExports = proxyquire("../uut/example/Bar", {
     // (which should only be the class itself.
 
     // NOTE: The FooStub has to be defined before using it here
-    "./Foo": { Foo: FooStub },
+    "./Foo": {Foo: FooStub},
 });
 
 // since above function returns the exports object we need to access the proper element

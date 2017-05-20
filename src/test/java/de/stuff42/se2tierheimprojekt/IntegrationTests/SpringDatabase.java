@@ -26,6 +26,7 @@ package de.stuff42.se2tierheimprojekt.IntegrationTests;
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.entity.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,20 +56,20 @@ public class SpringDatabase {
     private Logger logger;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         this.logger = LoggerFactory.getLogger(this.getClass());
         logger.info("");
         logger.info("=============== Test Start ================");
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         logger.info("=============== Test End ================");
         logger.info("");
     }
 
     @Test
-    public void spring(){
+    public void spring() {
         logger.info("Spring Autowired:");
         logger.info("-------------------------------");
         assertNotNull(fakeTable);
