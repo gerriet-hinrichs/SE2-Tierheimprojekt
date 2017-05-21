@@ -1,11 +1,10 @@
-<span>Sidebar</span>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
-<div data-bind="module: 'components/loremipsum'"></div>
+{{#foreach: itemList()}}
+<a class="clickable sidebar-item"
+    css.selected="{{IsSelected}}"
+    click="{{function() { $parent.navigate($data) }}}"
+    title="{{Title}}"
+    href="#{{Anker}}"
+    text="{{Name}}"></a>
+{{/foreach}}
 <div data-bind="module: 'components/loremipsum'"></div>
 <div data-bind="module: 'components/loremipsum'"></div>

@@ -2,5 +2,16 @@
 
 div#navigation {
   .flex-display();
+  .justify-content(space-between);
   background-color: hotpink;
+
+  > button {
+    .flex-display();
+    .flex-basis(100%);
+    .justify-content(center);
+  }
+
+  .selected {
+    background-color: lawngreen;
+  }
 }

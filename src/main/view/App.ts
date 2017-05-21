@@ -27,34 +27,85 @@ import "jquery";
 import * as ko from "knockout";
 import "knockout.punches";
 import "knockout-amd-helpers";
-import {TestApi} from "./api/TestApi";
+import {NavigationItem} from "./components/Navigation";
+import {SidebarItem} from "./components/Sidebar";
+import {QuestionData} from "./components/Question";
 
 // app class
 export class App {
-
-    public knockoutWorkingMessage: string = "Knockout is working!";
-
-    public itemList = ko.observableArray<TestEntity>([]);
-
-    public textInput = ko.observable<string>("");
+    public navigationItems = ko.observableArray<NavigationItem>();
+    public sidebarItems = ko.observableArray<SidebarItem>();
+    public questionItems = ko.observableArray<QuestionData>();
 
     public constructor() {
-        // if we get here, requireJS has properly loaded jQuery and this file
-        $("#requireWorks").text("RequireJS works!");
-
-        this.loadAsync();
+        this.prepareNavigationItems();
+        this.prepareSidebarItems();
+        this.prepareQuestionItems();
     }
 
-    public loadAsync() {
-        TestApi.getList().done(x => {
-            this.itemList(x);
+    public prepareNavigationItems() {
+        this.navigationItems.push({
+            Name: "Start",
+            Title: "Start",
+            IsSelected: ko.observable<boolean>(true)
+        },
+        {
+            Name: "Fragen",
+            Title: "Hier gehts zum Fragebogen!",
+            IsSelected: ko.observable<boolean>(false)
+        },
+        {
+            Name: "Impressum",
+            Title: "Über uns...",
+            IsSelected: ko.observable<boolean>(false)
+        },
+        {
+            Name: "Kontakt",
+            Title: "Kontaktiere uns!",
+            IsSelected: ko.observable<boolean>(false)
         });
     }
 
-    public sentText() {
-        TestApi.add(this.textInput()).done(x => {
-            this.textInput("");
-            this.itemList.push(x);
+    public prepareSidebarItems() {
+        this.sidebarItems.push({
+                Name: "Frage 1",
+                Title: "Frage 1",
+                Anker: "f1",
+                IsSelected: ko.observable<boolean>(true)
+            },
+            {
+                Name: "Frage 2",
+                Title: "Frage 2",
+                Anker: "f2",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Frage 3",
+                Title: "Frage 3",
+                Anker: "f3",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Frage 4",
+                Title: "Frage 4",
+                Anker: "f4",
+                IsSelected: ko.observable<boolean>(false)
+            });
+    }
+
+    public prepareQuestionItems() {
+        this.questionItems.push({
+            Name: "Question 1",
+            Description: "This is question #1"
+        }, {
+            Name: "Question 2",
+            Description: "This is question #2"
+        }, {
+            Name: "Question 3",
+            Description: "This is question #3"
+        }, {
+            Name: "Question 4",
+            Description: "This is question #4"
         });
     }
 }
