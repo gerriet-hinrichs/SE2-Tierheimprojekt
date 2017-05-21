@@ -23,45 +23,112 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import de.stuff42.se2tierheimprojekt.datatypes.Answer;
-import de.stuff42.se2tierheimprojekt.datatypes.Question;
+import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
+import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
+import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 
-public interface QuestionService {
-  /**
-   * Returns the first question of the questionnaire
-   * with all of its answers.
-   * @return Returns the first question or null if there isn't a first question
-   */
-  public Question getFirstWithAnswers();
-  
-  /**
-   * Returns the question with the ID and all of its answers
-   * @param id the ID of the wanted question
-   * @return the question with the ID or null if there is no question with this ID
-   */
-  public Question getByIDWithAnswers(long id);
-  
-  /**
-   * Returns a list with all questions of the questionnaire
-   * @return List with all questions
-   */
-  public List<Question> getList();
-  
-  /**
-   * Returns the next question for the given answer in the questionnaire
-   * @param questionID ID of the answered question
-   * @param answerID ID of the answer of the last question
-   * @return ID of the next question
-   */
-  public Question getNextforAnswer(long questionID, long answerID);
-  
-  /**
-   * Returns a List with all answers of the question with the specified ID
-   * @param questionID ID of the question
-   * @return List with all answers of the question or null if the question doesn't exist
-   */
-  public List<Answer> getAnswers(long questionID);
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
+public class QuestionService extends BaseService {
+
+    @Autowired
+    private QuestionDAO questionDAO;
+
+    @Autowired
+    private AnswerDAO answerDAO;
+
+    /**
+     * Returns the first question of the questionnaire with all of its answers.
+     *
+     * @return Returns the first question or null if there isn't a first question.
+     */
+    public QuestionModel getFirstWithAnswers() {
+        QuestionEntity questionEntity = questionDAO.getFirstQuestion();
+        if (questionEntity == null) {
+            return null;
+        }
+        return new QuestionModel(questionEntity);
+    }
+
+    /**
+     * Returns the question with the ID and all of its answers.
+     *
+     * @param id the ID of the wanted question.
+     *
+     * @return the question with the ID or null if there is no question with this ID.
+     */
+    public QuestionModel getByIDWithAnswers(long id) {
+        QuestionEntity questionEntity = questionDAO.findOne(id);
+        if (questionEntity == null) {
+            return null;
+        }
+        return new QuestionModel(questionEntity);
+    }
+
+    /**
+     * Returns the next question for the given answer in the questionnaire.
+     *
+     * @param questionId ID of the answered question.
+     * @param answerId   ID of the answer of the last question.
+     *
+     * @return Next question
+     */
+    public QuestionModel getNextforAnswer(long questionId, long answerId) {
+
+        // TODO: Load next question based on answer and not only on sort order.
+
+        QuestionEntity lastQuestionEntity = questionDAO.findOne(questionId);
+        if (lastQuestionEntity == null) {
+            return null;
+        }
+
+        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
+        if (nextQuestionEntity == null) {
+            return null;
+        }
+
+        return new QuestionModel(nextQuestionEntity);
+    }
+
+    /**
+     * Returns a list with all questions of the questionnaire.
+     *
+     * @return List with all questions.
+     */
+    public List<QuestionModel> getList() {
+        List<QuestionEntity> questionEntities = questionDAO.getSortedList();
+
+        List<QuestionModel> questionModels = new ArrayList<>(questionEntities.size());
+        for (QuestionEntity questionEntity : questionEntities) {
+            questionModels.add(new QuestionModel(questionEntity, false));
+        }
+
+        return questionModels;
+    }
+
+    /**
+     * Returns a List with all answers of the question with the specified ID
+     *
+     * @param questionId ID of the question
+     *
+     * @return List with all answers of the question or null if the question doesn't exist
+     */
+    public List<AnswerModel> getAnswersForQuestion(int questionId) {
+        List<AnswerEntity> answerEntities = answerDAO.getSortedListForQuestion(questionId);
+
+        List<AnswerModel> answerModels = new ArrayList<>(answerEntities.size());
+        for (AnswerEntity questionEntity : answerEntities) {
+            answerModels.add(new AnswerModel(questionEntity));
+        }
+
+        return answerModels;
+    }
 }

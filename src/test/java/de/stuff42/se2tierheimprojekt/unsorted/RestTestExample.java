@@ -42,54 +42,48 @@ import static io.restassured.RestAssured.get;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 // @SpringBootTest
 @ContextConfiguration(classes = {Application.class},
-    initializers = {TestApplicationInitializer.class})
+        initializers = {TestApplicationInitializer.class})
 //@WebAppConfiguration
 public class RestTestExample {
-  private RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
 
-  /**
-   * 
-   */
+    private RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
 
-  @LocalServerPort
-  private int port;
+    /**
+     *
+     */
 
-  @Before
-  public void setupConnection() {
+    @LocalServerPort
+    private int port;
 
+    @Before
+    public void setupConnection() {
 
-    RestAssured.baseURI = "http://localhost";
-    RestAssured.port = port;
-    RestAssured.basePath = "";
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+        RestAssured.basePath = "";
 
+    }
 
-  }
+    @Before
+    public void setup() throws Exception {
+        requestSpecBuilder.setContentType(ContentType.JSON).addHeader("Accept",
+                ContentType.JSON.getAcceptHeader());
 
+        // requestSpecBuilder.setContentType(ContentType.HTML).addHeader("Accept",
+        // ContentType.HTML.getAcceptHeader());
+    }
 
-
-  @Before
-  public void setup() throws Exception {
-    requestSpecBuilder.setContentType(ContentType.JSON).addHeader("Accept",
-        ContentType.JSON.getAcceptHeader());
-
-
-    // requestSpecBuilder.setContentType(ContentType.HTML).addHeader("Accept",
-    // ContentType.HTML.getAcceptHeader());
-  }
-
-
-  /**
-   * Test welcher kontrolliert ob die Website ein HTML Dokument ausgibt.
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void beispielTest() throws Exception {
-    // System.out.println(get("/test").contentType().contains(ContentType.JSON.toString()));
-    // System.out.println(get().asString()); //nur zum experimentieren
-    assert (get("/test").contentType().contains(ContentType.JSON.toString()));
-  }
-
+    /**
+     * Test welcher kontrolliert ob die Website ein HTML Dokument ausgibt.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void beispielTest() throws Exception {
+        // System.out.println(get("/test").contentType().contains(ContentType.JSON.toString()));
+        // System.out.println(get().asString()); //nur zum experimentieren
+        assert (get("/test").contentType().contains(ContentType.JSON.toString()));
+    }
 
 }
 

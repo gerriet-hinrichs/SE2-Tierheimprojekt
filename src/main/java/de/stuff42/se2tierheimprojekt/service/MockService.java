@@ -23,7 +23,6 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-
 import org.springframework.stereotype.Service;
 
 @Service

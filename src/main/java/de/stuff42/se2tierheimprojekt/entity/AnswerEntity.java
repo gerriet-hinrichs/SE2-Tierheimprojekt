@@ -21,10 +21,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.datatypes;
+package de.stuff42.se2tierheimprojekt.entity;
 
-//TODO
-//Check if the name is ok or if interface is needed
-public interface Answer {
+import javax.persistence.*;
 
+@Entity
+public class AnswerEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
+
+    public int sortOrder;
+
+    public String text;
+
+    @ManyToOne
+    public QuestionEntity question;
+
+    protected AnswerEntity() {
+        // no-args constructor required by JPA spec
+        // this one is protected since it shouldn't be used directly
+    }
+
+    public AnswerEntity(int sortOrder, String text, QuestionEntity question) {
+        this.sortOrder = sortOrder;
+        this.text = text;
+        this.question = question;
+    }
 }

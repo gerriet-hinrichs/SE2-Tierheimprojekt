@@ -21,44 +21,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.service;
+package de.stuff42.se2tierheimprojekt.model.rest;
 
-import java.util.List;
+import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 
-import de.stuff42.se2tierheimprojekt.datatypes.Answer;
-import de.stuff42.se2tierheimprojekt.datatypes.Question;
+import org.jetbrains.annotations.NotNull;
 
-public class QuestionServiceBean implements QuestionService {
+/**
+ * Data model for sending answer information to the client side.
+ */
+public class AnswerModel {
 
-  @Override
-  public Question getFirstWithAnswers() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    /**
+     * Answer text.
+     */
+    @NotNull
+    public String text;
 
-  @Override
-  public Question getByIDWithAnswers(long id) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    /**
+     * Sorting order.
+     */
+    public int sortOrder;
 
-  @Override
-  public List<Question> getList() {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    /**
+     * Belonging question's id.
+     */
+    public long questionId;
 
-  @Override
-  public Question getNextforAnswer(long questionID, long answerID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public List<Answer> getAnswers(long questionID) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
+    /**
+     * Creates rest model from database entity.
+     *
+     * @param entity Database entity.
+     */
+    public AnswerModel(AnswerEntity entity) {
+        text = entity.text;
+        sortOrder = entity.sortOrder;
+        questionId = entity.question.id;
+    }
 }

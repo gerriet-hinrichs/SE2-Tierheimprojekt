@@ -21,37 +21,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *  Radiobutton component
- */
-export interface IRadioButtonParams {
+package de.stuff42.se2tierheimprojekt.entity;
 
-}
-;
+import javax.persistence.*;
 
-export class Radiobutton {
+@Entity
+public class FakeEntity {
 
-    // fetch dom element here
-    //public radiobutton = $('#radiobutton');
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
 
-    private _isChecked = ko.observable<boolean>(true);
-    public isChecked = ko.pureComputed({
-        read: () => {
-            return this._isChecked();
-        },
-        write: c => {
-            this._isChecked(c);
-        }
-    }).extend({deffered: true, notify: 'always'});
+    // @Column(nullable = false)
+    public String name;
 
-    constructor(params: IRadioButtonParams) {
+    @OneToOne
+    public OtherFakeEntity other;
 
-        this.isChecked.subscribe(c => {
-            // TODO
-        });
+    protected FakeEntity() {
+        // no-args constructor required by JPA spec
+        // this one is protected since it shouldn't be used directly
+    }
 
-        this._isChecked.subscribe(c => {
-            // TODO
-        });
+    public FakeEntity(String name, OtherFakeEntity other) {
+        this.name = name;
+        this.other = other;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "<%s>[id=%d, Name=%s, other=%s]",
+                this.getClass().getSimpleName(), id, name, other);
     }
 }
