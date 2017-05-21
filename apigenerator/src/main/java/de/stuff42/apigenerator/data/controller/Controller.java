@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data;
+package de.stuff42.apigenerator.data.controller;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,9 +29,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Controller data element class.
@@ -44,6 +45,11 @@ public class Controller extends DataElement<TypeElement> {
     private List<Method> methods;
 
     /**
+     * Controller name.
+     */
+    private String name;
+
+    /**
      * Creates new data class instance from the given element.
      *
      * @param element   Mirror element.
@@ -53,19 +59,14 @@ public class Controller extends DataElement<TypeElement> {
         super(element, processor);
     }
 
-    /**
-     * Returns the controller name.
-     *
-     * @return Controller name.
-     */
-    public String getName() {
-        String fullJavaName = element.asType().toString();
-        return fullJavaName.replaceAll(".*\\.(.*?)(Controller)?$", "$1");
+    @Override
+    public String getExportFileName() {
+        return name + ".ts";
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append("export class ").append(getName()).append(" {\n");
+        sb.append("export class ").append(name).append(" {\n");
         for (Method method : methods) {
             method.generateTypescript(sb, level + 1);
         }
@@ -74,6 +75,12 @@ public class Controller extends DataElement<TypeElement> {
 
     @Override
     protected void processElement() {
+
+        // class name
+        String fullJavaName = element.asType().toString();
+        name = fullJavaName.replaceAll(".*\\.(.*?)(Controller)?$", "$1Api");
+
+        // methods
         methods = new LinkedList<>();
         for (Element member : element.getEnclosedElements()) {
 

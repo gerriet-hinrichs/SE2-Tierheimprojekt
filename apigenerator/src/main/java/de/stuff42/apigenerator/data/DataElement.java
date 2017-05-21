@@ -23,15 +23,15 @@
  */
 package de.stuff42.apigenerator.data;
 
-import javax.lang.model.element.Element;
-
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
  * Base for data classes.
+ *
+ * @param <T> Type mirror element type.
  */
-public abstract class DataElement<T extends Element> {
+public abstract class DataElement<T> {
 
     /**
      * Mirror element this data element is generated from.
@@ -87,4 +87,22 @@ public abstract class DataElement<T extends Element> {
      * Processes the contained element.
      */
     protected abstract void processElement();
+
+    /**
+     * Returns the export file name relative to the export directory.
+     * This method returns <code>null</code> if there is no export required.
+     *
+     * @return Export file name or <code>null</code>.
+     */
+    public String getExportFileName() {
+        return null;
+    }
+
+    /**
+     * Returns the mirror element for this data element.
+     * @return Mirror element.
+     */
+    public T getElement() {
+        return element;
+    }
 }

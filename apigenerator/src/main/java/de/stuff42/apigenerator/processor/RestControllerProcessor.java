@@ -35,20 +35,23 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 
-import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.web.bind.annotation.RestController;
-
 import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
-import de.stuff42.apigenerator.data.Controller;
+import de.stuff42.apigenerator.data.DataElement;
+import de.stuff42.apigenerator.data.controller.Controller;
+import de.stuff42.apigenerator.data.transformer.TransformerDataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.utils.PathUtils;
 import de.stuff42.utils.UtilsConfig;
 import de.stuff42.utils.exception.ExceptionPrinter;
+
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Processor that generates client API for controller classes.
@@ -108,23 +111,14 @@ public class RestControllerProcessor extends AbstractProcessor {
     private void processObject(@NotNull RoundEnvironment environment, @NotNull Element element) {
         try {
             if (element.getKind().isClass() && element instanceof TypeElement && element.getAnnotation(RestController.class) != null) {
-                message(Kind.NOTE, "Processing " + element.asType().toString());
-
                 // process object
                 Controller controller = new Controller((TypeElement) element, this);
-
-                // generate typescript code
-                StringBuilder sb = new StringBuilder();
-                controller.generateTypescript(sb);
-
-                // write to file
-                File outputFile = new File(OUTPUT_DIRECTORY, controller.getName() + ".ts");
-                FileUtils.writeStringToFile(outputFile, sb.toString(), Charset.forName("UTF-8"));
+                generateApiElement(controller);
             } else {
                 message(Kind.WARNING, "Skipping " + element.asType().toString());
             }
         } catch (Throwable t) {
-            message(Kind.ERROR, "Failed to process controller '" + element.asType().toString() + "': " + t.getMessage()
+            message(Kind.ERROR, "Failed to process '" + element.asType().toString() + "': " + t.getMessage()
                     + System.lineSeparator() + ExceptionPrinter.printThrowable(t));
         }
     }
@@ -215,9 +209,86 @@ public class RestControllerProcessor extends AbstractProcessor {
      *
      * @return Created type data element instance.
      */
-    public TypeDataElement<?> processDataType(TypeElement element) {
+    public TypeDataElement processDataType(TypeMirror element) {
 
-        // TODO @gerriet
-        return null;
+        // TODO @gerriet Replace with actual type data element
+        return new TypeDataElement(element, this) {
+
+            @Override
+            public String getTypescriptName() {
+                return "any /* " + element + " */";
+            }
+
+            @Override
+            public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+                // Nothing to do here
+            }
+
+            @Override
+            protected void processElement() {
+
+                // Nothing to do here
+            }
+        };
+    }
+
+    /**
+     * Writes contents to file.
+     *
+     * @param fileName Output file name  relative to {@link #OUTPUT_DIRECTORY}.
+     * @param content  Content to be written to file.
+     *
+     * @throws IOException If writing failed.
+     */
+    private void generateApiFile(String fileName, String content) throws IOException {
+        message(Kind.NOTE, "Writing " + fileName);
+        File outputFile = new File(OUTPUT_DIRECTORY, fileName);
+        if (outputFile.getParentFile().exists() || outputFile.mkdirs()) {
+            FileUtils.writeStringToFile(outputFile, content, Charset.forName("UTF-8"));
+        } else {
+            message(Kind.ERROR, "Failed to create missing parent directories for output.");
+        }
+    }
+
+    /**
+     * Generates output for the given data element.
+     *
+     * @param dataElement Data element.
+     *
+     * @throws IOException If output file writing failed.
+     */
+    private void generateApiElement(DataElement<?> dataElement) throws IOException {
+
+        // check if there is an export file name
+        String exportFileName = dataElement.getExportFileName();
+        if (exportFileName != null) {
+
+            // generate typescript code
+            StringBuilder sb = new StringBuilder();
+            dataElement.generateTypescript(sb);
+
+            // write to file
+            generateApiFile(exportFileName, sb.toString());
+        }
+    }
+
+    /**
+     * Generates output for the given type data element.
+     *
+     * @param dataElement Type data element.
+     *
+     * @throws IOException If output file writing failed.
+     */
+    private void generateApiElement(TypeDataElement dataElement) throws IOException {
+
+        // generate definitions
+        generateApiElement((DataElement<?>) dataElement);
+
+        // export transformer if required
+        TransformerDataElement transformerDataElement = dataElement.getTransformer();
+        if (transformerDataElement != null) {
+            generateApiElement(transformerDataElement);
+        }
     }
 }

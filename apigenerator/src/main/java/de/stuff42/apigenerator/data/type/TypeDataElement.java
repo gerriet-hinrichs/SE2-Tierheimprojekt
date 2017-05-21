@@ -23,15 +23,21 @@
  */
 package de.stuff42.apigenerator.data.type;
 
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.DataElement;
+import de.stuff42.apigenerator.data.transformer.TransformerDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
  * Type data element base class.
  */
-public abstract class TypeDataElement<T extends TypeElement> extends DataElement<T> {
+public abstract class TypeDataElement extends DataElement<TypeMirror> {
+
+    /**
+     * Transformer data element if there is a transformer for this type.
+     */
+    protected TransformerDataElement transformerDataElement = null;
 
     /**
      * Creates new data class instance from the given element.
@@ -39,7 +45,24 @@ public abstract class TypeDataElement<T extends TypeElement> extends DataElement
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    public TypeDataElement(T element, RestControllerProcessor processor) {
+    public TypeDataElement(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
     }
+
+    /**
+     * Returns the transformer data element for this type.
+     * Returns <code>null</code> if there is no transformer for this type.
+     *
+     * @return Transformer data element or <code>null</code>.
+     */
+    public TransformerDataElement getTransformer() {
+        return transformerDataElement;
+    }
+
+    /**
+     * Returns the type name for use in typescript code.
+     *
+     * @return Typescript code name.
+     */
+    public abstract String getTypescriptName();
 }
