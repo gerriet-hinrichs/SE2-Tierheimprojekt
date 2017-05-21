@@ -1,14 +1,40 @@
 <div class="header">
-    <h2>HEADER</h2>
+    <h2>SE2 Tierheimprojekt</h2>
 </div>
-<div class="navigation">
-    <span>NAVIGATION</span>
-</div>
+<div id="navigation" data-bind="module: { name: 'components/navigation', data: { items: navigationItems } }"></div>
 <div class="content">
-    <p>
-        CONTENT
-    </p>
+    <div id="sidebar" class="column" data-bind="module: { name: 'components/sidebar', data: { items: sidebarItems } }"></div>
+    <div class="inner-content">
+        <h2>Start</h2>
+        <!-- Checkbox -->
+        <div class="row">
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+        </div>
+        <!-- Radiobutton -->
+        <div class="row">
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+        </div>
+        <!-- Question -->
+        <div class="column questions">
+            {{#foreach: questionItems}}
+            <div class="question" data-bind="module: { name: 'components/question', data: { question: $data } }"></div>
+            {{/foreach}}
+        </div>
+        <!-- Scroll test -->
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div data-bind="module: 'components/loremipsum'"></div>
+        <div id="f1" data-bind="module: 'components/loremipsum'"></div>
+    </div>
 </div>
 <div class="footer">
-    <span>FOOTER</span>
+    <span>Tierheimprojekt &copy;</span>
 </div>

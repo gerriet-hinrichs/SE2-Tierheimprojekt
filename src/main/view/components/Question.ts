@@ -21,82 +21,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@import "globals";
-@import "flexbox";
-@import "sidebar";
-@import "navigation";
-@import "checkbox";
-@import "question";
-
-html {
-  background-color: @background-color;
-  height: 100%;
-}
-
-h1, h2, h3, h4, h5 {
-  margin: 0;
-}
-
-div {
-  //.flex-shrink(0);
-  font-family: sans-serif;
-
-  &:not(.app-body) {
-    padding: @global-padding;
-  }
-}
-
-html, body, div.header, div.content, div.footer, div.app-body, .row, .column {
-  .flex-display();
-}
-
-// Components may not shrink
-div.header, div#navigation, div#sidebar, div.footer {
-  .flex-shrink(0);
-}
-
-body, div.content, div.app-body {
-  .flex-grow(1);
-}
-
-div.app-body {
-  .flex-direction(column);
-}
-
-div.header {
-  .justify-content(center);
-  background-color: aqua;
-}
-
-div.content {
-  background-color: cadetblue;
-}
-
-div.inner-content {
-  .flex-grow(1);
-  overflow: auto;
-}
-
-div.footer {
-  .justify-content(flex-end);
-  background-color: aquamarine;
-}
-
 /**
-  FLEX Basics
+ *  Question component
  */
-.row {
-  .flex-direction(row);
-}
+export type QuestionData = {
+    Name: string,
+    Description: string
+};
 
-.column {
-  .flex-direction(column);
-}
+export interface IQuestionParams {
+    question: QuestionData;
+};
 
-.clickable {
-  cursor: pointer;
+export class Question {
+    public question = ko.observable<QuestionData>();
 
-  &:hover {
-    background-color: lightgray !important;
-  }
+    constructor(params: IQuestionParams) {
+        this.question(params.question);
+    }
 }

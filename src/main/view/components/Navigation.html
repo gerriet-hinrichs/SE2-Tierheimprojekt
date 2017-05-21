@@ -1,3 +1,7 @@
-<div id="navigation">
-    <span>Navigation</span>
-</div>
+{{#foreach: itemList()}}
+<button class="clickable"
+        css.selected="{{IsSelected()}}"
+        click="{{function() { $parent.navigate($data) }}}"
+        title="{{Title}}"
+        text="{{Name}}"></button>
+{{/foreach}}

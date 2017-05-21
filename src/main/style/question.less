@@ -1,0 +1,16 @@
+@import "flexbox";
+@import "globals";
+
+.questions {
+  .align-items(center);
+
+  > .question {
+    &:nth-child(even) {
+      background-color: lightgray;
+    }
+
+    > div:nth-child(2) {
+      font-style: italic;
+    }
+  }
+}
