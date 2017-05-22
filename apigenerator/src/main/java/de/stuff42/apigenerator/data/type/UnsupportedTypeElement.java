@@ -21,23 +21,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.controller;
+package de.stuff42.apigenerator.data.type;
 
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
-import de.stuff42.apigenerator.data.DataElement;
-import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
- * Parameter data element class.
+ * Type data for unsupported types.
  */
-public class Parameter extends DataElement<VariableElement> {
-
-    /**
-     * Parameter type.
-     */
-    private TypeDataElement<?> type;
+public class UnsupportedTypeElement extends TypeDataElement<TypeMirror> {
 
     /**
      * Creates new data class instance from the given element.
@@ -45,17 +38,24 @@ public class Parameter extends DataElement<VariableElement> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    Parameter(VariableElement element, RestControllerProcessor processor) {
+    public UnsupportedTypeElement(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
     }
 
     @Override
+    public String getTypescriptName() {
+        return "any";
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.getTypescriptName());
+
+        // nothing to do here
     }
 
     @Override
     public void processElement() {
-        type = processor.processDataType(element.asType());
+
+        // nothing to do here
     }
 }

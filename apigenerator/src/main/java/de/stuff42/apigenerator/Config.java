@@ -32,4 +32,9 @@ public class Config {
      * Output path for generated sources (relative to project root).
      */
     public static final String OUTPUT_PATH = "src/main/view/clientApi";
+
+    /**
+     * Data export path (relative to {@link #OUTPUT_PATH})
+     */
+    public static final String DATA_PATH = "data";
 }

@@ -21,38 +21,53 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.transformer;
+package de.stuff42.apigenerator.data.type;
 
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import de.stuff42.apigenerator.data.DataElement;
-import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
-public abstract class TransformerDataElement extends DataElement<TypeMirror> {
-
-    /**
-     * Type data element for this processor data.
-     */
-    private final TypeDataElement typeDataElement;
+/**
+ * Wildcard type element.
+ */
+public class WildCardTypeElement extends TypeDataElement<TypeMirror> {
 
     /**
      * Creates new data class instance from the given element.
      *
-     * @param typeDataElement Type data element.
-     * @param processor       Processor instance.
+     * @param element   Mirror element.
+     * @param processor Processor instance.
      */
-    public TransformerDataElement(TypeDataElement typeDataElement, RestControllerProcessor processor) {
-        super(typeDataElement.getElement(), processor);
-        this.typeDataElement = typeDataElement;
+    public WildCardTypeElement(TypeMirror element, RestControllerProcessor processor) {
+        super(element, processor);
     }
 
     /**
-     * Returns the type data element for this processor.
+     * Checks if the given type mirror is a wildcard type.
      *
-     * @return Type data element.
+     * @param typeMirror Type mirror element.
+     *
+     * @return If the given mirror element is a wildcard type.
      */
-    public TypeDataElement getTypeData() {
-        return typeDataElement;
+    public static boolean isWildCard(TypeMirror typeMirror) {
+        return typeMirror.getKind() == TypeKind.WILDCARD;
+    }
+
+    @Override
+    public String getTypescriptName() {
+        return "any";
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // nothing to do here
+    }
+
+    @Override
+    public void processElement() {
+
+        // nothing to do here
     }
 }

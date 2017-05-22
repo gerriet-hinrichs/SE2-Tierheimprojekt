@@ -74,7 +74,7 @@ public class Controller extends DataElement<TypeElement> {
     }
 
     @Override
-    protected void processElement() {
+    public void processElement() {
 
         // class name
         String fullJavaName = element.asType().toString();
@@ -86,7 +86,9 @@ public class Controller extends DataElement<TypeElement> {
 
             // only process public methods that have a request mapping
             if (member instanceof ExecutableElement && member.getAnnotation(RequestMapping.class) != null) {
-                this.methods.add(new Method((ExecutableElement) member, processor));
+                Method method = new Method((ExecutableElement) member, processor);
+                method.processElement();
+                this.methods.add(method);
             }
         }
     }

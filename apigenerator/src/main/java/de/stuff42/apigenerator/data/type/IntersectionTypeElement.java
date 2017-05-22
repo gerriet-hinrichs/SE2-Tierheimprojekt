@@ -21,23 +21,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.controller;
+package de.stuff42.apigenerator.data.type;
 
-import javax.lang.model.element.VariableElement;
+import java.util.LinkedList;
+import java.util.List;
+import javax.lang.model.type.IntersectionType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
-import de.stuff42.apigenerator.data.DataElement;
-import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
- * Parameter data element class.
+ * Intersection type element.
  */
-public class Parameter extends DataElement<VariableElement> {
+public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
 
     /**
-     * Parameter type.
+     * Intersection type bounds.
      */
-    private TypeDataElement<?> type;
+    private List<TypeDataElement<?>> bounds;
 
     /**
      * Creates new data class instance from the given element.
@@ -45,17 +47,49 @@ public class Parameter extends DataElement<VariableElement> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    Parameter(VariableElement element, RestControllerProcessor processor) {
+    public IntersectionTypeElement(IntersectionType element, RestControllerProcessor processor) {
         super(element, processor);
+    }
+
+    /**
+     * Checks if the given type mirror is an intersection type.
+     *
+     * @param typeMirror Type mirror element.
+     *
+     * @return If the given mirror element is an intersection type.
+     */
+    public static boolean isIntersectionType(TypeMirror typeMirror) {
+        return typeMirror.getKind() == TypeKind.INTERSECTION;
+    }
+
+    @Override
+    public String getTypescriptName() {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (TypeDataElement<?> typeData : bounds) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(" & ");
+            }
+            sb.append(typeData.getTypescriptName());
+        }
+        return sb.toString();
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.getTypescriptName());
+
+        // nothing to do here
     }
 
     @Override
     public void processElement() {
-        type = processor.processDataType(element.asType());
+
+        // grab bounds
+        bounds = new LinkedList<>();
+        for (TypeMirror elementType : element.getBounds()) {
+            bounds.add(processor.processDataType(elementType));
+        }
     }
 }

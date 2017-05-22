@@ -41,7 +41,7 @@ public class Method extends DataElement<ExecutableElement> {
     /**
      * Method return type.
      */
-    private TypeDataElement returnType;
+    private TypeDataElement<?> returnType;
 
     /**
      * Method parameters.
@@ -81,7 +81,6 @@ public class Method extends DataElement<ExecutableElement> {
         // method body
 
         // TODO @gerriet
-        sb.append(innerIndentation).append("// TODO @gerriet\n");
         sb.append(innerIndentation).append("return null;\n");
 
         // method end
@@ -89,14 +88,16 @@ public class Method extends DataElement<ExecutableElement> {
     }
 
     @Override
-    protected void processElement() {
+    public void processElement() {
         returnType = processor.processDataType(element.getReturnType());
 
         List<? extends VariableElement> parameterElements = element.getParameters();
         parameters = new ArrayList<>(parameterElements.size());
 
         for (VariableElement parameterElement : parameterElements) {
-            parameters.add(new Parameter(parameterElement, processor));
+            Parameter parameter = new Parameter(parameterElement, processor);
+            parameter.processElement();
+            parameters.add(parameter);
         }
     }
 

@@ -317,7 +317,8 @@ task generateClientAPI(type: JavaCompile) {
 generateClientAPI.dependsOn generateSystemIni
 
 // run api generation whenever the main source set is compiled
-compileJava.dependsOn generateClientAPI
+generateClientAPI.dependsOn compileJava
+classes.dependsOn generateClientAPI
 
 dependencies {
 

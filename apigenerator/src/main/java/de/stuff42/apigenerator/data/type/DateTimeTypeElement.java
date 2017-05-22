@@ -21,23 +21,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.controller;
+package de.stuff42.apigenerator.data.type;
 
-import javax.lang.model.element.VariableElement;
+import java.time.OffsetDateTime;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
-import de.stuff42.apigenerator.data.DataElement;
-import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
- * Parameter data element class.
+ * Date time type element.
  */
-public class Parameter extends DataElement<VariableElement> {
+public class DateTimeTypeElement extends TypeDataElement<TypeMirror> {
 
     /**
-     * Parameter type.
+     * Offset date time mirror.
      */
-    private TypeDataElement<?> type;
+    private static TypeMirror offsetDateTimeMirror;
 
     /**
      * Creates new data class instance from the given element.
@@ -45,17 +47,45 @@ public class Parameter extends DataElement<VariableElement> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    Parameter(VariableElement element, RestControllerProcessor processor) {
+    public DateTimeTypeElement(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
     }
 
     @Override
+    public String getTypescriptName() {
+        return "Date";
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.getTypescriptName());
+
+        // nothing to do here
     }
 
     @Override
     public void processElement() {
-        type = processor.processDataType(element.asType());
+
+        // nothing to do here
+    }
+
+    /**
+     * Checks if the given type mirror is an OffsetDateTime type.
+     *
+     * @param typeMirror            Type mirror element.
+     * @param processingEnvironment Processing environment.
+     *
+     * @return If the given mirror element is an OffsetDateTime type.
+     */
+    public static boolean isDate(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
+        Types typeUtils = processingEnvironment.getTypeUtils();
+
+        // load OffsetDateTime type mirror if required
+        if (offsetDateTimeMirror == null) {
+            Elements elementUtils = processingEnvironment.getElementUtils();
+            offsetDateTimeMirror = elementUtils.getTypeElement(OffsetDateTime.class.getName()).asType();
+        }
+
+        // check if assignment is possible
+        return typeUtils.isAssignable(typeMirror, offsetDateTimeMirror);
     }
 }

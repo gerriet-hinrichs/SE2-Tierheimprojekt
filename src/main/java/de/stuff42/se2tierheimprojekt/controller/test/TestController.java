@@ -23,6 +23,9 @@
  */
 package de.stuff42.se2tierheimprojekt.controller.test;
 
+import java.util.List;
+import java.util.Map;
+
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
 import de.stuff42.se2tierheimprojekt.entity.FakeEntity;
@@ -57,5 +60,150 @@ public class TestController extends BaseController<FakeService> {
     public FakeEntity add(@PathVariable String text) {
         logger.info(text);
         return service.add(text);
+    }
+
+    // Methods to test api generation & type exports
+    @RequestMapping(method = RequestMethod.GET, value = "/_byte")
+    public byte _byte() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Byte_")
+    public Byte _Byte_() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_short")
+    public short _short() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Short_")
+    public Short _Short_() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_int")
+    public int _int() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Integer_")
+    public Integer _Integer_() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_float")
+    public float _float() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Float_")
+    public Float _Float_() {
+        return 0.f;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_double")
+    public double _double() {
+        return 0;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Double_")
+    public Double _Double_() {
+        return 0.;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_char")
+    public char _char() {
+        return '\0';
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Char_")
+    public double _Char_() {
+        return '\0';
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_String_")
+    public String _String_() {
+        return "";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Object_")
+    public Object _Object_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Array_")
+    public String[] _Array_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Iterable_")
+    public Iterable<Object> _Iterable_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_RawIterable_")
+    @SuppressWarnings("rawtypes")
+    public Iterable _RawIterable_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_List_")
+    public List<Float> _List_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Enum_")
+    public TestEnum _Enum_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_Map_")
+    public Map<String, TestObjectA> _Map_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_TestObject_")
+    public TestObjectB _TestObject_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_GenericObject_")
+    public TestObjectC<TestObjectA, Bar<TestObjectA, TestObjectB>> _GenericObject_() {
+        return null;
+    }
+
+    // test data types for above methods
+    public enum TestEnum {
+        FOO, BAR, BAZ
+    }
+
+    public static class TestObjectA {
+
+        public TestObjectA a;
+
+        public TestObjectB b;
+    }
+
+    public static abstract class TestObjectB extends Bar<TestObjectA, TestObjectB> {
+
+        public TestObjectA c;
+
+        public TestObjectB d;
+    }
+
+    public static class Bar<A, B> {
+
+        public A foo;
+
+        public B bar;
+    }
+
+    public static class TestObjectC<A extends TestObjectA, B extends Bar<TestObjectA, TestObjectB>> {
+
+        public A ax;
+
+        public B bx;
     }
 }

@@ -39,6 +39,11 @@ public abstract class DataElement<T> {
     protected final T element;
 
     /**
+     * Processed flag.
+     */
+    private boolean processed = false;
+
+    /**
      * Processor instance.
      */
     protected final RestControllerProcessor processor;
@@ -52,7 +57,6 @@ public abstract class DataElement<T> {
     public DataElement(T element, RestControllerProcessor processor) {
         this.element = element;
         this.processor = processor;
-        processElement();
     }
 
     /**
@@ -86,7 +90,7 @@ public abstract class DataElement<T> {
     /**
      * Processes the contained element.
      */
-    protected abstract void processElement();
+    public abstract void processElement();
 
     /**
      * Returns the export file name relative to the export directory.
@@ -100,6 +104,7 @@ public abstract class DataElement<T> {
 
     /**
      * Returns the mirror element for this data element.
+     *
      * @return Mirror element.
      */
     public T getElement() {

@@ -23,10 +23,10 @@
  */
 package de.stuff42.apigenerator;
 
+import de.stuff42.utils.SystemConfig;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import de.stuff42.utils.SystemConfig;
 
 /**
  * Class for generator utilities.

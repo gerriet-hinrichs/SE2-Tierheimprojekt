@@ -21,21 +21,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.controller;
+package de.stuff42.apigenerator.data.type.object;
 
 import javax.lang.model.element.VariableElement;
 
-import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
- * Parameter data element class.
+ * Field type element.
  */
-public class Parameter extends DataElement<VariableElement> {
+public class FieldTypeElement extends TypeDataElement<VariableElement> {
 
     /**
-     * Parameter type.
+     * Field name.
+     */
+    private String name;
+
+    /**
+     * Field type.
      */
     private TypeDataElement<?> type;
 
@@ -45,17 +49,34 @@ public class Parameter extends DataElement<VariableElement> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    Parameter(VariableElement element, RestControllerProcessor processor) {
+    public FieldTypeElement(VariableElement element, RestControllerProcessor processor) {
         super(element, processor);
     }
 
     @Override
+    public String getTypescriptName() {
+        return name;
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.getTypescriptName());
+
+        // TODO @gerriet Why is that required?
+        if (type == null) {
+            processElement();
+        }
+
+        sb.append(indentation).append(name).append(": ")
+                .append(type.getTypescriptName()).append(",\n");
     }
 
     @Override
     public void processElement() {
+
+        // field name
+        name = element.getSimpleName().toString();
+
+        // field type
         type = processor.processDataType(element.asType());
     }
 }
