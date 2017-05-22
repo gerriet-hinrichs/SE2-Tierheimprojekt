@@ -39,14 +39,14 @@ public abstract class DataElement<T> {
     protected final T element;
 
     /**
-     * Processed flag.
-     */
-    private boolean processed = false;
-
-    /**
      * Processor instance.
      */
     protected final RestControllerProcessor processor;
+
+    /**
+     * Processed flag.
+     */
+    private boolean processed = false;
 
     /**
      * Creates new data class instance from the given element.
@@ -86,11 +86,6 @@ public abstract class DataElement<T> {
     public void generateTypescript(StringBuilder sb) {
         generateTypescript(sb, 0);
     }
-
-    /**
-     * Processes the contained element.
-     */
-    public abstract void processElement();
 
     /**
      * Returns the export file name relative to the export directory.

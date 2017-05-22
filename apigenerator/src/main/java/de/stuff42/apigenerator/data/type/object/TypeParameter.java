@@ -32,6 +32,7 @@ import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Type parameter element.
@@ -41,7 +42,7 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
     /**
      * Variable name.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Creates new data class instance from the given element.
@@ -51,25 +52,7 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
      */
     public TypeParameter(TypeVariable element, RestControllerProcessor processor) {
         super(element, processor);
-    }
-
-    @Override
-    public String getTypescriptName() {
-        return name;
-    }
-
-    @Override
-    public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(name);
-    }
-
-    @Override
-    public void processElement() {
-
-        // parameter name
-        name = element.asElement().getSimpleName().toString();
-
-        // TODO @gerriet type bonds?
+        name = new Lazy<>(() -> element.asElement().getSimpleName().toString());
     }
 
     /**
@@ -85,5 +68,15 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
         Element element = typeUtils.asElement(typeMirror);
 
         return element.getKind() == ElementKind.TYPE_PARAMETER;
+    }
+
+    @Override
+    public String getTypescriptName() {
+        return name.value();
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+        sb.append(name.value());
     }
 }

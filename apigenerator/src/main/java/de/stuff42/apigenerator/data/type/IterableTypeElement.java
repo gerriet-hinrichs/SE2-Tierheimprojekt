@@ -31,6 +31,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Type data element for iterable types.
@@ -38,14 +39,14 @@ import de.stuff42.apigenerator.processor.RestControllerProcessor;
 public class IterableTypeElement extends TypeDataElement<TypeMirror> {
 
     /**
-     * Element type.
-     */
-    private TypeDataElement<?> elementType;
-
-    /**
      * Type mirror for the generic iterable type (with one type argument)
      */
     private static DeclaredType iterableType = null;
+
+    /**
+     * Element type.
+     */
+    private Lazy<TypeDataElement<?>> elementType;
 
     /**
      * Creates new data class instance from the given element.
@@ -55,31 +56,17 @@ public class IterableTypeElement extends TypeDataElement<TypeMirror> {
      */
     public IterableTypeElement(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
-    }
+        elementType = new Lazy<>(() -> {
+            if (element.getKind() == TypeKind.ARRAY) {
 
-    @Override
-    public String getTypescriptName() {
-        return elementType.getTypescriptName() + "[]";
-    }
-
-    @Override
-    public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // nothing to do here
-    }
-
-    @Override
-    public void processElement() {
-        if (element.getKind() == TypeKind.ARRAY) {
-
-            // array: get component type
-            elementType = processor.processDataType(((ArrayType) element).getComponentType());
-        } else {
+                // array: get component type
+                return processor.processDataType(((ArrayType) element).getComponentType());
+            }
 
             // iterable (we know that we have exactly one argument)
             List<? extends TypeMirror> typeArguments = ((DeclaredType) element).getTypeArguments();
-            elementType = processor.processDataType(typeArguments.get(0));
-        }
+            return processor.processDataType(typeArguments.get(0));
+        });
     }
 
     /**
@@ -118,5 +105,16 @@ public class IterableTypeElement extends TypeDataElement<TypeMirror> {
 
         // no matching type
         return false;
+    }
+
+    @Override
+    public String getTypescriptName() {
+        return elementType.value().getTypescriptName() + "[]";
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // nothing to do here
     }
 }

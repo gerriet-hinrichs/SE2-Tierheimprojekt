@@ -43,6 +43,10 @@ import javax.lang.model.type.TypeVariable;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.apigenerator.data.DataElement;
@@ -53,10 +57,6 @@ import de.stuff42.apigenerator.data.type.object.TypeParameter;
 import de.stuff42.utils.PathUtils;
 import de.stuff42.utils.UtilsConfig;
 import de.stuff42.utils.exception.ExceptionPrinter;
-
-import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Processor that generates client API for controller classes.
@@ -123,7 +123,6 @@ public class RestControllerProcessor extends AbstractProcessor {
 
                 // process object
                 Controller controller = new Controller((TypeElement) element, this);
-                controller.processElement();
                 generateApiElement(controller);
             } else {
                 message(Kind.WARNING, "Skipping " + element.asType().toString());
@@ -214,70 +213,73 @@ public class RestControllerProcessor extends AbstractProcessor {
             return exportedTypes.get(key);
         }
 
-        TypeDataElement<?> result;
+        try {
+            TypeDataElement<?> result;
 
-        // primitive type?
-        if (PrimitiveType.isPrimitive(element)) {
-            result = new PrimitiveType(element, this);
+            // primitive type?
+            if (PrimitiveType.isPrimitive(element)) {
+                result = new PrimitiveType(element, this);
+            }
+
+            // offset date time?
+            else if (DateTimeTypeElement.isDate(element, processingEnv)) {
+                result = new DateTimeTypeElement(element, this);
+            }
+
+            // map?
+            else if (MapTypeElement.isMap(element, processingEnv)) {
+                result = new MapTypeElement(element, this);
+            }
+
+            // iterable type or array?
+            else if (IterableTypeElement.isIterable(element, processingEnv)) {
+                result = new IterableTypeElement(element, this);
+            }
+
+            // enum?
+            else if (EnumTypeElement.isEnum(element, processingEnv)) {
+                result = new EnumTypeElement((TypeElement) processingEnv.getTypeUtils().asElement(element), this);
+            }
+
+            // object?
+            else if (ObjectTypeElement.isObject(element, processingEnv)) {
+                result = new ObjectTypeElement((TypeElement) processingEnv.getTypeUtils().asElement(element), this);
+            }
+
+            // intersection?
+            else if (IntersectionTypeElement.isIntersectionType(element)) {
+                result = new IntersectionTypeElement((IntersectionType) element, this);
+            }
+
+            // wildcard?
+            else if (WildCardTypeElement.isWildCard(element)) {
+                result = new WildCardTypeElement(element, this);
+            }
+
+            // type parameter?
+            else if (TypeParameter.isTypeParameter(element, processingEnv)) {
+                result = new TypeParameter((TypeVariable) element, this);
+            }
+
+            // not supported...
+            else {
+                message(Kind.WARNING, "Unsupported type: " + element.toString());
+                result = new UnsupportedTypeElement(element, this);
+            }
+
+            // add exported type to map
+            exportedTypes.put(key, result);
+
+            // export
+            generateApiElement(result);
+
+            // return finished type
+            return result;
+        } catch (Throwable t) {
+            message(Kind.ERROR, "Failed to process '" + element.toString() + "': " + t.getMessage()
+                    + System.lineSeparator() + ExceptionPrinter.printThrowable(t));
         }
-
-        // offset date time?
-        else if (DateTimeTypeElement.isDate(element, processingEnv)) {
-            result = new DateTimeTypeElement(element, this);
-        }
-
-        // map?
-        else if (MapTypeElement.isMap(element, processingEnv)) {
-            result = new MapTypeElement(element, this);
-        }
-
-        // iterable type or array?
-        else if (IterableTypeElement.isIterable(element, processingEnv)) {
-            result = new IterableTypeElement(element, this);
-        }
-
-        // enum?
-        else if (EnumTypeElement.isEnum(element, processingEnv)) {
-            result = new EnumTypeElement((TypeElement) processingEnv.getTypeUtils().asElement(element), this);
-        }
-
-        // object?
-        else if (ObjectTypeElement.isObject(element, processingEnv)) {
-            result = new ObjectTypeElement((TypeElement) processingEnv.getTypeUtils().asElement(element), this);
-        }
-
-        // intersection?
-        else if (IntersectionTypeElement.isIntersectionType(element)) {
-            result = new IntersectionTypeElement((IntersectionType) element, this);
-        }
-
-        // wildcard?
-        else if (WildCardTypeElement.isWildCard(element)) {
-            result = new WildCardTypeElement(element, this);
-        }
-
-        // type parameter?
-        else if (TypeParameter.isTypeParameter(element, processingEnv)) {
-            result = new TypeParameter((TypeVariable) element, this);
-        }
-
-        // not supported...
-        else {
-            message(Kind.WARNING, "Unsupported type: " + element.toString());
-            result = new UnsupportedTypeElement(element, this);
-        }
-
-        // add exported type to map
-        exportedTypes.put(key, result);
-
-        // start actual element processing
-        result.processElement();
-
-        // export
-        generateApiElement(result);
-
-        // return finished type
-        return result;
+        return new UnsupportedTypeElement(element, this);
     }
 
     /**

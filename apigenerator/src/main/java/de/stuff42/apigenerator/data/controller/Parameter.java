@@ -28,6 +28,7 @@ import javax.lang.model.element.VariableElement;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Parameter data element class.
@@ -37,7 +38,7 @@ public class Parameter extends DataElement<VariableElement> {
     /**
      * Parameter type.
      */
-    private TypeDataElement<?> type;
+    private Lazy<TypeDataElement<?>> type;
 
     /**
      * Creates new data class instance from the given element.
@@ -47,15 +48,11 @@ public class Parameter extends DataElement<VariableElement> {
      */
     Parameter(VariableElement element, RestControllerProcessor processor) {
         super(element, processor);
+        type = new Lazy<>(() -> processor.processDataType(element.asType()));
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.getTypescriptName());
-    }
-
-    @Override
-    public void processElement() {
-        type = processor.processDataType(element.asType());
+        sb.append(element.getSimpleName()).append(": ").append(type.value().getTypescriptName());
     }
 }

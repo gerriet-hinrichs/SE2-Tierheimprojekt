@@ -62,12 +62,6 @@ public class DateTimeTypeElement extends TypeDataElement<TypeMirror> {
         // nothing to do here
     }
 
-    @Override
-    public void processElement() {
-
-        // nothing to do here
-    }
-
     /**
      * Checks if the given type mirror is an OffsetDateTime type.
      *

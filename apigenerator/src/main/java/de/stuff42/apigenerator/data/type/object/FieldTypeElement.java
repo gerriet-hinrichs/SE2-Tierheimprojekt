@@ -27,6 +27,7 @@ import javax.lang.model.element.VariableElement;
 
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Field type element.
@@ -36,12 +37,12 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
     /**
      * Field name.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Field type.
      */
-    private TypeDataElement<?> type;
+    private Lazy<TypeDataElement<?>> type;
 
     /**
      * Creates new data class instance from the given element.
@@ -51,32 +52,18 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
      */
     public FieldTypeElement(VariableElement element, RestControllerProcessor processor) {
         super(element, processor);
+        name = new Lazy<>(() -> element.getSimpleName().toString());
+        type = new Lazy<>(() -> processor.processDataType(element.asType()));
     }
 
     @Override
     public String getTypescriptName() {
-        return name;
+        return name.value();
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // TODO @gerriet Why is that required?
-        if (type == null) {
-            processElement();
-        }
-
-        sb.append(indentation).append(name).append(": ")
-                .append(type.getTypescriptName()).append(",\n");
-    }
-
-    @Override
-    public void processElement() {
-
-        // field name
-        name = element.getSimpleName().toString();
-
-        // field type
-        type = processor.processDataType(element.asType());
+        sb.append(indentation).append(name.value()).append(": ")
+                .append(type.value().getTypescriptName()).append(",\n");
     }
 }

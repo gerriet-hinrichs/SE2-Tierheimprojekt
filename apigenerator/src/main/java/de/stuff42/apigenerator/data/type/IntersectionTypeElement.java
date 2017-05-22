@@ -30,6 +30,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Intersection type element.
@@ -39,7 +40,7 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     /**
      * Intersection type bounds.
      */
-    private List<TypeDataElement<?>> bounds;
+    private Lazy<List<TypeDataElement<?>>> bounds;
 
     /**
      * Creates new data class instance from the given element.
@@ -49,6 +50,14 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
      */
     public IntersectionTypeElement(IntersectionType element, RestControllerProcessor processor) {
         super(element, processor);
+        bounds = new Lazy<>(() -> {
+            // grab bounds
+            List<TypeDataElement<?>> boundList = new LinkedList<>();
+            for (TypeMirror elementType : element.getBounds()) {
+                boundList.add(processor.processDataType(elementType));
+            }
+            return boundList;
+        });
     }
 
     /**
@@ -66,7 +75,7 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     public String getTypescriptName() {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
-        for (TypeDataElement<?> typeData : bounds) {
+        for (TypeDataElement<?> typeData : bounds.value()) {
             if (first) {
                 first = false;
             } else {
@@ -81,15 +90,5 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // nothing to do here
-    }
-
-    @Override
-    public void processElement() {
-
-        // grab bounds
-        bounds = new LinkedList<>();
-        for (TypeMirror elementType : element.getBounds()) {
-            bounds.add(processor.processDataType(elementType));
-        }
     }
 }

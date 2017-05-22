@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Primitive type data.
@@ -75,7 +76,7 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
     /**
      * Typescript name for the primitive type.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Creates new data class instance from the given element.
@@ -85,22 +86,7 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
      */
     public PrimitiveType(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
-    }
-
-    @Override
-    public String getTypescriptName() {
-        return name;
-    }
-
-    @Override
-    public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // primitive types do not need to be exported
-    }
-
-    @Override
-    public void processElement() {
-        name = primitiveTypes.getOrDefault(element.toString(), "any");
+        name = new Lazy<>(() -> primitiveTypes.getOrDefault(element.toString(), "any"));
     }
 
     /**
@@ -112,6 +98,17 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
      */
     public static boolean isPrimitive(TypeMirror typeMirror) {
         return primitiveTypes.containsKey(typeMirror.toString());
+    }
+
+    @Override
+    public String getTypescriptName() {
+        return name.value();
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // primitive types do not need to be exported
     }
 
     @Override

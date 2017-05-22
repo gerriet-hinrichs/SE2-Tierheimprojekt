@@ -35,6 +35,7 @@ import javax.lang.model.util.Types;
 import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Enum type element.
@@ -44,12 +45,12 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
     /**
      * List with all enum elements.
      */
-    private List<String> elements;
+    private Lazy<List<String>> elements;
 
     /**
      * Enum name.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Creates new data class instance from the given element.
@@ -59,54 +60,17 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
      */
     public EnumTypeElement(TypeElement element, RestControllerProcessor processor) {
         super(element, processor);
-    }
-
-    @Override
-    public String getTypescriptName() {
-        return "Api." + name;
-    }
-
-    @Override
-    public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // inner indentation
-        String innerIndentation1 = Utilities.getIndentationString(level + 1);
-        String innerIndentation2 = Utilities.getIndentationString(level + 2);
-
-        // namespace start
-        sb.append(indentation).append("declare namespace Api {\n");
-
-        // enum export
-        sb.append(innerIndentation1).append("export type ").append(name).append(" = ");
-        boolean first = true;
-        for (String value : elements) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append("\n").append(innerIndentation2).append("| ");
+        name = new Lazy<>(() -> element.getSimpleName().toString());
+        elements = new Lazy<>(() -> {
+            List<? extends Element> enclosedElements = element.getEnclosedElements();
+            List<String> valueList = new ArrayList<>(enclosedElements.size());
+            for (Element enclosedElement : enclosedElements) {
+                if (enclosedElement.getKind() == ElementKind.ENUM_CONSTANT) {
+                    valueList.add(enclosedElement.getSimpleName().toString());
+                }
             }
-            sb.append('"').append(value).append('"');
-        }
-        sb.append(";\n");
-
-        // namespace end
-        sb.append(indentation).append("}\n");
-    }
-
-    @Override
-    public void processElement() {
-
-        // enum name
-        name = element.getSimpleName().toString();
-
-        // enum values
-        List<? extends Element> enclosedElements = element.getEnclosedElements();
-        elements = new ArrayList<>(enclosedElements.size());
-        for (Element element : enclosedElements) {
-            if (element.getKind() == ElementKind.ENUM_CONSTANT) {
-                elements.add(element.getSimpleName().toString());
-            }
-        }
+            return valueList;
+        });
     }
 
     /**
@@ -124,7 +88,39 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
     }
 
     @Override
+    public String getTypescriptName() {
+        return "Api." + name.value();
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // inner indentation
+        String innerIndentation1 = Utilities.getIndentationString(level + 1);
+        String innerIndentation2 = Utilities.getIndentationString(level + 2);
+
+        // namespace start
+        sb.append(indentation).append("declare namespace Api {\n");
+
+        // enum export
+        sb.append(innerIndentation1).append("export type ").append(name.value()).append(" = ");
+        boolean first = true;
+        for (String value : elements.value()) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append("\n").append(innerIndentation2).append("| ");
+            }
+            sb.append('"').append(value).append('"');
+        }
+        sb.append(";\n");
+
+        // namespace end
+        sb.append(indentation).append("}\n");
+    }
+
+    @Override
     public String getExportFileName() {
-        return Config.DATA_PATH + "/" + name + ".d.ts";
+        return Config.DATA_PATH + "/" + name.value() + ".d.ts";
     }
 }

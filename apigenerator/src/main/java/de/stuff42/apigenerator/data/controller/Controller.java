@@ -29,10 +29,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
-
-import org.springframework.web.bind.annotation.RequestMapping;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Controller data element class.
@@ -42,12 +43,12 @@ public class Controller extends DataElement<TypeElement> {
     /**
      * Controller methods.
      */
-    private List<Method> methods;
+    private Lazy<List<Method>> methods;
 
     /**
      * Controller name.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Creates new data class instance from the given element.
@@ -57,39 +58,35 @@ public class Controller extends DataElement<TypeElement> {
      */
     public Controller(TypeElement element, RestControllerProcessor processor) {
         super(element, processor);
+        name = new Lazy<>(() -> {
+            String fullJavaName = element.asType().toString();
+            return fullJavaName.replaceAll(".*\\.(.*?)(Controller)?$", "$1Api");
+        });
+        methods = new Lazy<>(() -> {
+            List<Method> methodList = new LinkedList<>();
+            for (Element member : element.getEnclosedElements()) {
+
+                // only process public methods that have a request mapping
+                if (member instanceof ExecutableElement && member.getAnnotation(RequestMapping.class) != null) {
+                    Method method = new Method((ExecutableElement) member, processor);
+                    methodList.add(method);
+                }
+            }
+            return methodList;
+        });
     }
 
     @Override
     public String getExportFileName() {
-        return name + ".ts";
+        return name.value() + ".ts";
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append("export class ").append(name).append(" {\n");
-        for (Method method : methods) {
+        sb.append("export class ").append(name.value()).append(" {\n");
+        for (Method method : methods.value()) {
             method.generateTypescript(sb, level + 1);
         }
         sb.append("}\n");
-    }
-
-    @Override
-    public void processElement() {
-
-        // class name
-        String fullJavaName = element.asType().toString();
-        name = fullJavaName.replaceAll(".*\\.(.*?)(Controller)?$", "$1Api");
-
-        // methods
-        methods = new LinkedList<>();
-        for (Element member : element.getEnclosedElements()) {
-
-            // only process public methods that have a request mapping
-            if (member instanceof ExecutableElement && member.getAnnotation(RequestMapping.class) != null) {
-                Method method = new Method((ExecutableElement) member, processor);
-                method.processElement();
-                this.methods.add(method);
-            }
-        }
     }
 }

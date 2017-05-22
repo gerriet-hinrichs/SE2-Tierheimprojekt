@@ -52,10 +52,4 @@ public class UnsupportedTypeElement extends TypeDataElement<TypeMirror> {
 
         // nothing to do here
     }
-
-    @Override
-    public void processElement() {
-
-        // nothing to do here
-    }
 }

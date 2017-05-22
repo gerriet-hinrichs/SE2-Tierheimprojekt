@@ -34,6 +34,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Map type data element.
@@ -48,12 +49,12 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
     /**
      * Key type data.
      */
-    private TypeDataElement<?> keyType;
+    private Lazy<TypeDataElement<?>> keyType;
 
     /**
      * Element type data.
      */
-    private TypeDataElement<?> valueType;
+    private Lazy<TypeDataElement<?>> valueType;
 
     /**
      * Creates new data class instance from the given element.
@@ -63,26 +64,16 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
      */
     public MapTypeElement(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
-    }
-
-    @Override
-    public String getTypescriptName() {
-        return "{ [key: " + keyType.getTypescriptName() + "]: " + valueType.getTypescriptName() + " }";
-    }
-
-    @Override
-    public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // nothing to do here
-    }
-
-    @Override
-    public void processElement() {
 
         // we know that we have exactly two argument
-        List<? extends TypeMirror> typeArguments = ((DeclaredType) element).getTypeArguments();
-        keyType = processor.processDataType(typeArguments.get(0));
-        valueType = processor.processDataType(typeArguments.get(1));
+        keyType = new Lazy<>(() -> {
+            List<? extends TypeMirror> typeArguments = ((DeclaredType) element).getTypeArguments();
+            return processor.processDataType(typeArguments.get(0));
+        });
+        valueType = new Lazy<>(() -> {
+            List<? extends TypeMirror> typeArguments = ((DeclaredType) element).getTypeArguments();
+            return processor.processDataType(typeArguments.get(1));
+        });
     }
 
     /**
@@ -116,5 +107,16 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
 
         // no matching type
         return false;
+    }
+
+    @Override
+    public String getTypescriptName() {
+        return "{ [key: " + keyType.value().getTypescriptName() + "]: " + valueType.value().getTypescriptName() + " }";
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // nothing to do here
     }
 }

@@ -34,6 +34,7 @@ import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Object type element.
@@ -43,22 +44,22 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
     /**
      * Object name.
      */
-    private String name;
+    private Lazy<String> name;
 
     /**
      * Object fields.
      */
-    private List<FieldTypeElement> fields;
+    private Lazy<List<FieldTypeElement>> fields;
 
     /**
      * Parent type.
      */
-    private TypeDataElement<?> parent;
+    private Lazy<TypeDataElement<?>> parent;
 
     /**
      * Type parameters.
      */
-    private List<TypeDataElement<?>> typeParameters;
+    private Lazy<List<TypeDataElement<?>>> typeParameters;
 
     /**
      * Creates new data class instance from the given element.
@@ -68,27 +69,57 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
      */
     public ObjectTypeElement(TypeElement element, RestControllerProcessor processor) {
         super(element, processor);
+        name = new Lazy<>(() -> element.getSimpleName().toString());
+        parent = new Lazy<>(() -> processor.processDataType(element.getSuperclass()));
+        fields = new Lazy<>(() -> {
+            List<FieldTypeElement> fieldList = new LinkedList<>();
+            for (Element member : element.getEnclosedElements()) {
+                if (member.getKind().isField() && member.getModifiers().contains(Modifier.PUBLIC)) {
+                    FieldTypeElement fieldTypeElement = new FieldTypeElement((VariableElement) member, processor);
+                    fieldList.add(fieldTypeElement);
+                }
+            }
+            return fieldList;
+        });
+        typeParameters = new Lazy<>(() -> {
+            List<TypeDataElement<?>> typeParameterList = new LinkedList<>();
+
+            for (TypeParameterElement parameterElement : element.getTypeParameters()) {
+                typeParameterList.add(processor.processDataType(parameterElement.asType()));
+            }
+            return typeParameterList;
+        });
+    }
+
+    /**
+     * Checks if the given type mirror is an object type.
+     *
+     * @param typeMirror            Type mirror element.
+     * @param processingEnvironment Processing environment.
+     *
+     * @return If the given mirror element is an object type.
+     */
+    public static boolean isObject(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
+        Types typeUtils = processingEnvironment.getTypeUtils();
+        Element element = typeUtils.asElement(typeMirror);
+
+        return element.getKind() == ElementKind.CLASS;
     }
 
     @Override
     public String getTypescriptName() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Api.").append(name);
-
-        // TODO @gerriet Why is that required?
-        if (typeParameters == null) {
-            processElement();
-        }
+        sb.append("Api.").append(name.value());
 
         // TODO @gerriet Gernerics
-        for (int i = 0; i < typeParameters.size(); i++) {
+        for (int i = 0; i < typeParameters.value().size(); i++) {
             if (i == 0) {
                 sb.append('<');
             } else {
                 sb.append(", ");
             }
             sb.append("any");
-            if (i == typeParameters.size() - 1) {
+            if (i == typeParameters.value().size() - 1) {
                 sb.append('>');
             }
         }
@@ -107,12 +138,12 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
         sb.append(indentation).append("declare namespace Api {\n");
 
         // object export (as typescript interface)
-        sb.append(innerIndentation1).append("export interface ").append(name);
+        sb.append(innerIndentation1).append("export interface ").append(name.value());
 
-        if (!typeParameters.isEmpty()) {
+        if (!typeParameters.value().isEmpty()) {
             sb.append('<');
             boolean first = true;
-            for (TypeDataElement<?> typeParameter : typeParameters) {
+            for (TypeDataElement<?> typeParameter : typeParameters.value()) {
                 if (first) {
                     first = false;
                 } else {
@@ -124,12 +155,12 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
         }
 
         // special parent handling (do not have {} as parent)
-        if (!parent.isRootObjectType()) {
-            sb.append(" extends ").append(parent.getTypescriptName());
+        if (!parent.value().isRootObjectType()) {
+            sb.append(" extends ").append(parent.value().getTypescriptName());
         }
         sb.append(" {\n");
 
-        for (FieldTypeElement field : fields) {
+        for (FieldTypeElement field : fields.value()) {
             field.generateTypescript(sb, level + 2, innerIndentation2);
         }
         sb.append(innerIndentation1).append("}\n");
@@ -139,48 +170,7 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
     }
 
     @Override
-    public void processElement() {
-
-        // object name
-        name = element.getSimpleName().toString();
-
-        // object parent
-        parent = processor.processDataType(element.getSuperclass());
-
-        // fields
-        fields = new LinkedList<>();
-        for (Element member : element.getEnclosedElements()) {
-            if (member.getKind().isField() && member.getModifiers().contains(Modifier.PUBLIC)) {
-                FieldTypeElement fieldTypeElement = new FieldTypeElement((VariableElement) member, processor);
-                fields.add(fieldTypeElement);
-            }
-        }
-
-        // type parameters
-        typeParameters = new LinkedList<>();
-
-        for (TypeParameterElement parameterElement : element.getTypeParameters()) {
-            typeParameters.add(processor.processDataType(parameterElement.asType()));
-        }
-    }
-
-    @Override
     public String getExportFileName() {
-        return Config.DATA_PATH + "/" + name + ".d.ts";
-    }
-
-    /**
-     * Checks if the given type mirror is an object type.
-     *
-     * @param typeMirror            Type mirror element.
-     * @param processingEnvironment Processing environment.
-     *
-     * @return If the given mirror element is an object type.
-     */
-    public static boolean isObject(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
-        Types typeUtils = processingEnvironment.getTypeUtils();
-        Element element = typeUtils.asElement(typeMirror);
-
-        return element.getKind() == ElementKind.CLASS;
+        return Config.DATA_PATH + "/" + name.value() + ".d.ts";
     }
 }

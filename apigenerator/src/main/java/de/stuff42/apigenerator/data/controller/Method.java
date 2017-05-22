@@ -32,6 +32,7 @@ import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
+import de.stuff42.utils.data.Lazy;
 
 /**
  * Method data element.
@@ -41,12 +42,12 @@ public class Method extends DataElement<ExecutableElement> {
     /**
      * Method return type.
      */
-    private TypeDataElement<?> returnType;
+    private Lazy<TypeDataElement<?>> returnType;
 
     /**
      * Method parameters.
      */
-    private List<Parameter> parameters;
+    private Lazy<List<Parameter>> parameters;
 
     /**
      * Creates new data class instance from the given element.
@@ -56,6 +57,17 @@ public class Method extends DataElement<ExecutableElement> {
      */
     Method(ExecutableElement element, RestControllerProcessor processor) {
         super(element, processor);
+        returnType = new Lazy<>(() -> processor.processDataType(element.getReturnType()));
+        parameters = new Lazy<>(() -> {
+            List<? extends VariableElement> parameterElements = element.getParameters();
+            List<Parameter> parameterList = new ArrayList<>(parameterElements.size());
+
+            for (VariableElement parameterElement : parameterElements) {
+                Parameter parameter = new Parameter(parameterElement, processor);
+                parameterList.add(parameter);
+            }
+            return parameterList;
+        });
     }
 
     @Override
@@ -68,7 +80,7 @@ public class Method extends DataElement<ExecutableElement> {
         // method header
         sb.append(indentation).append("public static ").append(element.getSimpleName()).append("(");
         boolean first = true;
-        for (Parameter parameter : parameters) {
+        for (Parameter parameter : parameters.value()) {
             if (first) {
                 first = false;
             } else {
@@ -76,29 +88,14 @@ public class Method extends DataElement<ExecutableElement> {
             }
             parameter.generateTypescript(sb, 0, "");
         }
-        sb.append("): ").append(returnType.getTypescriptName()).append(" {\n");
+        sb.append("): ").append(returnType.value().getTypescriptName()).append(" {\n");
 
         // method body
 
-        // TODO @gerriet
+        // TODO @gerriet Add ajax call
         sb.append(innerIndentation).append("return null;\n");
 
         // method end
         sb.append(indentation).append("}\n");
     }
-
-    @Override
-    public void processElement() {
-        returnType = processor.processDataType(element.getReturnType());
-
-        List<? extends VariableElement> parameterElements = element.getParameters();
-        parameters = new ArrayList<>(parameterElements.size());
-
-        for (VariableElement parameterElement : parameterElements) {
-            Parameter parameter = new Parameter(parameterElement, processor);
-            parameter.processElement();
-            parameters.add(parameter);
-        }
-    }
-
 }
