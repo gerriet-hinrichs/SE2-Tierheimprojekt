@@ -27,17 +27,11 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
-import de.stuff42.utils.data.Lazy;
 
 /**
  * Wildcard type element.
  */
 public class WildCardTypeElement extends TypeDataElement<WildcardType> {
-
-    /**
-     * Bond for this wildcard type.
-     */
-    private Lazy<TypeDataElement<?>> bond;
 
     /**
      * Creates new data class instance from the given element.
@@ -47,19 +41,11 @@ public class WildCardTypeElement extends TypeDataElement<WildcardType> {
      */
     public WildCardTypeElement(WildcardType element, RestControllerProcessor processor) {
         super(element, processor);
-        bond = new Lazy<>(() -> {
-            TypeMirror extendsBound = element.getExtendsBound();
-            if (extendsBound == null) {
-                return null;
-            }
-            return processor.processDataType(extendsBound);
-        });
     }
 
     @Override
     public String getTypescriptName() {
-        TypeDataElement<?> bondType = bond.value();
-        return bondType == null ? "any" : bondType.getTypescriptName();
+        return "any";
     }
 
     @Override
