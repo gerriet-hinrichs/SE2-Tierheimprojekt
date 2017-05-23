@@ -21,23 +21,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator.data.type;
+package de.stuff42.apigenerator.data.type.object;
 
+import java.util.LinkedList;
+import java.util.List;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
 
+import de.stuff42.apigenerator.Utilities;
+import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
 /**
- * Wildcard type element.
+ * Declared type element.
+ * <p>
+ * Type element for type access on generic types with bound parameters.
  */
-public class WildCardTypeElement extends TypeDataElement<WildcardType> {
+public class DeclaredTypeElement extends TypeDataElement<DeclaredType> {
 
     /**
-     * Bond for this wildcard type.
+     * Parent type.
      */
-    private Lazy<TypeDataElement<?>> bond;
+    private Lazy<TypeDataElement<?>> type;
+
+    /**
+     * Type parameters.
+     */
+    private Lazy<List<TypeDataElement<?>>> typeParameters;
 
     /**
      * Creates new data class instance from the given element.
@@ -45,31 +56,40 @@ public class WildCardTypeElement extends TypeDataElement<WildcardType> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    public WildCardTypeElement(WildcardType element, RestControllerProcessor processor) {
+    public DeclaredTypeElement(DeclaredType element, RestControllerProcessor processor) {
         super(element, processor);
-        bond = new Lazy<>(() -> {
-            TypeMirror extendsBound = element.getExtendsBound();
-            if (extendsBound == null) {
-                return null;
+        type = new Lazy<>(() -> processor.processDeclared(element));
+        typeParameters = new Lazy<>(() -> {
+            LinkedList<TypeDataElement<?>> parameters = new LinkedList<>();
+            for (TypeMirror parameterMirror : element.getTypeArguments()) {
+                parameters.add(processor.processDataType(parameterMirror));
             }
-            return processor.processDataType(extendsBound);
+            return parameters;
         });
     }
 
     @Override
+    public String getRawTypescriptName() {
+        return type.value().getRawTypescriptName();
+    }
+
+    @Override
     public String getTypescriptName() {
-        TypeDataElement<?> bondType = bond.value();
-        return bondType == null ? "any" : bondType.getTypescriptName();
+        return getRawTypescriptName() + Utilities.generateGenericArguments(typeParameters.value(), false);
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-
-        // nothing to do here
+        type.value().generateTypescript(sb, level, indentation);
     }
 
     @Override
     public TypeMirror getTypeMirror() {
         return element;
+    }
+
+    @Override
+    public boolean ignoreWithinBondsAndInheritance() {
+        return type.value().ignoreWithinBondsAndInheritance();
     }
 }

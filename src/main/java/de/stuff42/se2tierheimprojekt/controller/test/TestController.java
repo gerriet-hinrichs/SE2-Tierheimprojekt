@@ -174,12 +174,30 @@ public class TestController extends BaseController<FakeService> {
         return null;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/_GenericObject2_")
+    public TestObjectC<?, ?> _GenericObject2_() {
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_GenericObject3_")
+    public TestObjectC<? extends Base, Bar<TestObjectA, TestObjectB>> _GenericObject3_() {
+        return null;
+    }
+
     // test data types for above methods
     public enum TestEnum {
         FOO, BAR, BAZ
     }
 
-    public static class TestObjectA {
+    static class Base implements Foo {
+
+    }
+
+    interface Foo {
+
+    }
+
+    public static class TestObjectA extends Base {
 
         public TestObjectA a;
 
@@ -193,14 +211,14 @@ public class TestController extends BaseController<FakeService> {
         public TestObjectB d;
     }
 
-    public static class Bar<A, B> {
+    public static class Bar<A extends Base & Foo, B> extends Base {
 
         public A foo;
 
         public B bar;
     }
 
-    public static class TestObjectC<A extends TestObjectA, B extends Bar<TestObjectA, TestObjectB>> {
+    public static class TestObjectC<A extends TestObjectA, B extends Bar<?, ?>> extends Base {
 
         public A ax;
 

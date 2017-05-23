@@ -24,6 +24,7 @@
 package de.stuff42.apigenerator.data.type.object;
 
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
@@ -50,7 +51,7 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
      * @param element   Mirror element.
      * @param processor Processor instance.
      */
-    public FieldTypeElement(VariableElement element, RestControllerProcessor processor) {
+    FieldTypeElement(VariableElement element, RestControllerProcessor processor) {
         super(element, processor);
         name = new Lazy<>(() -> element.getSimpleName().toString());
         type = new Lazy<>(() -> processor.processDataType(element.asType()));
@@ -65,5 +66,10 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
         sb.append(indentation).append(name.value()).append(": ")
                 .append(type.value().getTypescriptName()).append(",\n");
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
     }
 }

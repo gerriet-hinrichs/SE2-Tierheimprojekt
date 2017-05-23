@@ -23,14 +23,11 @@
  */
 package de.stuff42.apigenerator.data.type.object;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
-import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.data.type.TypeDataElement;
+import de.stuff42.apigenerator.data.type.UnsupportedTypeElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
@@ -45,6 +42,12 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
     private Lazy<String> name;
 
     /**
+     * Bond for this type variable.
+     * We ignore interfaces, so we only have a parent class as bond.
+     */
+    private Lazy<TypeDataElement<?>> bond;
+
+    /**
      * Creates new data class instance from the given element.
      *
      * @param element   Mirror element.
@@ -53,21 +56,7 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
     public TypeParameter(TypeVariable element, RestControllerProcessor processor) {
         super(element, processor);
         name = new Lazy<>(() -> element.asElement().getSimpleName().toString());
-    }
-
-    /**
-     * Checks if the given type mirror is a type parameter.
-     *
-     * @param typeMirror            Type mirror element.
-     * @param processingEnvironment Processing environment.
-     *
-     * @return If the given mirror element is a type parameter.
-     */
-    public static boolean isTypeParameter(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
-        Types typeUtils = processingEnvironment.getTypeUtils();
-        Element element = typeUtils.asElement(typeMirror);
-
-        return element.getKind() == ElementKind.TYPE_PARAMETER;
+        bond = new Lazy<>(() -> processor.processDataType(element.getUpperBound()));
     }
 
     @Override
@@ -78,5 +67,16 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
         sb.append(name.value());
+
+        // handle bond properly
+        TypeDataElement<?> bondElement = bond.value();
+        if (!(bondElement.ignoreWithinBondsAndInheritance() || bondElement instanceof UnsupportedTypeElement)) {
+            sb.append(" extends ").append(bondElement.getTypescriptName());
+        }
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element;
     }
 }

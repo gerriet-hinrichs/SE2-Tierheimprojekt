@@ -23,7 +23,9 @@
  */
 package de.stuff42.apigenerator;
 
-import de.stuff42.utils.SystemConfig;
+import java.util.List;
+
+import de.stuff42.apigenerator.data.type.TypeDataElement;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -34,28 +36,9 @@ import org.jetbrains.annotations.NotNull;
 public class Utilities {
 
     /**
-     * Build version from system ini.
-     */
-    private static final String BUILD_VERSION = SystemConfig.get("BUILD", "Version", String.class, "SNAPSHOT");
-
-    /**
      * Indentation base string.
      */
     private static final String INDENTATION_BASE = "    ";
-
-    /**
-     * Calculates a safe identifier for use in paths and code.
-     * This method adds the build version to calculation to get different results for every build version.
-     * The idea is to prevent outside use of internal stuff (where the calculated identifier is used).
-     *
-     * @param longName Long name to calculate identifier from.
-     *
-     * @return Calculated identifier.
-     */
-    @NotNull
-    public static String getIdentifier(@NotNull String longName) {
-        return "_" + Integer.toString((longName + "_" + BUILD_VERSION).hashCode(), 16);
-    }
 
     /**
      * Calculates an indentation string for the given level.
@@ -64,12 +47,44 @@ public class Utilities {
      *
      * @return Indentation string.
      */
+    @NotNull
     @Contract(pure = true)
     public static String getIndentationString(int level) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < level; i++) {
-            result += INDENTATION_BASE;
+            result.append(INDENTATION_BASE);
         }
-        return result;
+        return result.toString();
+    }
+
+    /**
+     * Generates a code snipped for generic arguments.
+     *
+     * @param arguments List with generic arguments.
+     * @param withBonds If bonds should be generated.
+     *
+     * @return Generated snippet.
+     */
+    @NotNull
+    public static String generateGenericArguments(List<TypeDataElement<?>> arguments, boolean withBonds) {
+        StringBuilder sb = new StringBuilder();
+        if (!arguments.isEmpty()) {
+            sb.append('<');
+            boolean first = true;
+            for (TypeDataElement<?> typeParameter : arguments) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", ");
+                }
+                if (withBonds) {
+                    typeParameter.generateTypescript(sb, 0, "");
+                } else {
+                    sb.append(typeParameter.getTypescriptName());
+                }
+            }
+            sb.append('>');
+        }
+        return sb.toString();
     }
 }

@@ -25,39 +25,38 @@ package de.stuff42.apigenerator.data.type.object;
 
 import java.util.LinkedList;
 import java.util.List;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
+import de.stuff42.apigenerator.data.type.UnsupportedTypeElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
 /**
- * Object type element.
+ * Object or interface type element.
  */
 public class ObjectTypeElement extends TypeDataElement<TypeElement> {
 
     /**
-     * Object name.
+     * Object or interface name.
      */
     private Lazy<String> name;
 
     /**
-     * Object fields.
+     * Object or interface fields.
      */
     private Lazy<List<FieldTypeElement>> fields;
 
     /**
-     * Parent type.
+     * Parent or interface type.
      */
     private Lazy<TypeDataElement<?>> parent;
 
     /**
-     * Type parameters.
+     * Type or interface parameters.
      */
     private Lazy<List<TypeDataElement<?>>> typeParameters;
 
@@ -69,6 +68,7 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
      */
     public ObjectTypeElement(TypeElement element, RestControllerProcessor processor) {
         super(element, processor);
+
         name = new Lazy<>(() -> element.getSimpleName().toString());
         parent = new Lazy<>(() -> processor.processDataType(element.getSuperclass()));
         fields = new Lazy<>(() -> {
@@ -83,7 +83,6 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
         });
         typeParameters = new Lazy<>(() -> {
             List<TypeDataElement<?>> typeParameterList = new LinkedList<>();
-
             for (TypeParameterElement parameterElement : element.getTypeParameters()) {
                 typeParameterList.add(processor.processDataType(parameterElement.asType()));
             }
@@ -91,40 +90,20 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
         });
     }
 
-    /**
-     * Checks if the given type mirror is an object type.
-     *
-     * @param typeMirror            Type mirror element.
-     * @param processingEnvironment Processing environment.
-     *
-     * @return If the given mirror element is an object type.
-     */
-    public static boolean isObject(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
-        Types typeUtils = processingEnvironment.getTypeUtils();
-        Element element = typeUtils.asElement(typeMirror);
+    @Override
+    public String getRawTypescriptName() {
 
-        return element.getKind() == ElementKind.CLASS;
+        // give any if we are not a class
+        if (element.getKind() == ElementKind.CLASS) {
+            return "Api." + name.value();
+        }
+        return "any";
     }
 
     @Override
     public String getTypescriptName() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Api.").append(name.value());
-
-        // TODO @gerriet Gernerics
-        for (int i = 0; i < typeParameters.value().size(); i++) {
-            if (i == 0) {
-                sb.append('<');
-            } else {
-                sb.append(", ");
-            }
-            sb.append("any");
-            if (i == typeParameters.value().size() - 1) {
-                sb.append('>');
-            }
-        }
-
-        return sb.toString();
+        return getRawTypescriptName() +
+                Utilities.generateGenericArguments(typeParameters.value(), false);
     }
 
     @Override
@@ -139,23 +118,11 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
 
         // object export (as typescript interface)
         sb.append(innerIndentation1).append("export interface ").append(name.value());
+        sb.append(Utilities.generateGenericArguments(typeParameters.value(), true));
 
-        if (!typeParameters.value().isEmpty()) {
-            sb.append('<');
-            boolean first = true;
-            for (TypeDataElement<?> typeParameter : typeParameters.value()) {
-                if (first) {
-                    first = false;
-                } else {
-                    sb.append(", ");
-                }
-                typeParameter.generateTypescript(sb, 0, "");
-            }
-            sb.append('>');
-        }
-
-        // special parent handling (do not have {} as parent)
-        if (!parent.value().isRootObjectType()) {
+        // special parent handling (do not have "{}" or "any" as parent)
+        TypeDataElement<?> parentElement = parent.value();
+        if (!(parentElement.ignoreWithinBondsAndInheritance() || parentElement instanceof UnsupportedTypeElement)) {
             sb.append(" extends ").append(parent.value().getTypescriptName());
         }
         sb.append(" {\n");
@@ -171,6 +138,23 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
 
     @Override
     public String getExportFileName() {
-        return Config.DATA_PATH + "/" + name.value() + ".d.ts";
+
+        // only export if we have a class
+        if (element.getKind() == ElementKind.CLASS) {
+            return Config.DATA_PATH + "/" + name.value() + ".d.ts";
+        }
+        return null;
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
+    }
+
+    @Override
+    public boolean ignoreWithinBondsAndInheritance() {
+
+        // we only care about classes
+        return element.getKind() != ElementKind.CLASS;
     }
 }

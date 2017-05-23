@@ -88,14 +88,14 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
     public static boolean isMap(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
         Types typeUtils = processingEnvironment.getTypeUtils();
 
-        // load iterable type mirror if required
+        // load map type mirror if required
         if (mapType == null) {
 
-            // create generic iterable type mirror with a single type parameter argument
+            // create generic map type mirror with two type parameter argument
             Elements elementUtils = processingEnvironment.getElementUtils();
             WildcardType WILDCARD_TYPE_NULL = typeUtils.getWildcardType(null, null);
-            TypeElement iterableTypeElement = elementUtils.getTypeElement(Map.class.getName());
-            mapType = typeUtils.getDeclaredType(iterableTypeElement, WILDCARD_TYPE_NULL, WILDCARD_TYPE_NULL);
+            TypeElement mapTypeElement = elementUtils.getTypeElement(Map.class.getName());
+            mapType = typeUtils.getDeclaredType(mapTypeElement, WILDCARD_TYPE_NULL, WILDCARD_TYPE_NULL);
         }
 
         // check for map
@@ -118,5 +118,10 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // nothing to do here
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element;
     }
 }

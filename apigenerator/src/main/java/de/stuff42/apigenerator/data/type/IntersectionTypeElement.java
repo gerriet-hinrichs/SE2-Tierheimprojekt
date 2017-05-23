@@ -26,7 +26,6 @@ package de.stuff42.apigenerator.data.type;
 import java.util.LinkedList;
 import java.util.List;
 import javax.lang.model.type.IntersectionType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
@@ -51,6 +50,7 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     public IntersectionTypeElement(IntersectionType element, RestControllerProcessor processor) {
         super(element, processor);
         bounds = new Lazy<>(() -> {
+
             // grab bounds
             List<TypeDataElement<?>> boundList = new LinkedList<>();
             for (TypeMirror elementType : element.getBounds()) {
@@ -60,28 +60,19 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
         });
     }
 
-    /**
-     * Checks if the given type mirror is an intersection type.
-     *
-     * @param typeMirror Type mirror element.
-     *
-     * @return If the given mirror element is an intersection type.
-     */
-    public static boolean isIntersectionType(TypeMirror typeMirror) {
-        return typeMirror.getKind() == TypeKind.INTERSECTION;
-    }
-
     @Override
     public String getTypescriptName() {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (TypeDataElement<?> typeData : bounds.value()) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(" & ");
+            if (!(typeData.ignoreWithinBondsAndInheritance() || typeData instanceof UnsupportedTypeElement)) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(" & ");
+                }
+                sb.append(typeData.getTypescriptName());
             }
-            sb.append(typeData.getTypescriptName());
         }
         return sb.toString();
     }
@@ -90,5 +81,10 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // nothing to do here
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element;
     }
 }

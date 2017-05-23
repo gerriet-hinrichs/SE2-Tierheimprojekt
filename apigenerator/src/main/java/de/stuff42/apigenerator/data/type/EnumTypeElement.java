@@ -25,12 +25,10 @@ package de.stuff42.apigenerator.data.type;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 
 import de.stuff42.apigenerator.Config;
 import de.stuff42.apigenerator.Utilities;
@@ -73,20 +71,6 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
         });
     }
 
-    /**
-     * Checks if the given type mirror is an enum type.
-     *
-     * @param typeMirror            Type mirror element.
-     * @param processingEnvironment Processing environment.
-     *
-     * @return If the given mirror element is an enum type.
-     */
-    public static boolean isEnum(TypeMirror typeMirror, ProcessingEnvironment processingEnvironment) {
-        Types typeUtils = processingEnvironment.getTypeUtils();
-        Element element = typeUtils.asElement(typeMirror);
-        return element.getKind() == ElementKind.ENUM;
-    }
-
     @Override
     public String getTypescriptName() {
         return "Api." + name.value();
@@ -122,5 +106,10 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
     @Override
     public String getExportFileName() {
         return Config.DATA_PATH + "/" + name.value() + ".d.ts";
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
     }
 }

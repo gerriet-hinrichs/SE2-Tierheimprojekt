@@ -23,6 +23,8 @@
  */
 package de.stuff42.apigenerator.data;
 
+import javax.lang.model.type.TypeMirror;
+
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
@@ -105,4 +107,11 @@ public abstract class DataElement<T> {
     public T getElement() {
         return element;
     }
+
+    /**
+     * Returns the type mirror element for this data element.
+     *
+     * @return Type mirror element.
+     */
+    public abstract TypeMirror getTypeMirror();
 }

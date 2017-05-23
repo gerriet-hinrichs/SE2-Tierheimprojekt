@@ -117,4 +117,9 @@ public class IterableTypeElement extends TypeDataElement<TypeMirror> {
 
         // nothing to do here
     }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element;
+    }
 }

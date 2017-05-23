@@ -112,7 +112,12 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
     }
 
     @Override
-    public boolean isRootObjectType() {
+    public TypeMirror getTypeMirror() {
+        return element;
+    }
+
+    @Override
+    public boolean ignoreWithinBondsAndInheritance() {
         return "java.lang.Object".equals(element.toString());
     }
 }

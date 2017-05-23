@@ -24,6 +24,7 @@
 package de.stuff42.apigenerator.data.controller;
 
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
@@ -54,5 +55,10 @@ public class Parameter extends DataElement<VariableElement> {
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
         sb.append(element.getSimpleName()).append(": ").append(type.value().getTypescriptName());
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
     }
 }

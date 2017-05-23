@@ -51,11 +51,23 @@ public abstract class TypeDataElement<T> extends DataElement<T> {
     public abstract String getTypescriptName();
 
     /**
-     * Returns if this type element represents the object type.
+     * Returns the raw typescript name.
+     * This method only returns a different result than {@link #getTypescriptName()} for generic objects.
      *
-     * @return If this type element represents the object type.
+     * @return Raw typescript name.
+     *
+     * @see #getTypescriptName()
      */
-    public boolean isRootObjectType() {
+    public String getRawTypescriptName() {
+        return getTypescriptName();
+    }
+
+    /**
+     * Returns if this type element represents something that can be ignored within bonds and inheritance.
+     *
+     * @return If this type element represents something that can be ignored within bonds and inheritance.
+     */
+    public boolean ignoreWithinBondsAndInheritance() {
         return false;
     }
 }

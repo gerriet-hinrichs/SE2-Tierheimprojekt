@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.DataElement;
@@ -97,5 +98,10 @@ public class Method extends DataElement<ExecutableElement> {
 
         // method end
         sb.append(indentation).append("}\n");
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
     }
 }

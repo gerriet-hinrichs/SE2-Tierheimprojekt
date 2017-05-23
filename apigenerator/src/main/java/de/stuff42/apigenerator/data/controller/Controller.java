@@ -28,12 +28,13 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-
-import org.springframework.web.bind.annotation.RequestMapping;
+import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
+
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Controller data element class.
@@ -79,6 +80,11 @@ public class Controller extends DataElement<TypeElement> {
     @Override
     public String getExportFileName() {
         return name.value() + ".ts";
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element.asType();
     }
 
     @Override
