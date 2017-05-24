@@ -24,15 +24,33 @@
             <div class="question" data-bind="module: { name: 'components/question', data: { question: $data } }"></div>
             {{/foreach}}
         </div>
-        <!-- Scroll test -->
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div data-bind="module: 'components/loremipsum'"></div>
-        <div id="f1" data-bind="module: 'components/loremipsum'"></div>
+        <!-- Animation Samples -->
+        <div class="wrap">
+            <div>
+                <a class="shake-y" href="">
+                    <div class="img-cont ">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 1">
+                    </div>
+                </a>
+                <p>shake on Y</p>
+            </div>
+            <div>
+                <a class="shake-x" href="">
+                    <div class="img-cont ">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 2">
+                    </div>
+                </a>
+                <p>shake on X</p>
+            </div>
+            <div>
+                <a class="flip-it" href="">
+                    <div class="img-cont">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 3">
+                    </div>
+                </a>
+                <p>no shake</p>
+            </div>
+        </div>
     </div>
 </div>
 <div class="footer">
