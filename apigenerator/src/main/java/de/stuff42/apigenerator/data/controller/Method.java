@@ -149,7 +149,7 @@ public class Method extends DataElement<ExecutableElement> {
      * @param pathVariableName       Path variable name.
      * @param typescriptVariableName Typescript variable name.
      */
-    public void addPathVariable(String pathVariableName, String typescriptVariableName) {
+    void addPathVariable(String pathVariableName, String typescriptVariableName) {
         route.value().addPathVariable(pathVariableName, typescriptVariableName);
     }
 
@@ -159,7 +159,7 @@ public class Method extends DataElement<ExecutableElement> {
      * @param queryParameterName     Query parameter name.
      * @param typescriptVariableName Typescript variable name.
      */
-    public void addQueryParameter(String queryParameterName, String typescriptVariableName) {
+    void addQueryParameter(String queryParameterName, String typescriptVariableName) {
         route.value().addQueryParameter(queryParameterName, typescriptVariableName);
     }
 
@@ -168,7 +168,7 @@ public class Method extends DataElement<ExecutableElement> {
      *
      * @param bodyVariableName Request body variable name.
      */
-    public void setBodyVariableName(String bodyVariableName) {
+    void setBodyVariableName(String bodyVariableName) {
         this.bodyVariableName = bodyVariableName;
     }
 }
