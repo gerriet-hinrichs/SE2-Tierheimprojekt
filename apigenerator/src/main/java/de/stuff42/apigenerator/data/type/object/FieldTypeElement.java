@@ -63,9 +63,13 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
     }
 
     @Override
+    public boolean supportsNull() {
+        return type.value().supportsNull();
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(indentation).append(name.value()).append(": ")
-                .append(type.value().getTypescriptName()).append(",\n");
+        sb.append(indentation).append(name.value()).append(": ").append(type.value().getNullAwareTypescriptName()).append(",\n");
     }
 
     @Override

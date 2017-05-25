@@ -77,6 +77,11 @@ public class EnumTypeElement extends TypeDataElement<TypeElement> {
     }
 
     @Override
+    public boolean supportsNull() {
+        return false;
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // inner indentation

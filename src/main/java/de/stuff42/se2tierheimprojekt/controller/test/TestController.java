@@ -134,7 +134,7 @@ public class TestController extends BaseController<FakeService> {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/_Array_")
-    public String[] _Array_() {
+    public int[] _Array_() {
         return null;
     }
 

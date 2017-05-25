@@ -4,6 +4,7 @@
     "target": "es5",
     "module": "AMD",
     "noImplicitAny": true,
+    "strictNullChecks": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "removeComments": false,

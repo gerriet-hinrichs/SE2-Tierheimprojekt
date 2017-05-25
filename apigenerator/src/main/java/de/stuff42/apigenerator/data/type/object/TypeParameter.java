@@ -65,13 +65,18 @@ public class TypeParameter extends TypeDataElement<TypeVariable> {
     }
 
     @Override
+    public boolean supportsNull() {
+        return bond.value().supportsNull();
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
         sb.append(name.value());
 
         // handle bond properly
         TypeDataElement<?> bondElement = bond.value();
         if (!(bondElement.ignoreWithinBondsAndInheritance() || bondElement instanceof UnsupportedTypeElement)) {
-            sb.append(" extends ").append(bondElement.getTypescriptName());
+            sb.append(" extends ").append(bondElement.getNullAwareTypescriptName());
         }
     }
 

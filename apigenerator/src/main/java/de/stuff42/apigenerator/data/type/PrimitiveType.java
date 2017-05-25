@@ -38,45 +38,50 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
     /**
      * Mapping for java to primitive typescript type.
      */
-    private static Map<String, String> primitiveTypes = new HashMap<>();
+    private static Map<String, PrimitiveTypeInfo> primitiveTypes = new HashMap<>();
 
     // initialize primitive type mapping
     static {
 
         // integers
-        primitiveTypes.put("byte", "number");
-        primitiveTypes.put("java.lang.Byte", "number");
+        primitiveTypes.put("byte", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Byte", new PrimitiveTypeInfo("number", true));
 
-        primitiveTypes.put("short", "number");
-        primitiveTypes.put("java.lang.Short", "number");
+        primitiveTypes.put("short", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Short", new PrimitiveTypeInfo("number", true));
 
-        primitiveTypes.put("int", "number");
-        primitiveTypes.put("java.lang.Integer", "number");
+        primitiveTypes.put("int", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Integer", new PrimitiveTypeInfo("number", true));
 
-        primitiveTypes.put("long", "number");
-        primitiveTypes.put("java.lang.Long", "number");
+        primitiveTypes.put("long", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Long", new PrimitiveTypeInfo("number", true));
 
         // floating point
-        primitiveTypes.put("float", "number");
-        primitiveTypes.put("java.lang.Float", "number");
+        primitiveTypes.put("float", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Float", new PrimitiveTypeInfo("number", true));
 
-        primitiveTypes.put("double", "number");
-        primitiveTypes.put("java.lang.Double", "number");
+        primitiveTypes.put("double", new PrimitiveTypeInfo("number", false));
+        primitiveTypes.put("java.lang.Double", new PrimitiveTypeInfo("number", true));
 
         // string
-        primitiveTypes.put("char", "string");
-        primitiveTypes.put("java.lang.Char", "string");
+        primitiveTypes.put("char", new PrimitiveTypeInfo("string", false));
+        primitiveTypes.put("java.lang.Char", new PrimitiveTypeInfo("string", true));
 
-        primitiveTypes.put("java.lang.String", "string");
+        primitiveTypes.put("java.lang.String", new PrimitiveTypeInfo("string", true));
 
         // object
-        primitiveTypes.put("java.lang.Object", "{}");
+        primitiveTypes.put("java.lang.Object", new PrimitiveTypeInfo("{}", true));
     }
 
     /**
      * Typescript name for the primitive type.
      */
     private Lazy<String> name;
+
+    /**
+     * If <code>null</code> is supported.
+     */
+    private Lazy<Boolean> typeSupportsNull;
 
     /**
      * Creates new data class instance from the given element.
@@ -86,7 +91,17 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
      */
     public PrimitiveType(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
-        name = new Lazy<>(() -> primitiveTypes.getOrDefault(element.toString(), "any"));
+        name = new Lazy<>(() -> {
+            PrimitiveTypeInfo typeInfo = primitiveTypes.get(element.toString());
+            if (typeInfo == null) {
+                return "any";
+            }
+            return typeInfo.tyescriptName;
+        });
+        typeSupportsNull = new Lazy<>(() -> {
+            PrimitiveTypeInfo typeInfo = primitiveTypes.get(element.toString());
+            return typeInfo == null || typeInfo.supportsNull;
+        });
     }
 
     /**
@@ -119,5 +134,37 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
     @Override
     public boolean ignoreWithinBondsAndInheritance() {
         return "java.lang.Object".equals(element.toString());
+    }
+
+    @Override
+    public boolean supportsNull() {
+        return typeSupportsNull.value();
+    }
+
+    /**
+     * Helper container class for type info.
+     */
+    private static class PrimitiveTypeInfo {
+
+        /**
+         * Typescript name.
+         */
+        private final String tyescriptName;
+
+        /**
+         * If <code>null</code> is supported.
+         */
+        private final boolean supportsNull;
+
+        /**
+         * Creates type info instance.
+         *
+         * @param typescriptName Typescript name.
+         * @param supportsNull   If <code>null</code> is supported.
+         */
+        private PrimitiveTypeInfo(String typescriptName, boolean supportsNull) {
+            this.tyescriptName = typescriptName;
+            this.supportsNull = supportsNull;
+        }
     }
 }
