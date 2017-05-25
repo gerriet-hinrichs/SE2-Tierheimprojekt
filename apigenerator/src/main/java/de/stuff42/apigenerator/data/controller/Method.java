@@ -27,13 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
+
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Method data element.
@@ -51,9 +52,19 @@ public class Method extends DataElement<ExecutableElement> {
     private Lazy<List<Parameter>> parameters;
 
     /**
+     * Method's route.
+     */
+    private Lazy<Route> route;
+
+    /**
      * Belonging controller instance.
      */
     private Controller controller;
+
+    /**
+     * Body variable name.
+     */
+    private String bodyVariableName;
 
     /**
      * Creates new data class instance from the given element.
@@ -76,14 +87,15 @@ public class Method extends DataElement<ExecutableElement> {
             }
             return parameterList;
         });
+        route = new Lazy<>(() -> new Route(element.getAnnotation(RequestMapping.class), processor));
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // inner indentation info
-        int innerLevel = level + 1;
-        String innerIndentation = Utilities.getIndentationString(innerLevel);
+        String indentationSingle = Utilities.getIndentationString(level + 1);
+        String indentationDouble = Utilities.getIndentationString(level + 2);
 
         // method header
         sb.append(indentation).append("public static ").append(element.getSimpleName()).append("(");
@@ -96,22 +108,30 @@ public class Method extends DataElement<ExecutableElement> {
             }
             parameter.generateTypescript(sb, 0, "");
         }
-
-        // TODO @gerriet Remove additional null
-        sb.append("): (").append(processor.getTypeAlias(getAliasBaseName() + "$return", returnType.value())).append(") | null {\n");
+        sb.append("): JQueryDeferred<").append(processor.getTypeAlias(getAliasBaseName() + "$result", returnType.value())).append("> {\n");
 
         // method body
+        sb.append(indentationSingle).append("return <any>jQuery.ajax({\n");
 
-        // TODO @gerriet Add ajax call
-        sb.append(innerIndentation).append("return null;\n");
+        // method & route
+        sb.append(indentationDouble).append("method: \"").append(route.value().getMethod()).append("\",\n");
+        sb.append(indentationDouble).append("url: ");
+        route.value().generateTypescript(sb, 0, "");
+        sb.append(",\n");
+
+        // optional body
+        if (bodyVariableName != null) {
+            sb.append(indentationDouble).append("data: JSON.stringify(").append(bodyVariableName).append("),\n");
+        }
+
+        // configuration
+        sb.append(indentationDouble).append("dataType: \"json\",\n");
+        sb.append(indentationDouble).append("mimeType: \"application/json\",\n");
+
+        sb.append(indentationSingle).append("});\n");
 
         // method end
         sb.append(indentation).append("}\n");
-    }
-
-    @Override
-    public TypeMirror getTypeMirror() {
-        return element.asType();
     }
 
     /**
@@ -121,5 +141,34 @@ public class Method extends DataElement<ExecutableElement> {
      */
     String getAliasBaseName() {
         return controller.getAliasBaseName() + '$' + element.getSimpleName().toString();
+    }
+
+    /**
+     * Adds a path variable reference to this method's route.
+     *
+     * @param pathVariableName       Path variable name.
+     * @param typescriptVariableName Typescript variable name.
+     */
+    public void addPathVariable(String pathVariableName, String typescriptVariableName) {
+        route.value().addPathVariable(pathVariableName, typescriptVariableName);
+    }
+
+    /**
+     * Adds a query parameter to this method's route.
+     *
+     * @param queryParameterName     Query parameter name.
+     * @param typescriptVariableName Typescript variable name.
+     */
+    public void addQueryParameter(String queryParameterName, String typescriptVariableName) {
+        route.value().addQueryParameter(queryParameterName, typescriptVariableName);
+    }
+
+    /**
+     * Sets this method's request body variable name.
+     *
+     * @param bodyVariableName Request body variable name.
+     */
+    public void setBodyVariableName(String bodyVariableName) {
+        this.bodyVariableName = bodyVariableName;
     }
 }

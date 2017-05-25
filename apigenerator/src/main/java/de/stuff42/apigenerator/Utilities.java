@@ -26,7 +26,6 @@ package de.stuff42.apigenerator;
 import java.util.List;
 
 import de.stuff42.apigenerator.data.type.TypeDataElement;
-import de.stuff42.utils.SystemConfig;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -35,11 +34,6 @@ import org.jetbrains.annotations.NotNull;
  * Class for generator utilities.
  */
 public class Utilities {
-
-    /**
-     * Build version from system ini.
-     */
-    private static final String BUILD_VERSION = SystemConfig.get("BUILD", "Version", String.class, "SNAPSHOT");
 
     /**
      * Indentation base string.
@@ -114,8 +108,8 @@ public class Utilities {
         // iterate over the string
         char[] stringCharacters = string.toCharArray();
         char character;
-        for (int i = 0; i < stringCharacters.length; i++) {
-            character = stringCharacters[i];
+        for (char stringCharacter : stringCharacters) {
+            character = stringCharacter;
             if (character == '(') {
 
                 // count open parenthesis
@@ -149,19 +143,5 @@ public class Utilities {
             return "(" + string + ")";
         }
         return string;
-    }
-
-    /**
-     * Calculates a safe identifier for use in paths and code.
-     * This method adds the build version to calculation to get different results for every build version.
-     * The idea is to prevent outside use of internal stuff (where the calculated identifier is used).
-     *
-     * @param longName Long name to calculate identifier from.
-     *
-     * @return Calculated identifier.
-     */
-    @NotNull
-    public static String getIdentifier(@NotNull String longName) {
-        return "_" + Integer.toHexString((longName + "_" + BUILD_VERSION).hashCode());
     }
 }
