@@ -28,7 +28,6 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
@@ -69,7 +68,7 @@ public class Controller extends DataElement<TypeElement> {
 
                 // only process public methods that have a request mapping
                 if (member instanceof ExecutableElement && member.getAnnotation(RequestMapping.class) != null) {
-                    Method method = new Method((ExecutableElement) member, processor);
+                    Method method = new Method((ExecutableElement) member, processor, this);
                     methodList.add(method);
                 }
             }
@@ -83,16 +82,20 @@ public class Controller extends DataElement<TypeElement> {
     }
 
     @Override
-    public TypeMirror getTypeMirror() {
-        return element.asType();
-    }
-
-    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
         sb.append("export class ").append(name.value()).append(" {\n");
         for (Method method : methods.value()) {
             method.generateTypescript(sb, level + 1);
         }
         sb.append("}\n");
+    }
+
+    /**
+     * Returns the alias base name for this controller.
+     *
+     * @return Alias base name.
+     */
+    String getAliasBaseName() {
+        return name.value();
     }
 }

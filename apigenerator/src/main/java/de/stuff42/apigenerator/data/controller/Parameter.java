@@ -24,12 +24,15 @@
 package de.stuff42.apigenerator.data.controller;
 
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Parameter data element class.
@@ -42,23 +45,55 @@ public class Parameter extends DataElement<VariableElement> {
     private Lazy<TypeDataElement<?>> type;
 
     /**
+     * Method instance for this parameter.
+     */
+    private Method method;
+
+    /**
      * Creates new data class instance from the given element.
      *
      * @param element   Mirror element.
      * @param processor Processor instance.
+     * @param method    Method instance.
      */
-    Parameter(VariableElement element, RestControllerProcessor processor) {
+    Parameter(VariableElement element, RestControllerProcessor processor, Method method) {
         super(element, processor);
+        this.method = method;
         type = new Lazy<>(() -> processor.processDataType(element.asType()));
     }
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.value().getTypescriptName());
+
+        // path variable?
+        PathVariable pathVariable = element.getAnnotation(PathVariable.class);
+        if (pathVariable != null) {
+            method.addPathVariable("".equals(pathVariable.name()) ? element.getSimpleName().toString() : pathVariable.name(),
+                    element.getSimpleName().toString());
+        }
+
+        // query parameter?
+        RequestParam requestParam = element.getAnnotation(RequestParam.class);
+        if (requestParam != null) {
+            method.addQueryParameter("".equals(requestParam.name()) ? element.getSimpleName().toString() : requestParam.name(),
+                    element.getSimpleName().toString());
+        }
+
+        // body parameter
+        if (element.getAnnotation(RequestBody.class) != null) {
+            method.setBodyVariableName(element.getSimpleName().toString());
+        }
+
+        // generate header
+        sb.append(element.getSimpleName()).append(": ").append(processor.getTypeAlias(getAliasBaseName(), type.value()));
     }
 
-    @Override
-    public TypeMirror getTypeMirror() {
-        return element.asType();
+    /**
+     * Returns the alias base name for this controller.
+     *
+     * @return Alias base name.
+     */
+    private String getAliasBaseName() {
+        return method.getAliasBaseName() + '$' + element.getSimpleName().toString();
     }
 }

@@ -23,8 +23,6 @@
  */
 package de.stuff42.apigenerator.data;
 
-import javax.lang.model.type.TypeMirror;
-
 import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
@@ -44,11 +42,6 @@ public abstract class DataElement<T> {
      * Processor instance.
      */
     protected final RestControllerProcessor processor;
-
-    /**
-     * Processed flag.
-     */
-    private boolean processed = false;
 
     /**
      * Creates new data class instance from the given element.
@@ -98,20 +91,4 @@ public abstract class DataElement<T> {
     public String getExportFileName() {
         return null;
     }
-
-    /**
-     * Returns the mirror element for this data element.
-     *
-     * @return Mirror element.
-     */
-    public T getElement() {
-        return element;
-    }
-
-    /**
-     * Returns the type mirror element for this data element.
-     *
-     * @return Type mirror element.
-     */
-    public abstract TypeMirror getTypeMirror();
 }

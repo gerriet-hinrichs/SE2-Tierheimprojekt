@@ -1,0 +1,25 @@
+Frage,Antworten,"Tierarten und Eigenschaften: HUND, KATZE, VOGEL, FISCH, REPTIL, HAMSTER, KANINCHEN, MEERSCHWEINCHEN, MAUS, JUNG, KLEIN, MITTELGROSS, GROSS, TEUER, MITTELTEUER, PREISWERT, PFLEGEBEDUERFTIG, GARTEN"
+,,Tierart/Eigenschaft Ausschließen:
+Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?,,
+,Weniger als 35,"HUND, KATZE, MITTELGROSS, GROSS"
+,35 bis 55,"MITTELGROSS, GROSS"
+,Mehr als 55,
+Kann das Tier auch im Garten gehalten werden?,,
+,Ja,
+,Nein,GARTEN
+In welcher Umgebung wird das Tier gehalten?,,
+,Land / Dorf,
+,Wohngebiet ohne Hauptstraße in direkter Umgebung,
+,An einer Hauptstraße oder in Stadtkern,HUND
+Wieviele Stunden haben sie durchschnittlich täglich Zeit für das Tier?,,
+,Bis zu 1,"PFLEGEBEDUERFTIG, HUND, KATZE, VOGEL, GROSS, MITTELGROSS"
+,1 bis 4,"PFLEGEBEDUERFTIG, HUND, VOGEL"
+,5 bis 8,PFLEGEBEDUERFTIG
+,Den ganzen Tag,
+Soll das Tier auch von Kindern versorgt werden?,,
+,Ja,"PFLEGEBEDUERFTIG, HUND, VOGEL, KANINCHEN"
+,Nein,
+Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung),,
+,20 bis 30 €,"HUND, KATZE, MITTELGROSS, GROSS"
+,30 bis 60 €,"HUND, GROSS"
+,60 bis 80 €,

@@ -27,9 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -44,6 +42,7 @@ import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 
 import de.stuff42.apigenerator.Config;
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.data.controller.Controller;
@@ -97,6 +96,11 @@ public class RestControllerProcessor extends AbstractProcessor {
     private List<TypeDataElement<?>> exportedDeclaredTypes = new LinkedList<>();
 
     /**
+     * Alias data map.
+     */
+    private Map<String, String> aliasRegistry = new HashMap<>();
+
+    /**
      * Called before the object processing starts.
      *
      * @return If object should be processed within the current step. If <code>false</code> is returned {@link
@@ -121,7 +125,7 @@ public class RestControllerProcessor extends AbstractProcessor {
     /**
      * Processes a found object.
      *
-     * @param element     Object data information.
+     * @param element Object data information.
      */
     private void processObject(@NotNull Element element) {
         try {
@@ -183,16 +187,40 @@ public class RestControllerProcessor extends AbstractProcessor {
 
             // stop processing if we have errors
             if (environment.errorRaised()) {
+
                 // skip further processing
                 return true;
             }
 
-            // call step finalized method
-            return true;
+            // generate alias file
+            generateAliasFile();
         }
 
         // no elements found: we did everything
         return true;
+    }
+
+    /**
+     * Generates the alias file containing all registered aliases.
+     */
+    private void generateAliasFile() {
+
+        // only generate file if we have alias stuff
+        if (!aliasRegistry.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            String indentation = Utilities.getIndentationString(1);
+
+            // generate content
+            sb.append("declare namespace Alias {\n");
+            for (Map.Entry<String, String> aliasEntry : aliasRegistry.entrySet()) {
+                sb.append(indentation).append("export type ").append(aliasEntry.getKey())
+                        .append(" = ").append(aliasEntry.getValue()).append(";\n");
+            }
+            sb.append("}\n");
+
+            // write file
+            generateApiFile("alias.d.ts", sb.toString());
+        }
     }
 
     /**
@@ -395,5 +423,40 @@ public class RestControllerProcessor extends AbstractProcessor {
             // write to file
             generateApiFile(exportFileName, sb.toString());
         }
+    }
+
+    /**
+     * Creates a type alias for the given type.
+     *
+     * @param suggestedName Suggested alias name.
+     * @param type          Type to be aliased.
+     *
+     * @return Actual alias name for use in code.
+     */
+    public String getTypeAlias(String suggestedName, TypeDataElement<?> type) {
+
+        // start with the suggested name as key
+        String actualKey = suggestedName;
+        String typeName = type.getNullAwareTypescriptName();
+
+        // is the suggested name available?
+        if (aliasRegistry.containsKey(actualKey)) {
+
+            // check if the found entry is the same
+            if (!aliasRegistry.get(actualKey).equals(typeName)) {
+
+                // if they are different, we need to adjust the key (we should be unique enough using hash code)
+                actualKey += "_" + Integer.toHexString(typeName.hashCode());
+                aliasRegistry.put(actualKey, typeName);
+            }
+
+        } else {
+
+            // name available: create entry
+            aliasRegistry.put(actualKey, typeName);
+        }
+
+        // add namespace to alias
+        return "Alias." + actualKey;
     }
 }

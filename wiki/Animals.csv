@@ -1,0 +1,21 @@
+Tierart und Eigenschaften,Name,Rasse,Geschlecht,Alter,Platzbedarf
+"HUND, MITTELGROSS, JUNG, TEUER",Didi,Mischling,männlich,jung,mittel
+"HUND, KLEIN, JUNG, MITTELTEUER",Slushi,Jack-Russell-Terrier-Mischling,männlich,jung,klein
+"HUND, GROSS, JUNG, TEUER",Sandor,Malinois,männlich,jung,groß
+"HUND, MITTELGROSS, TEUER, GARTEN",Thelma,Mischling,weiblich,ausgewachsen,mittel
+"HUND, MITTELGROSS, TEUER, PFLEGEBEDUERFTIG",Anuk,Thai Ridgeback,weiblich,alt,mittel
+"KATZE, MITTELTEUER",Tobi,Europäisch Kurzhaat,männlich,alt,klein
+"KATZE, JUNG, MITTELTEUER",Mia,Siam,weiblich,jung,klein
+"KATZE, MITTELTEUER",Lisa,Kartäuser-Mischling,weiblich,ausgewachsen,klein
+"KATZE, MITTELTEUER",Jenny,Europäisch Kurzhaat,männlich,alt,klein
+"KANINCHEN, JUNG, PREISWERT",Peach,Kaninchen,weiblich,jung,klein
+"KANINCHEN, PREISWERT",Chipman,Löwenkopf-Kaninchen,männlich,ausgewachsen,klein
+"VOGEL, KLEIN, PREISWERT",Jewels und Yellow,Kanarienvögel,weiblich,ausgewachsen,mittel
+"MEERSCHWEINCHEN, PREISWERT",Rambo,Meerschweinchen,männlich,ausgewachsen,klein
+"MAUS, PREISWERT",Perdita,Chinchilla,weiblich,alt,klein
+"MAUS, PREISWERT",Bibi und Tina,Chinchilla,weiblich,jung,klein
+"REPTIL, PREISWERT",Hänne,Leghorn (Hahn),männlich,ausgewachsen,klein
+"REPTIL, PREISWERT",Sting,Echse,männlich,alt,klein
+"VOGEL, GROSS, TEUER",Vasco,Graupapagei,männlich,alt,groß
+"REPTIL, GROSS, MITTELTEUER",Noah,Kornnatter,männlich,ausgewachsen,klein
+"REPTIL, PREISWERT",Horst,Bartagamme (Echse),männlich,ausgewachsen,klein

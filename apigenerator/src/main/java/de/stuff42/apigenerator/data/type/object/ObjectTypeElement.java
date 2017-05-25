@@ -102,8 +102,11 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
 
     @Override
     public String getTypescriptName() {
-        return getRawTypescriptName() +
-                Utilities.generateGenericArguments(typeParameters.value(), false);
+        if (element.getKind() == ElementKind.CLASS) {
+            return getRawTypescriptName() +
+                    Utilities.generateGenericArguments(typeParameters.value(), false);
+        }
+        return "any";
     }
 
     @Override
@@ -156,5 +159,10 @@ public class ObjectTypeElement extends TypeDataElement<TypeElement> {
 
         // we only care about classes
         return element.getKind() != ElementKind.CLASS;
+    }
+
+    @Override
+    public boolean supportsNull() {
+        return true;
     }
 }
