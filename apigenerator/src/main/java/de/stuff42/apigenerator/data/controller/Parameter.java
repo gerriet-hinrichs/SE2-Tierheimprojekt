@@ -54,7 +54,7 @@ public class Parameter extends DataElement<VariableElement> {
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(element.getSimpleName()).append(": ").append(type.value().getTypescriptName());
+        sb.append(element.getSimpleName()).append(": ").append(type.value().getNullAwareTypescriptName());
     }
 
     @Override

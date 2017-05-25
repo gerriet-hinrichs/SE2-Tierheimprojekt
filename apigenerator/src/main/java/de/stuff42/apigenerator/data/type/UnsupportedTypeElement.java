@@ -48,6 +48,13 @@ public class UnsupportedTypeElement extends TypeDataElement<TypeMirror> {
     }
 
     @Override
+    public boolean supportsNull() {
+
+        // we don't know but assume it does
+        return true;
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // nothing to do here

@@ -49,6 +49,11 @@ public class WildCardTypeElement extends TypeDataElement<WildcardType> {
     }
 
     @Override
+    public boolean supportsNull() {
+        return true;
+    }
+
+    @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // nothing to do here

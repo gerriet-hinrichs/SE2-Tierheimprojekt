@@ -89,7 +89,9 @@ public class Method extends DataElement<ExecutableElement> {
             }
             parameter.generateTypescript(sb, 0, "");
         }
-        sb.append("): ").append(returnType.value().getTypescriptName()).append(" {\n");
+
+        // TODO @gerriet Remove additional null
+        sb.append("): (").append(returnType.value().getNullAwareTypescriptName()).append(") | null {\n");
 
         // method body
 
