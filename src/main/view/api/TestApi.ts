@@ -27,10 +27,10 @@ import "jquery";
 export class TestApi {
 
     public static getList(): JQueryDeferred<TestEntity[]> {
-        return <any>$.get("/test", null, "json");
+        return <any>$.get("/test", undefined, "json");
     }
 
     public static add(text: string): JQueryDeferred<TestEntity> {
-        return <any>$.post("/test/" + encodeURIComponent(text), "", null, "json");
+        return <any>$.post("/test/" + encodeURIComponent(text), "", undefined, "json");
     }
 }
