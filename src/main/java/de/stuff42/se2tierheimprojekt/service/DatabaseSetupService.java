@@ -27,13 +27,15 @@ import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
+/**
+ * Service that fills the database with data.
+ */
 @Service
-public class DataBaseFillService extends BaseService {
+public class DatabaseSetupService extends BaseService {
 
     @Autowired
     private QuestionDAO questionDAO;
@@ -42,30 +44,38 @@ public class DataBaseFillService extends BaseService {
     private AnswerDAO answerDAO;
 
     /**
-     *
-     * @param questionSortOrder SortOrder of Question.
-     * @param questionText Test of Question.
-     * @param answers Integer = AnswerSortOrder, String = AnswerText.
+     * Cleans the database.
      */
-    public void addQuestionWithAnswers(int questionSortOrder, String questionText, Map<Integer ,String> answers){
-        // TODO: safety checks
-        QuestionEntity question = new QuestionEntity( questionSortOrder, questionText);
+    public void clean() {
+        answerDAO.deleteAll();
+        questionDAO.deleteAll();
+
+        // TODO: clean other DAOs here
+    }
+
+    /**
+     * Fills the database with data.
+     */
+    public void setup() {
+        // TODO: create database entries here.
+    }
+
+    /**
+     * Adds a question with answers to the database.
+     *
+     * @param questionSortOrder Question sort order.
+     * @param questionText      Question text.
+     * @param answers           Ordered answers.
+     */
+    public void addQuestionWithAnswers(int questionSortOrder, String questionText, String... answers) {
+        QuestionEntity question = new QuestionEntity(questionSortOrder, questionText);
         questionDAO.save(question);
-        for (Map.Entry<Integer, String> entry : answers.entrySet()) {
-            AnswerEntity answer = new AnswerEntity( entry.getKey(), entry.getValue(), question);
+
+        int answerSortOrder = 0;
+        for (String answerText : answers) {
+            AnswerEntity answer = new AnswerEntity(answerSortOrder++, answerText, question);
             answerDAO.save(answer);
         }
     }
-    /*
-    public void addQuestion(int sortOrder, String text){
-        QuestionEntity entry = new QuestionEntity( sortOrder, text);
-        questionDAO.save(entry);
-    }
 
-    public void addAnswer(int answerSortOrder, String answerText, int questionSortOrder, String questionText){
-        // TODO: if Question exists add answer
-        AnswerEntity entry = new AnswerEntity( answerSortOrder, answerText, new QuestionEntity( questionSortOrder, questionText));
-        answerDAO.save(entry);
-    }
-    */
 }

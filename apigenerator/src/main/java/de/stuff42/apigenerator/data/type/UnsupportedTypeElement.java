@@ -21,20 +21,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.apigenerator;
+package de.stuff42.apigenerator.data.type;
+
+import javax.lang.model.type.TypeMirror;
+
+import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
 /**
- * Configuration class for client api generation.
+ * Type data for unsupported types.
  */
-public class Config {
+public class UnsupportedTypeElement extends TypeDataElement<TypeMirror> {
 
     /**
-     * Output path for generated sources (relative to project root).
+     * Creates new data class instance from the given element.
+     *
+     * @param element   Mirror element.
+     * @param processor Processor instance.
      */
-    public static final String OUTPUT_PATH = "src/main/view/clientApi";
+    public UnsupportedTypeElement(TypeMirror element, RestControllerProcessor processor) {
+        super(element, processor);
+    }
 
-    /**
-     * Data export path (relative to {@link #OUTPUT_PATH})
-     */
-    public static final String DATA_PATH = "data";
+    @Override
+    public String getTypescriptName() {
+        return "any";
+    }
+
+    @Override
+    public void generateTypescript(StringBuilder sb, int level, String indentation) {
+
+        // nothing to do here
+    }
+
+    @Override
+    public TypeMirror getTypeMirror() {
+        return element;
+    }
 }

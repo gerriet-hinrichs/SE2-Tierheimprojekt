@@ -21,25 +21,92 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+@import "globals";
+@import "flexbox";
 @import "sidebar";
+@import "navigation";
+@import "checkbox";
+@import "question";
+@import "animations";
 
 @border-color: lighten(black, 40%);
 @font-color: lighten(black, 20%);
 @background-color: darken(white, 10%);
 @global-padding: 10px;
+@title-color: darken(green, 50);
+@answernotchecked-color: black;
+@answerchekced-color: lighten(grey, 50%);
+@question-color:black;
 
 html {
   background-color: @background-color;
+  height: 100%;
 }
 
-.box {
-  border: 1px solid @border-color;
-  color: @font-color;
-  padding: @global-padding;
-  background-color: white;
+h1, h2, h3, h4, h5 {
+  margin: 0;
+}
 
-  &:not(:first-child) {
-    margin-top: 20px;
+div {
+  //.flex-shrink(0);
+  font-family: sans-serif;
+
+  &:not(.app-body) {
+    padding: @global-padding;
+  }
+}
+
+html, body, div.header, div.content, div.footer, div.app-body, .row, .column {
+  .flex-display();
+}
+
+// Components may not shrink
+div.header, div#navigation, div#sidebar, div.footer {
+  .flex-shrink(0);
+}
+
+body, div.content, div.app-body {
+  .flex-grow(1);
+}
+
+div.app-body {
+  .flex-direction(column);
+}
+
+div.header {
+  .justify-content(center);
+  background-color: aqua;
+}
+
+div.content {
+  background-color: cadetblue;
+}
+
+div.inner-content {
+  .flex-grow(1);
+  overflow: auto;
+}
+
+div.footer {
+  .justify-content(flex-end);
+  background-color: aquamarine;
+}
+
+/**
+  FLEX Basics
+ */
+.row {
+  .flex-direction(row);
+}
+
+.column {
+  .flex-direction(column);
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: lightgray !important;
   }
 }

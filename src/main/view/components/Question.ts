@@ -22,27 +22,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *  Sidebar component
+ *  Question component
  */
-export type SidebarItem = {
+export type QuestionData = {
     Name: string,
-    Title: string;
-    Anker: string;
-    IsSelected: KnockoutObservable<boolean>
+    Description: string
 };
 
-export interface ISidebarParams {
-    items: SidebarItem[];
+export interface IQuestionParams {
+    question: QuestionData;
 };
 
-export class Sidebar {
-    public itemList = ko.observableArray<SidebarItem>();
+export class Question {
+    public question = ko.observable<QuestionData>();
 
-    constructor(params: ISidebarParams) {
-        this.itemList(params.items);
-    }
-
-    public navigate(item: SidebarItem) {
-        console.log(item.Name + " clicked.");
+    constructor(params: IQuestionParams) {
+        this.question(params.question);
     }
 }

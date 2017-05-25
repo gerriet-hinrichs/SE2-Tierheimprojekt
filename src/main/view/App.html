@@ -1,16 +1,58 @@
-<div class="box">
-    <p>Spring works!</p>
-    <p id="requireWorks">RequireJS does not work.</p>
-    <p text="{{knockoutWorkingMessage}}">Knockout does not work.</p>
+<div class="header">
+    <h2>SE2 Tierheimprojekt</h2>
 </div>
-<div class="box">
-    {{#foreach itemList}}
-    <p>{{id}}: {{name}} ({{other.id}}: {{other.name}})</p>
-    {{/foreach}}
-    <p><input type="text" value="{{textInput}}"/>
-        <button click="{{sentText}}">Send</button>
-    </p>
+<div id="navigation" data-bind="module: { name: 'components/navigation', data: { items: navigationItems } }"></div>
+<div class="content">
+    <div id="sidebar" class="column" data-bind="module: { name: 'components/sidebar', data: { items: sidebarItems } }"></div>
+    <div class="inner-content">
+        <h2>Start</h2>
+        <!-- Checkbox -->
+        <div class="row">
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+            <div data-bind="module: 'components/checkbox'"></div>
+        </div>
+        <!-- Radiobutton -->
+        <div class="row">
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+            <div data-bind="module: 'components/radiobutton'"></div>
+        </div>
+        <!-- Question -->
+        <div class="column questions">
+            {{#foreach: questionItems}}
+            <div class="question" data-bind="module: { name: 'components/question', data: { question: $data } }"></div>
+            {{/foreach}}
+        </div>
+        <!-- Animation Samples -->
+        <div class="wrap">
+            <div>
+                <a class="shake-y" href="">
+                    <div class="img-cont ">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 1">
+                    </div>
+                </a>
+                <p>shake on Y</p>
+            </div>
+            <div>
+                <a class="shake-x" href="">
+                    <div class="img-cont ">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 2">
+                    </div>
+                </a>
+                <p>shake on X</p>
+            </div>
+            <div>
+                <a class="flip-it" href="">
+                    <div class="img-cont">
+                        <img src="http://orig14.deviantart.net/7b01/f/2013/196/6/8/grumpy_cat_by_lord_iluvatar-d6dj8g3.png" alt="Image 3">
+                    </div>
+                </a>
+                <p>no shake</p>
+            </div>
+        </div>
+    </div>
 </div>
-<div data-bind="module: 'components/Sidebar'"></div>
-<div data-bind="module: 'components/Checkbox'"></div>
-<div data-bind="module: 'components/Radiobutton'"></div>
+<div class="footer">
+    <span>Tierheimprojekt &copy;</span>
+</div>

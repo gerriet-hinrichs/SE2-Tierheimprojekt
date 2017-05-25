@@ -1,11 +1,22 @@
-sidebar {
-  background-color: hotpink;
+@import "flexbox";
+@import "globals";
 
-  h2 {
-    background-color: aqua;
+div#sidebar {
+  .flex-display();
+  .flex-basis(150px);
+  background-color: aqua;
+  overflow: auto;
+
+  .sidebar-item {
+    text-decoration: none;
+    color: inherit;
   }
 
-  h3 {
-    background-color: brown;
+  a {
+    padding: @global-padding;
+  }
+
+  .selected {
+    background-color: lawngreen;
   }
 }
