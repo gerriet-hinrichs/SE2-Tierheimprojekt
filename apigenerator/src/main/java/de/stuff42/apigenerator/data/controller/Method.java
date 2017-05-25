@@ -51,20 +51,27 @@ public class Method extends DataElement<ExecutableElement> {
     private Lazy<List<Parameter>> parameters;
 
     /**
+     * Belonging controller instance.
+     */
+    private Controller controller;
+
+    /**
      * Creates new data class instance from the given element.
      *
-     * @param element   Mirror element.
-     * @param processor Processor instance.
+     * @param element    Mirror element.
+     * @param processor  Processor instance.
+     * @param controller Controller instance.
      */
-    Method(ExecutableElement element, RestControllerProcessor processor) {
+    Method(ExecutableElement element, RestControllerProcessor processor, Controller controller) {
         super(element, processor);
+        this.controller = controller;
         returnType = new Lazy<>(() -> processor.processDataType(element.getReturnType()));
         parameters = new Lazy<>(() -> {
             List<? extends VariableElement> parameterElements = element.getParameters();
             List<Parameter> parameterList = new ArrayList<>(parameterElements.size());
 
             for (VariableElement parameterElement : parameterElements) {
-                Parameter parameter = new Parameter(parameterElement, processor);
+                Parameter parameter = new Parameter(parameterElement, processor, this);
                 parameterList.add(parameter);
             }
             return parameterList;
@@ -91,7 +98,7 @@ public class Method extends DataElement<ExecutableElement> {
         }
 
         // TODO @gerriet Remove additional null
-        sb.append("): (").append(returnType.value().getNullAwareTypescriptName()).append(") | null {\n");
+        sb.append("): (").append(processor.getTypeAlias(getAliasBaseName() + "$return", returnType.value())).append(") | null {\n");
 
         // method body
 
@@ -105,5 +112,14 @@ public class Method extends DataElement<ExecutableElement> {
     @Override
     public TypeMirror getTypeMirror() {
         return element.asType();
+    }
+
+    /**
+     * Returns the alias base name for this controller.
+     *
+     * @return Alias base name.
+     */
+    String getAliasBaseName() {
+        return controller.getAliasBaseName() + '$' + element.getSimpleName().toString();
     }
 }

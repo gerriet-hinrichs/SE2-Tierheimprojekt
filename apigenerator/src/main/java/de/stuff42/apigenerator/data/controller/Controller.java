@@ -69,7 +69,7 @@ public class Controller extends DataElement<TypeElement> {
 
                 // only process public methods that have a request mapping
                 if (member instanceof ExecutableElement && member.getAnnotation(RequestMapping.class) != null) {
-                    Method method = new Method((ExecutableElement) member, processor);
+                    Method method = new Method((ExecutableElement) member, processor, this);
                     methodList.add(method);
                 }
             }
@@ -94,5 +94,14 @@ public class Controller extends DataElement<TypeElement> {
             method.generateTypescript(sb, level + 1);
         }
         sb.append("}\n");
+    }
+
+    /**
+     * Returns the alias base name for this controller.
+     *
+     * @return Alias base name.
+     */
+    String getAliasBaseName() {
+        return name.value();
     }
 }
