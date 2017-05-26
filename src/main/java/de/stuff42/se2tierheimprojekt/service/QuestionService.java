@@ -31,7 +31,9 @@ import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.EvaluationModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,5 +132,15 @@ public class QuestionService extends BaseService {
         }
 
         return answerModels;
+    }
+    
+    /**
+     * Gets all answers of the Questionaire and returns the Evaluation.
+     * 
+     * @param answers All selected answers of the questionaire
+     * @return
+     */
+    public ResultModel evaluateQuestionaire (EvaluationModel answers) {
+      return new ResultModel(null);
     }
 }
