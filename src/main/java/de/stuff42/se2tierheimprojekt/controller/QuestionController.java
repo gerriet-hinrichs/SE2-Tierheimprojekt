@@ -28,13 +28,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.stuff42.se2tierheimprojekt.controller.test.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.EvaluationModel;
+import de.stuff42.se2tierheimprojekt.model.rest.QuestionAndAnswerIDModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import de.stuff42.se2tierheimprojekt.service.QuestionService;
 
 @RestController
@@ -65,7 +69,7 @@ public class QuestionController extends BaseController<QuestionService> {
    * @return the question with the ID or null if there is no question with this ID.
    */
   @RequestMapping (value="/Question/{ID}", method=RequestMethod.GET)
-  public QuestionModel getByIDWithAnswers(@PathVariable("ID") int id) {
+  public QuestionModel getByIDWithAnswers(@PathVariable("ID") long id) {
     logger.info("Get Question "+id);  
     return service.getByIDWithAnswers(id);
   }
@@ -79,8 +83,8 @@ public class QuestionController extends BaseController<QuestionService> {
    * @return Next question
    */
   @RequestMapping (value="/Question/answer", method=RequestMethod.POST)
-  public QuestionModel getNextforAnswer(int questionId, int answerId) {
-    return service.getNextforAnswer(questionId, answerId);
+  public QuestionModel getNextforAnswer(QuestionAndAnswerIDModel ids) {
+    return service.getNextforAnswer(ids.questionID, ids.answerID);
   }
 
   /**
@@ -105,6 +109,16 @@ public class QuestionController extends BaseController<QuestionService> {
       return service.getAnswersForQuestion(questionId);
   }
   
-
+  /**
+   * Gets all answers of the Questionaire and returns the Evaluation.
+   * 
+   * @param answers All selected answers of the questionaire
+   * @return
+   */
+  
+  @RequestMapping (value="/Question/answer", method=RequestMethod.POST)
+  public ResultModel evaluateQuestionaire (@RequestBody EvaluationModel answers) {
+    return service.evaluateQuestionaire(answers);
+  }
 
 }
