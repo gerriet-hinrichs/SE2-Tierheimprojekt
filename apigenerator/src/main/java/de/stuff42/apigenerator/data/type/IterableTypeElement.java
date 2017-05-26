@@ -30,6 +30,7 @@ import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
@@ -109,7 +110,14 @@ public class IterableTypeElement extends TypeDataElement<TypeMirror> {
 
     @Override
     public String getTypescriptName() {
-        return elementType.value().getTypescriptName() + "[]";
+
+        // we give '[' as context here so we get parenthesis if any combine operator was found
+        return Utilities.addRequiredSurroundingParenthesis(elementType.value().getNullAwareTypescriptName(), '[') + "[]";
+    }
+
+    @Override
+    public boolean supportsNull() {
+        return true;
     }
 
     @Override

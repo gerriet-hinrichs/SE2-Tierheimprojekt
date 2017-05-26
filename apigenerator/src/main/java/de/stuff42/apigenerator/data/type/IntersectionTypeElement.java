@@ -28,6 +28,7 @@ import java.util.List;
 import javax.lang.model.type.IntersectionType;
 import javax.lang.model.type.TypeMirror;
 
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
@@ -63,6 +64,7 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
     @Override
     public String getTypescriptName() {
         StringBuilder sb = new StringBuilder();
+
         boolean first = true;
         for (TypeDataElement<?> typeData : bounds.value()) {
             if (!(typeData.ignoreWithinBondsAndInheritance() || typeData instanceof UnsupportedTypeElement)) {
@@ -71,10 +73,18 @@ public class IntersectionTypeElement extends TypeDataElement<IntersectionType> {
                 } else {
                     sb.append(" & ");
                 }
-                sb.append(typeData.getTypescriptName());
+
+                // ensure we construct the correct type
+                sb.append(Utilities.addRequiredSurroundingParenthesis(typeData.getNullAwareTypescriptName(), '&'));
             }
         }
+
         return sb.toString();
+    }
+
+    @Override
+    public boolean supportsNull() {
+        return bounds.value().stream().allMatch(TypeDataElement::supportsNull);
     }
 
     @Override

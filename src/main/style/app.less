@@ -27,24 +27,22 @@
 @import "navigation";
 @import "checkbox";
 @import "question";
-@import "animations";
-
-@border-color: lighten(black, 40%);
-@font-color: lighten(black, 20%);
-@background-color: darken(white, 10%);
-@global-padding: 10px;
-@title-color: darken(green, 50);
-@answernotchecked-color: black;
-@answerchekced-color: lighten(grey, 50%);
-@question-color:black;
+//@import "animations";
+@import "logo";
 
 html {
-  background-color: @background-color;
   height: 100%;
 }
 
 h1, h2, h3, h4, h5 {
+  .flex-grow(1);
   margin: 0;
+  font-family: 'Lobster', cursive;
+}
+
+h1 {
+  .align-self(flex-end);
+  font-size: 4em;
 }
 
 div {
@@ -67,19 +65,8 @@ div.header, div#navigation, div#sidebar, div.footer {
 
 body, div.content, div.app-body {
   .flex-grow(1);
-}
-
-div.app-body {
-  .flex-direction(column);
-}
-
-div.header {
-  .justify-content(center);
-  background-color: aqua;
-}
-
-div.content {
-  background-color: cadetblue;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 div.inner-content {
@@ -87,9 +74,35 @@ div.inner-content {
   overflow: auto;
 }
 
+div.banner-container {
+  .flex-grow(1);
+  padding: 0;
+}
+
+div.banner {
+  background: url('/static/images/Beagle_1.jpg') no-repeat top center;
+  background-size: contain;
+}
+
+button#button-fragebogen {
+  margin: 20px 100px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border: 2px solid white;
+  font-size: 2em;
+  font-family: monospace;
+
+  &:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    cursor: pointer;
+  }
+}
+
 div.footer {
   .justify-content(flex-end);
-  background-color: aquamarine;
 }
 
 /**
@@ -109,4 +122,38 @@ div.footer {
   &:hover {
     background-color: lightgray !important;
   }
+}
+
+.selected {
+  background-color: lighten(lawngreen, 30%);
+}
+
+body {
+  .justify-content(center);
+  background-size: cover;
+  background: url('/static/images/background_2.jpg') no-repeat center center fixed white;
+  margin: 0;
+}
+
+div.app-body {
+  .flex-direction(column);
+  min-height: 600px;
+  min-width: 850px;
+  max-width: 800px;
+
+}
+
+div#navigation, div.content {
+  background-color: black;
+  opacity: 0.7;
+}
+
+div#navigation {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+div.content {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }

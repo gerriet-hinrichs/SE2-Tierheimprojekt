@@ -37,33 +37,54 @@ export class App {
     public sidebarItems = ko.observableArray<SidebarItem>();
     public questionItems = ko.observableArray<QuestionData>();
 
+    /**
+     * Sidebar to display
+     */
+    public IsSidebarVisible = ko.observable<boolean>(false);
+
+    /**
+     * Margins for app-body to create moderate centered view
+     */
+    public viewMarginTop = ko.observable<string>("");
+    public viewMarginBottom = ko.observable<string>("");
+    // Left and right margin shall be always the same (horizontal centered)
+    public viewMarginLeftRight = ko.observable<string>("");
+
     public constructor() {
+        this.setViewPort();
+
         this.prepareNavigationItems();
         this.prepareSidebarItems();
         this.prepareQuestionItems();
     }
 
+    public setViewPort() {
+        this.viewMarginTop("20px");
+        this.viewMarginBottom("150px");
+        this.viewMarginLeftRight("20px");
+    }
+
     public prepareNavigationItems() {
         this.navigationItems.push({
-            Name: "Start",
-            Title: "Start",
-            IsSelected: ko.observable<boolean>(true)
-        },
-        {
-            Name: "Fragen",
-            Title: "Hier gehts zum Fragebogen!",
-            IsSelected: ko.observable<boolean>(false)
-        },
-        {
-            Name: "Impressum",
-            Title: "Über uns...",
-            IsSelected: ko.observable<boolean>(false)
-        },
-        {
-            Name: "Kontakt",
-            Title: "Kontaktiere uns!",
-            IsSelected: ko.observable<boolean>(false)
-        });
+                Name: "Start",
+                Title: "Start",
+                IsSelected: ko.observable<boolean>(true)
+            },
+            {
+                Name: "Fragen",
+                Title: "Hier gehts zum Fragebogen!",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Impressum",
+                Title: "Über uns...",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Kontakt",
+                Title: "Kontaktiere uns!",
+                IsSelected: ko.observable<boolean>(false)
+            });
     }
 
     public prepareSidebarItems() {

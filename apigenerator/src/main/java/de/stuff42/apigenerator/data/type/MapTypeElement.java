@@ -111,7 +111,14 @@ public class MapTypeElement extends TypeDataElement<TypeMirror> {
 
     @Override
     public String getTypescriptName() {
-        return "{ [key: " + keyType.value().getTypescriptName() + "]: " + valueType.value().getTypescriptName() + " }";
+
+        // null is not supported for typescript object keys so even if the java type allows it, we exclude it here
+        return "{ [key: " + keyType.value().getTypescriptName() + "]: " + valueType.value().getNullAwareTypescriptName() + " }";
+    }
+
+    @Override
+    public boolean supportsNull() {
+        return true;
     }
 
     @Override

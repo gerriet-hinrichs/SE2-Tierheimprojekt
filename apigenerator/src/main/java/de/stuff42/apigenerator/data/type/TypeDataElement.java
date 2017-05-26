@@ -23,6 +23,9 @@
  */
 package de.stuff42.apigenerator.data.type;
 
+import javax.lang.model.type.TypeMirror;
+
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 
@@ -41,6 +44,24 @@ public abstract class TypeDataElement<T> extends DataElement<T> {
      */
     public TypeDataElement(T element, RestControllerProcessor processor) {
         super(element, processor);
+    }
+
+    /**
+     * Returns the type name for use in typescript code where null awareness is important.
+     *
+     * @return Typescript code name.
+     */
+    public String getNullAwareTypescriptName() {
+        String typescriptName = getTypescriptName();
+        if ("any".equals(typescriptName)) {
+
+            // no need to add null information to "any"
+            return typescriptName;
+        }
+
+        // only add parenthesis if
+
+        return Utilities.addRequiredSurroundingParenthesis(typescriptName, '|') + (supportsNull() ? " | null" : "");
     }
 
     /**
@@ -70,4 +91,27 @@ public abstract class TypeDataElement<T> extends DataElement<T> {
     public boolean ignoreWithinBondsAndInheritance() {
         return false;
     }
+
+    /**
+     * Returns if this type supports null.
+     *
+     * @return If this type supports null.
+     */
+    public abstract boolean supportsNull();
+
+    /**
+     * Returns the mirror element for this data element.
+     *
+     * @return Mirror element.
+     */
+    public T getElement() {
+        return element;
+    }
+
+    /**
+     * Returns the type mirror element for this data element.
+     *
+     * @return Type mirror element.
+     */
+    public abstract TypeMirror getTypeMirror();
 }

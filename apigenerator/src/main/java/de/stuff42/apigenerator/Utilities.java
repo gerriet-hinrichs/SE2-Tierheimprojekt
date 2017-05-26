@@ -80,11 +80,68 @@ public class Utilities {
                 if (withBonds) {
                     typeParameter.generateTypescript(sb, 0, "");
                 } else {
-                    sb.append(typeParameter.getTypescriptName());
+                    sb.append(typeParameter.getNullAwareTypescriptName());
                 }
             }
             sb.append('>');
         }
         return sb.toString();
+    }
+
+    /**
+     * Checks if surrounding parenthesis are required.
+     * <p>
+     * This method only works on valid typescript type strings.
+     *
+     * @param string              Input string.
+     * @param nextCombineOperator Next type combine operator the result is used for.
+     *
+     * @return Input string with added surrounding parenthesis if necessary.
+     */
+    public static String addRequiredSurroundingParenthesis(String string, char nextCombineOperator) {
+
+        // helper variables to detect parenthesis behavior
+        boolean parenthesisRequired = false;
+        int openParenthesisCount = 0;
+        char foundTopLevelCombineOperator = 0;
+
+        // iterate over the string
+        char[] stringCharacters = string.toCharArray();
+        char character;
+        for (char stringCharacter : stringCharacters) {
+            character = stringCharacter;
+            if (character == '(') {
+
+                // count open parenthesis
+                openParenthesisCount++;
+            } else if (character == ')') {
+
+                // count closing parenthesis
+                openParenthesisCount--;
+            } else if (character == '&' || character == '|') {
+
+                // only look in top level context for combine operators
+                if (openParenthesisCount == 0) {
+
+                    if (foundTopLevelCombineOperator == 0) {
+                        foundTopLevelCombineOperator = character;
+                    }
+
+                    // if we have mixed operators or the found context is different from the next one
+                    if (foundTopLevelCombineOperator != character || foundTopLevelCombineOperator != nextCombineOperator) {
+
+                        // we need to add parenthesis
+                        parenthesisRequired = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // add parenthesis if required
+        if (parenthesisRequired) {
+            return "(" + string + ")";
+        }
+        return string;
     }
 }

@@ -28,9 +28,15 @@
 <head>
     <title>SE 2 Tierheimprojekt</title>
     <link rel="stylesheet" type="text/css" href="static/app.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 </head>
 <body>
-<div class="app-body" data-bind="template: 'App'"></div>
+<div class="app-body" data-bind="template: 'App',
+    style: { 'margin-top': viewMarginTop,
+             'margin-left': viewMarginLeftRight,
+             'margin-bottom': viewMarginBottom,
+             'margin-right': viewMarginLeftRight }">
+</div>
 <script type="application/javascript">
     window["BuildVersion"] = ${model.buildVersionJS};
     window["BuildTime"] = ${model.buildTimeJS};

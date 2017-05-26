@@ -87,4 +87,9 @@ public class DateTimeTypeElement extends TypeDataElement<TypeMirror> {
         // check if assignment is possible
         return typeUtils.isAssignable(typeMirror, offsetDateTimeMirror);
     }
+
+    @Override
+    public boolean supportsNull() {
+        return true;
+    }
 }

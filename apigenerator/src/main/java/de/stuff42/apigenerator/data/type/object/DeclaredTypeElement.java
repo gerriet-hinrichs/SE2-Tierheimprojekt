@@ -92,4 +92,9 @@ public class DeclaredTypeElement extends TypeDataElement<DeclaredType> {
     public boolean ignoreWithinBondsAndInheritance() {
         return type.value().ignoreWithinBondsAndInheritance();
     }
+
+    @Override
+    public boolean supportsNull() {
+        return type.value().supportsNull();
+    }
 }
