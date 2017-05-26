@@ -31,18 +31,18 @@ import java.util.List;
 
 public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
 
-    @Query( "select animal " +
-            "from AnimalEntity animal " +
-            "where " +
-            "animal.animalType = :animalType and " +
-            "animal.size = :size and " +
-            "animal.cost = :cost and " +
-            "animal.needCare = :needCare and " +
+    @Query( "SELECT animal " +
+            "FROM AnimalEntity animal " +
+            "WHERE " +
+            "animal.animalType IN :animalType AND " +
+            "animal.size IN :size AND " +
+            "animal.cost IN :cost AND " +
+            "animal.needCare = :needCare AND " +
             "animal.garden = :garden " +
-            "order by animal.id")
-    List<AnimalEntity> getFittingAnimals(@Param("animalType") String animalType,
-                                         @Param("size") String size,
-                                         @Param("cost") String cost,
+            "ORDER BY animal.id")
+    List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
+                                         @Param("size") List<String> size,
+                                         @Param("cost") List<String> cost,
                                          @Param("needCare") Boolean needCare,
                                          @Param("garden") Boolean garden);
 }
