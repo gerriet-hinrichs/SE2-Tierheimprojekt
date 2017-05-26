@@ -26,6 +26,7 @@ package de.stuff42.se2tierheimprojekt.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.entity.AnimalDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
@@ -46,6 +47,9 @@ public class QuestionService extends BaseService {
 
     @Autowired
     private AnswerDAO answerDAO;
+    
+    @Autowired
+    private AnimalDAO animalDAO;
 
     /**
      * Returns the first question of the questionnaire with all of its answers.
@@ -141,14 +145,12 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire (EvaluationModel answers) {
-      String type = answers.animalType;
-      String cost = answers.cost;
-      String size = answers.size;
+      List<String> animalType = answers.animalType;
+      List<String> cost = answers.cost;
+      List<String> size = answers.size;
       boolean garden = answers.garden;
       boolean needSpecialCare = answers.needCare;
       
-      
-      
-      return new ResultModel(null);
+      return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }
