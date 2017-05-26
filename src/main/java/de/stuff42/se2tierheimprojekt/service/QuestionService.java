@@ -141,6 +141,14 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire (EvaluationModel answers) {
+      String type = answers.animalType;
+      String cost = answers.cost;
+      String size = answers.size;
+      boolean garden = answers.garden;
+      boolean needSpecialCare = answers.needCare;
+      
+      
+      
       return new ResultModel(null);
     }
 }
