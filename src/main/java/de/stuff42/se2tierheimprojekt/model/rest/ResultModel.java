@@ -23,16 +23,35 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
+import de.stuff42.se2tierheimprojekt.entity.AnimalEntity;
+
 import javax.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Creates a return from Service/Database towards Frontend.
+ */
 public class ResultModel {
 
+    /**
+     * List of all results from request.
+     */
     @NotNull
     List<AnimalModel> foundAnimals;
 
-    public ResultModel(@NotNull List<AnimalModel> foundAnimals) {
-        this.foundAnimals = foundAnimals;
+    /**
+     * All result Animals.
+     * @param foundAnimals list of AnimalEntity from Database.
+     */
+    public ResultModel(@NotNull List<AnimalEntity> foundAnimals) {
+        List<AnimalModel> animals = new ArrayList<>();
+
+        for (AnimalEntity entry : foundAnimals) {
+            animals.add(new AnimalModel(entry.name, entry.race, entry.sex, entry.age, entry.requiredSpace));
+        }
+
+        this.foundAnimals = animals;
     }
 }
