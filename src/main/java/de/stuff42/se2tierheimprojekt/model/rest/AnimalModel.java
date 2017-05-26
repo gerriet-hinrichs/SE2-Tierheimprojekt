@@ -25,28 +25,35 @@ package de.stuff42.se2tierheimprojekt.model.rest;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * An single Animal with his attributes.
+ */
 public class AnimalModel {
 
-    // <""> or <attributeText>
     @NotNull
     public String name;
 
-    // <""> or <attributeText>
     @NotNull
     public String race;
 
-    // <""> or <attributeText>
     @NotNull
     public String sex;
 
-    // <""> or <attributeText>
     @NotNull
     public String age;
 
-    // <""> or <attributeText>
     @NotNull
     public String requiredSpace;
 
+    /**
+     * An single Animal.
+     * Empty String or Text.
+     * @param name <""> or <attributeText>.
+     * @param race <""> or <attributeText>.
+     * @param sex <""> or <attributeText>.
+     * @param age <""> or <attributeText>.
+     * @param requiredSpace <""> or <attributeText>.
+     */
     public AnimalModel(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace) {
         this.name = name;
         this.race = race;

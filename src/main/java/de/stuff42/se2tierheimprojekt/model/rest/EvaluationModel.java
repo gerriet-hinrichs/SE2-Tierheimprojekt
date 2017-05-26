@@ -24,30 +24,53 @@
 package de.stuff42.se2tierheimprojekt.model.rest;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
+/**
+ * Question from Frontend towards Service/Database.
+ */
 public class EvaluationModel {
 
-    // dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse
+    /**
+     * One or more animalType that possible for search.
+     */
     @NotNull
-    public String animalType;
+    public List<String> animalType;
 
-    // small, medium, huge
+    /**
+     * One or more size that possible for search.
+     */
     @NotNull
-    public String size;
+    public List<String> size;
 
-    // cheap, medium, expensive
+    /**
+     * One or more cost that possible for search.
+     */
     @NotNull
-    public String cost;
+    public List<String> cost;
 
-    // true, false
+    /**
+     * Need Care or not.
+     */
     @NotNull
     public Boolean needCare;
 
-    // true, false
+    /**
+     * Need garden or not.
+     */
     @NotNull
     public Boolean garden;
 
-    public EvaluationModel(@NotNull String animalType, @NotNull String size, @NotNull String cost, @NotNull Boolean needCare, @NotNull Boolean garden) {
+    /**
+     * Creates a Request
+     * Spelling is important!
+     * @param animalType dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse. (One or More)
+     * @param size small, medium, huge. (One or More)
+     * @param cost cheap, medium, expensive. (One or More)
+     * @param needCare true, false.
+     * @param garden true, false.
+     */
+    public EvaluationModel(@NotNull List<String> animalType, @NotNull List<String> size, @NotNull List<String> cost, @NotNull Boolean needCare, @NotNull Boolean garden) {
         this.animalType = animalType;
         this.size = size;
         this.cost = cost;
