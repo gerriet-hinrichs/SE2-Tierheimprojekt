@@ -41,8 +41,4 @@ export class Sidebar {
     constructor(params: ISidebarParams) {
         this.itemList(params.items);
     }
-
-    public navigate(item: SidebarItem) {
-        console.log(item.Name + " clicked.");
-    }
 }

@@ -1,8 +1,7 @@
 {{#foreach: itemList()}}
 <a class="clickable sidebar-item"
     css.selected="{{IsSelected}}"
-    click="{{function() { $parent.navigate($data) }}}"
+    href="{{Anker}}"
     title="{{Title}}"
-    href="#{{Anker}}"
     text="{{Name}}"></a>
 {{/foreach}}

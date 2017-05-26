@@ -8,18 +8,29 @@ export type NavigationItem = {
 };
 
 export interface INavigationParams {
-    items: NavigationItem[];
+    items: KnockoutObservableArray<NavigationItem>;
+    currentComponent: KnockoutObservable<string>;
 }
 ;
 
 export class Navigation {
-    public itemList = ko.observableArray<NavigationItem>([]);
+    public itemList: KnockoutObservableArray<NavigationItem>;
+    public currentComponent: KnockoutObservable<string>;
 
     constructor(params: INavigationParams) {
-        this.itemList(params.items);
+        this.currentComponent = params.currentComponent;
+        this.itemList = params.items;
     }
 
     public navigate(item: NavigationItem) {
-        console.log(item.Name + " clicked.");
+        // If clicked current module again, do nothing
+        if(this.currentComponent() != item.Name) {
+            for (let item of this.itemList()) {
+                item.IsSelected(false);// = ko.observable<boolean>(false);
+            }
+
+            item.IsSelected(true);
+            this.currentComponent(item.Name);
+        }
     }
 }

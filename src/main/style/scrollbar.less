@@ -1,0 +1,33 @@
+.scrollbar (@color: rgba(0, 0, 0, 0.2), @width: 7px, @height: 9px, @radius: 4px) {
+  overflow: auto;
+
+&::-webkit-scrollbar {
+  width: @width;
+  height: @height;
+}
+
+&::-webkit-scrollbar-button:start:decrement,
+&::-webkit-scrollbar-button:end:increment {
+  display: block;
+  height: 0;
+  background-color: transparent;
+}
+
+&::-webkit-scrollbar-track-piece {
+  border-radius: 0;
+  border-bottom-right-radius: @radius;
+  border-bottom-left-radius: @radius;
+}
+
+&::-webkit-scrollbar-thumb:vertical {
+  height: 50px;
+  background-color: @color;
+  border-radius: @radius;
+}
+
+&::-webkit-scrollbar-thumb:horizontal {
+  width: 50px;
+  background-color: @color;
+  border-radius: @radius;
+}
+}

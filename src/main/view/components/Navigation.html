@@ -1,6 +1,6 @@
-{{#foreach: itemList()}}
+{{#foreach: itemList}}
 <button class="clickable"
-        css.selected="{{IsSelected()}}"
+        css.selected-nav-item="{{IsSelected}}"
         click="{{function() { $parent.navigate($data) }}}"
         title="{{Title}}"
         text="{{Name}}"></button>

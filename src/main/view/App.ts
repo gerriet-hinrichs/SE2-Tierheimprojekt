@@ -28,19 +28,23 @@ import * as ko from "knockout";
 import "knockout.punches";
 import "knockout-amd-helpers";
 import {NavigationItem} from "./components/Navigation";
-import {SidebarItem} from "./components/Sidebar";
 import {QuestionData} from "./components/Question";
 
 // app class
 export class App {
     public navigationItems = ko.observableArray<NavigationItem>();
-    public sidebarItems = ko.observableArray<SidebarItem>();
     public questionItems = ko.observableArray<QuestionData>();
+
+    /**
+     * Current component name for intern pseudo routing via module binding.
+     * Default 'Start' for selected component on startup
+     */
+    public currentComponent: KnockoutObservable<string>;
 
     /**
      * Sidebar to display
      */
-    public IsSidebarVisible = ko.observable<boolean>(false);
+    public IsSidebarVisible: KnockoutObservable<boolean>;
 
     /**
      * Margins for app-body to create moderate centered view
@@ -51,10 +55,11 @@ export class App {
     public viewMarginLeftRight = ko.observable<string>("");
 
     public constructor() {
-        this.setViewPort();
+        this.currentComponent = ko.observable<string>("Start");
+        this.IsSidebarVisible = ko.observable<boolean>(false);
 
+        this.setViewPort();
         this.prepareNavigationItems();
-        this.prepareSidebarItems();
         this.prepareQuestionItems();
     }
 
@@ -83,33 +88,6 @@ export class App {
             {
                 Name: "Kontakt",
                 Title: "Kontaktiere uns!",
-                IsSelected: ko.observable<boolean>(false)
-            });
-    }
-
-    public prepareSidebarItems() {
-        this.sidebarItems.push({
-                Name: "Frage 1",
-                Title: "Frage 1",
-                Anker: "f1",
-                IsSelected: ko.observable<boolean>(true)
-            },
-            {
-                Name: "Frage 2",
-                Title: "Frage 2",
-                Anker: "f2",
-                IsSelected: ko.observable<boolean>(false)
-            },
-            {
-                Name: "Frage 3",
-                Title: "Frage 3",
-                Anker: "f3",
-                IsSelected: ko.observable<boolean>(false)
-            },
-            {
-                Name: "Frage 4",
-                Title: "Frage 4",
-                Anker: "f4",
                 IsSelected: ko.observable<boolean>(false)
             });
     }

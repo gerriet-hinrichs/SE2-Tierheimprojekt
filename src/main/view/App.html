@@ -1,18 +1,16 @@
 <div class="header">
-    <h1>SE2 Tierheimprojekt</h1>
+    <h1>SE2 Tierheimprojekt &copy;</h1>
     {{#module: { name: 'components/logo', data: { isAnimated: false, isVisible: true } } /}}
 </div>
-<div id="navigation" data-bind="module: { name: 'components/navigation', data: { items: navigationItems } }"></div>
-<div class="content">
-    {{#if: !!IsSidebarVisible()}}
-    <div id="sidebar" class="column"
-         data-bind="module: { name: 'components/sidebar', data: { items: sidebarItems } }"></div>
-    {{/if}}
-    <div class="column banner-container">
-        <div class="inner-content banner"></div>
-        <button id="button-fragebogen">Zum Fragebogen</button>
-    </div>
+<div id="navigation" data-bind="module: { name: 'components/navigation',
+    data: { items: navigationItems, currentComponent: currentComponent } }"></div>
+
+<!-- Pseudo routing via component bindings (modules) -->
+<div class="content" data-bind="module: './tabs/' + currentComponent()">
+
 </div>
+<!-- /////////////////////////////////////////////// -->
+
 <div class="footer">
     <span>Tierheimprojekt &copy;</span>
 </div>
