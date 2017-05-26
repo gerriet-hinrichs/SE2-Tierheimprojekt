@@ -28,7 +28,6 @@
 import {SidebarItem} from "../components/Sidebar";
 
 export class Start {
-    public sidebarItems = ko.observableArray<SidebarItem>();
     public IsSidebarVisible: KnockoutObservable<boolean>;
 
     constructor() {

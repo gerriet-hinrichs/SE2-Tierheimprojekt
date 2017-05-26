@@ -2,9 +2,9 @@
  *  Navigation component
  */
 export type NavigationItem = {
-  Name: string;
-  Title: string;
-  IsSelected: KnockoutObservable<boolean>;
+    Name: string;
+    Title: string;
+    IsSelected: KnockoutObservable<boolean>;
 };
 
 export interface INavigationParams {
@@ -23,14 +23,11 @@ export class Navigation {
     }
 
     public navigate(item: NavigationItem) {
-        // If clicked current module again, do nothing
-        if(this.currentComponent() != item.Name) {
-            for (let item of this.itemList()) {
-                item.IsSelected(false);// = ko.observable<boolean>(false);
-            }
-
-            item.IsSelected(true);
-            this.currentComponent(item.Name);
+        for (let item of this.itemList()) {
+            item.IsSelected(false);// = ko.observable<boolean>(false);
         }
+
+        item.IsSelected(true);
+        this.currentComponent(item.Name);
     }
 }

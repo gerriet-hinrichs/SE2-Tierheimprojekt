@@ -24,11 +24,9 @@
 /**
  *  Impressum component
  */
-import {SidebarItem} from "../components/Sidebar";
 
 export class Impressum {
-    public IsSidebarVisible: KnockoutObservable<boolean>;
-    public sidebarItems = ko.observableArray<SidebarItem>();
+    public IsSidebarVisible: KnockoutObservable<boolean>
 
     constructor() {
         // No sidebar on component 'Impressum'

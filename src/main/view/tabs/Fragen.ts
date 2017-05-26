@@ -24,14 +24,16 @@
 /**
  *  Fragen component
  */
-import {SidebarItem} from "../components/Sidebar";
 
 export class Fragen {
-    public sidebarItems = ko.observableArray<SidebarItem>();
     public IsSidebarVisible: KnockoutObservable<boolean>;
 
     constructor() {
         // No sidebar on component 'Start'
         this.IsSidebarVisible = ko.observable<boolean>(false);
+    }
+
+    public showQuestions(component: KnockoutObservable<string>) {
+        component("Fragebogen");
     }
 }

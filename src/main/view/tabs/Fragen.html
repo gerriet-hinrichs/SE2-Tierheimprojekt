@@ -1,8 +1,8 @@
-{{#if: !!IsSidebarVisible()}}
-<div id="sidebar" class="column"
-     data-bind="module: { name: 'components/sidebar', data: { items: sidebarItems } }"></div>
-{{/if}}
 <div id="fragen" class="column banner-container">
     <div class="inner-content banner"></div>
-    <button class="button-fragebogen">Zum Fragebogen</button>
+    <button click="{{function() { showQuestions($parent.currentComponent) } }}"
+            class="button-fragebogen"
+            title="Hier gehts zum Fragebogen!">
+        Zum Fragebogen
+    </button>
 </div>
