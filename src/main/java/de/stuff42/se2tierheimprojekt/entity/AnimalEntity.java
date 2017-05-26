@@ -72,10 +72,9 @@ public class AnimalEntity {
     @NotNull
     public Boolean garden;
 
-
-    protected AnimalEntity() {
+    public AnimalEntity(){
         // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
+        // it shouldn't be used directly
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace,

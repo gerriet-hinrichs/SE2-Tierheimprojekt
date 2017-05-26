@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.stuff42.se2tierheimprojekt.controller.test.GenerateClientApi;
+import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.EvaluationModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionAndAnswerIDModel;

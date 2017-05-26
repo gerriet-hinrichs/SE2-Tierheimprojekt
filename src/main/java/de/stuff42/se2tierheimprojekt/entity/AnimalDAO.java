@@ -30,18 +30,26 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
-
+/*
     @Query( "SELECT animal " +
             "FROM AnimalEntity animal " +
             "WHERE " +
             "animal.animalType IN :animalType AND " +
-            "animal.size IN :size AND " +
+            "animal.size IN :ssize AND " +
             "animal.cost IN :cost AND " +
             "animal.needCare = :needCare AND " +
             "animal.garden = :garden " +
             "ORDER BY animal.id")
     List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
-                                         @Param("size") List<String> size,
+                                         @Param("ssize") List<String> size,
+                                         @Param("cost") List<String> cost,
+                                         @Param("needCare") Boolean needCare,
+                                         @Param("garden") Boolean garden);
+                                         */
+
+    @Query( "SELECT animal FROM AnimalEntity animal WHERE animal.animalType = :animalType ORDER BY animal.id")
+    List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
+                                         @Param("ssize") List<String> size,
                                          @Param("cost") List<String> cost,
                                          @Param("needCare") Boolean needCare,
                                          @Param("garden") Boolean garden);

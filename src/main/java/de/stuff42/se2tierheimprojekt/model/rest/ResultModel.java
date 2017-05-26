@@ -39,7 +39,7 @@ public class ResultModel {
      * List of all results from request.
      */
     @NotNull
-    List<AnimalModel> foundAnimals;
+    public List<AnimalModel> foundAnimals;
 
     /**
      * All result Animals.
