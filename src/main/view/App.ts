@@ -32,6 +32,9 @@ import {QuestionData} from "./components/Question";
 
 // app class
 export class App {
+    /**
+     * Items for navigation and sidebar
+     */
     public navigationItems = ko.observableArray<NavigationItem>();
     public questionItems = ko.observableArray<QuestionData>();
 
@@ -54,6 +57,11 @@ export class App {
     // Left and right margin shall be always the same (horizontal centered)
     public viewMarginLeftRight = ko.observable<string>("");
 
+    /**
+     * Index for automatic slideshow
+     */
+    public index = 0;
+
     public constructor() {
         this.currentComponent = ko.observable<string>("Start");
         this.IsSidebarVisible = ko.observable<boolean>(false);
@@ -61,6 +69,9 @@ export class App {
         this.setViewPort();
         this.prepareNavigationItems();
         this.prepareQuestionItems();
+
+        // Automatic slide show icon
+        //this.slideShow();
     }
 
     public setViewPort() {
@@ -106,6 +117,33 @@ export class App {
             Name: "Question 4",
             Description: "This is question #4"
         });
+    }
+
+    /**
+     * Automatic slide show for logo
+     */
+    public slideShow() {
+        let container = document.getElementById("logo-icon");
+
+        console.log("container", container);
+
+        if(!!container) {
+            if(this.index == 0) {
+                $("#logo-icon").fadeIn("slow");
+                container.style.backgroundImage = "url('/static/images/logo_1.png')";
+
+                this.index = 1;
+            } else {
+                container.style.backgroundImage = "url('/static/images/logo_2.png')";
+                this.index = 0;
+            }
+        }
+
+        $('#logo-icon').fadeIn("slow");
+
+        setTimeout(function() {
+            this.slideShow()
+        }.bind(this), 2000);
     }
 }
 
