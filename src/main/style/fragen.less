@@ -1,6 +1,22 @@
 @import "globals";
+@import "flexbox";
 @import "scrollbar";
 
 div#fragen {
   .scrollbar(@selected-color, 5px);
+}
+
+div.banner-container {
+  .flex-grow(1);
+  padding: 0 !important;
+
+  > h2 {
+    .flex-grow(0);
+    .align-self(center);
+  }
+}
+
+div.banner {
+  background: url('/static/images/Beagle_1.jpg') no-repeat top center;
+  background-size: contain;
 }

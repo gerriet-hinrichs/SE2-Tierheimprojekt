@@ -82,12 +82,12 @@ export class App {
             },
             {
                 Name: "Impressum",
-                Title: "Über uns...",
+                Title: "Impressum",
                 IsSelected: ko.observable<boolean>(false)
             },
             {
                 Name: "Kontakt",
-                Title: "Kontaktiere uns!",
+                Title: "Über uns",
                 IsSelected: ko.observable<boolean>(false)
             });
     }
