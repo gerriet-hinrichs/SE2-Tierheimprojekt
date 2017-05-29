@@ -36,7 +36,8 @@ public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
             "AND a.animalSize IN :animalSize " +
             "AND a.cost IN :cost " +
             "AND a.needCare = :needCare " +
-            "AND a.garden = :garden")
+            "AND a.garden = :garden " +
+            "ORDER BY a.name")
     List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
                                          @Param("animalSize") List<String> animalSize,
                                          @Param("cost") List<String> cost,
