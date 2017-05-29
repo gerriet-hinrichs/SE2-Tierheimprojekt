@@ -23,10 +23,12 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import de.stuff42.se2tierheimprojekt.Application;
-import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.model.rest.*;
-import org.junit.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import de.stuff42.se2tierheimprojekt.Application;
+import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
+import de.stuff42.se2tierheimprojekt.model.rest.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,39 +50,42 @@ import static org.junit.Assert.*;
 public class QuestionServiceTest {
 
     @Autowired
-    private  DatabaseSetupService databaseSetupService;
+    private DatabaseSetupService databaseSetupService;
+
     @Autowired
     private QuestionService questionService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-/*
-    @BeforeClass
-    public static void setUpClass(){
 
-        // TODO: Connect to Database (Maybe don't need to make a new Application)
-        // TODO: Fill Database with Dummy's
-    }
+    /*
+        @BeforeClass
+        public static void setUpClass(){
 
-    @AfterClass
-    public static void cleanUpClass(){
-        // TODO: Clean Database (if Transactional don't makes it)
-    }
-*/
+            // TODO: Connect to Database (Maybe don't need to make a new Application)
+            // TODO: Fill Database with Dummy's
+        }
+
+        @AfterClass
+        public static void cleanUpClass(){
+            // TODO: Clean Database (if Transactional don't makes it)
+        }
+    */
     @Before
-    public void before(){
+    public void before() {
         logger.info("--------------- Start Test ---------------");
     }
 
     @After
-    public void after(){
+    public void after() {
         logger.info("--------------- End Test ---------------");
         logger.info("");
     }
 
     @Test
-    public void delateMe(){
+    public void delateMe() {
         databaseSetupService.clean();
         databaseSetupService.setup();
-/*
+
         List<String> animalType = new ArrayList<>();// dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse
         animalType.add("dog");
         animalType.add("cat");
@@ -103,10 +108,9 @@ public class QuestionServiceTest {
         EvaluationModel eva = new EvaluationModel(animalType, size, cost, false, false);
         ResultModel model = questionService.evaluateQuestionaire(eva);
 
-        for(AnimalModel entry : model.foundAnimals){
+        for (AnimalModel entry : model.foundAnimals) {
             logger.info(entry.name);
         }
-        */
     }
 
     //@Test
@@ -150,7 +154,7 @@ public class QuestionServiceTest {
     //@Test
     public void getAnswersForQuestion() {
         logger.info("getAnswersForQuestion");
-        List<AnswerModel> methodReturnValue = questionService.getAnswersForQuestion( 0);
+        List<AnswerModel> methodReturnValue = questionService.getAnswersForQuestion(0);
         logger.info("methodReturnValue: " + methodReturnValue.toString());
         assertNotNull(methodReturnValue);
         logger.info("ListContent: ");
