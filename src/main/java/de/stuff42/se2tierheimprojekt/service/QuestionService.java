@@ -26,12 +26,15 @@ package de.stuff42.se2tierheimprojekt.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.entity.AnimalDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionDAO;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.EvaluationModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,9 @@ public class QuestionService extends BaseService {
 
     @Autowired
     private AnswerDAO answerDAO;
+    
+    @Autowired
+    private AnimalDAO animalDAO;
 
     /**
      * Returns the first question of the questionnaire with all of its answers.
@@ -130,5 +136,21 @@ public class QuestionService extends BaseService {
         }
 
         return answerModels;
+    }
+    
+    /**
+     * Gets all answers of the Questionaire and returns the Evaluation.
+     * 
+     * @param answers All selected answers of the questionaire
+     * @return
+     */
+    public ResultModel evaluateQuestionaire (EvaluationModel answers) {
+      List<String> animalType = answers.animalType;
+      List<String> cost = answers.cost;
+      List<String> size = answers.size;
+      boolean garden = answers.garden;
+      boolean needSpecialCare = answers.needCare;
+      
+      return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }

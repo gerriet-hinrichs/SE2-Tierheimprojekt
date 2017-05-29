@@ -25,8 +25,7 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
-import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -44,15 +44,18 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
-@Transactional
+//@Transactional
 public class QuestionServiceTest {
 
     @Autowired
+    private  DatabaseSetupService databaseSetupService;
+    @Autowired
     private QuestionService questionService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+/*
     @BeforeClass
     public static void setUpClass(){
+
         // TODO: Connect to Database (Maybe don't need to make a new Application)
         // TODO: Fill Database with Dummy's
     }
@@ -61,7 +64,7 @@ public class QuestionServiceTest {
     public static void cleanUpClass(){
         // TODO: Clean Database (if Transactional don't makes it)
     }
-
+*/
     @Before
     public void before(){
         logger.info("--------------- Start Test ---------------");
@@ -74,7 +77,37 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void delateMe(){}
+    public void delateMe(){
+        databaseSetupService.clean();
+        databaseSetupService.setup();
+/*
+        List<String> animalType = new ArrayList<>();// dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse
+        animalType.add("dog");
+        animalType.add("cat");
+        animalType.add("bird");
+        animalType.add("fish");
+        animalType.add("reptile");
+        animalType.add("hamster");
+        animalType.add("bunny");
+        animalType.add("guineaPig");
+        animalType.add("mouse");
+        List<String> size = new ArrayList<>();//small, medium, huge
+        size.add("small");
+        size.add("medium");
+        size.add("huge");
+        List<String> cost = new ArrayList<>();// cheap, medium, expensive
+        cost.add("cheap");
+        cost.add("medium");
+        cost.add("expensive");
+
+        EvaluationModel eva = new EvaluationModel(animalType, size, cost, false, false);
+        ResultModel model = questionService.evaluateQuestionaire(eva);
+
+        for(AnimalModel entry : model.foundAnimals){
+            logger.info(entry.name);
+        }
+        */
+    }
 
     //@Test
     public void getFirstWithAnswers() {
