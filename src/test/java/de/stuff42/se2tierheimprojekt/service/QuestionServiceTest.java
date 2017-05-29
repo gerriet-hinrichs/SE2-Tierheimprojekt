@@ -45,9 +45,9 @@ import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.model.rest.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
 //@Transactional
 public class QuestionServiceTest {
 
@@ -83,28 +83,28 @@ public class QuestionServiceTest {
         logger.info("");
     }
 
-    @Test
-    public void delateMe() {
-        databaseSetupService.clean();
-        databaseSetupService.setup();
-
-        List<AnimalType> animalType = Arrays.asList(AnimalType.values());
-        List<String> size = new ArrayList<>();//small, medium, huge
-        size.add("small");
-        size.add("medium");
-        size.add("huge");
-        List<String> cost = new ArrayList<>();// cheap, medium, expensive
-        cost.add("cheap");
-        cost.add("medium");
-        cost.add("expensive");
-
-        EvaluationModel eva = new EvaluationModel(animalType, size, cost, false, false);
-        ResultModel model = questionService.evaluateQuestionaire(eva);
-
-        for (AnimalModel entry : model.foundAnimals) {
-            logger.info(entry.name);
-        }
-    }
+//    @Test
+//    public void delateMe() {
+//        databaseSetupService.clean();
+//        databaseSetupService.setup();
+//
+//        List<AnimalType> animalType = Arrays.asList(AnimalType.values());
+//        List<String> size = new ArrayList<>();//small, medium, huge
+//        size.add("small");
+//        size.add("medium");
+//        size.add("huge");
+//        List<String> cost = new ArrayList<>();// cheap, medium, expensive
+//        cost.add("cheap");
+//        cost.add("medium");
+//        cost.add("expensive");
+//
+//        EvaluationModel eva = new EvaluationModel(animalType, size, cost, false, false);
+//        ResultModel model = questionService.evaluateQuestionaire(eva);
+//
+//        for (AnimalModel entry : model.foundAnimals) {
+//            logger.info(entry.name);
+//        }
+//    }
 
     //@Test
     public void getFirstWithAnswers() {
