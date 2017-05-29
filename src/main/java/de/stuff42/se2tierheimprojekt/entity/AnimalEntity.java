@@ -23,7 +23,10 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -58,27 +61,25 @@ public class AnimalEntity {
 
     // small, medium, huge
     @NotNull
-    public String size;
+    public String animalSize;
 
     // cheap, medium, expensive
     @NotNull
     public String cost;
 
     // true, false
-    @NotNull
-    public Boolean needCare;
+    public boolean needCare;
 
     // true, false
-    @NotNull
-    public Boolean garden;
+    public boolean garden;
 
-    public AnimalEntity(){
+    public AnimalEntity() {
         // no-args constructor required by JPA spec
         // it shouldn't be used directly
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace,
-                        @NotNull String animalType, @NotNull String size, @NotNull String cost, @NotNull Boolean needCare, @NotNull Boolean garden) {
+                        @NotNull String animalType, @NotNull String animalSize, @NotNull String cost, boolean needCare, boolean garden) {
         // TODO: check for not null
         this.name = name;
         this.race = race;
@@ -86,7 +87,7 @@ public class AnimalEntity {
         this.age = age;
         this.requiredSpace = requiredSpace;
         this.animalType = animalType;
-        this.size = size;
+        this.animalSize = animalSize;
         this.cost = cost;
         this.needCare = needCare;
         this.garden = garden;

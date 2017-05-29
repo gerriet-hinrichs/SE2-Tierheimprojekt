@@ -23,34 +23,24 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
-/*
-    @Query( "SELECT animal " +
-            "FROM AnimalEntity animal " +
-            "WHERE " +
-            "animal.animalType IN :animalType AND " +
-            "animal.size IN :ssize AND " +
-            "animal.cost IN :cost AND " +
-            "animal.needCare = :needCare AND " +
-            "animal.garden = :garden " +
-            "ORDER BY animal.id")
-    List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
-                                         @Param("ssize") List<String> size,
-                                         @Param("cost") List<String> cost,
-                                         @Param("needCare") Boolean needCare,
-                                         @Param("garden") Boolean garden);
-                                         */
 
-    @Query( "SELECT animal FROM AnimalEntity animal WHERE animal.animalType = :animalType ORDER BY animal.id")
+    @Query("SELECT a FROM AnimalEntity a " +
+            "WHERE a.animalType IN :animalType " +
+            "AND a.animalSize IN :animalSize " +
+            "AND a.cost IN :cost " +
+            "AND a.needCare = :needCare " +
+            "AND a.garden = :garden")
     List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
-                                         @Param("ssize") List<String> size,
+                                         @Param("animalSize") List<String> animalSize,
                                          @Param("cost") List<String> cost,
-                                         @Param("needCare") Boolean needCare,
-                                         @Param("garden") Boolean garden);
+                                         @Param("needCare") boolean needCare,
+                                         @Param("garden") boolean garden);
+
 }

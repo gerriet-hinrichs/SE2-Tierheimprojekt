@@ -116,7 +116,7 @@ public class QuestionController extends BaseController<QuestionService> {
    * @return
    */
   
-  @RequestMapping (value="/Question/answer", method=RequestMethod.POST)
+  @RequestMapping (value="/Questions/evaluate", method=RequestMethod.POST)
   public ResultModel evaluateQuestionaire (@RequestBody EvaluationModel answers) {
     return service.evaluateQuestionaire(answers);
   }
