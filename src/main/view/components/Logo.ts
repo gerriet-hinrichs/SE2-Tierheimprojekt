@@ -14,6 +14,5 @@ export class Navigation {
     constructor(params: ILogoParams) {
         this.IsAnimated = ko.observable<boolean>(params.isAnimated);
         this.IsVisible = ko.observable<boolean>(params.isVisible);
-
     }
 }
