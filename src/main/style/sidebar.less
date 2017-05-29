@@ -1,0 +1,25 @@
+@import "flexbox";
+@import "globals";
+@import "scrollbar";
+
+div#sidebar {
+  .scrollbar(@selected-color, 5px);
+  .flex-display();
+  .flex-basis(150px);
+  overflow: auto;
+
+  border-right: 1px solid white;
+
+  .sidebar-item {
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  a {
+    padding: @global-padding;
+  }
+}

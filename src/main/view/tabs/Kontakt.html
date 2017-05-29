@@ -1,0 +1,27 @@
+{{#if: !!IsSidebarVisible()}}
+<div id="sidebar" class="column"
+     data-bind="module: { name: 'components/Sidebar', data: { items: sidebarItems } }"></div>
+{{/if}}
+
+<div class="inner-content">
+    <div id="contact-project">
+        <h2>Über das Projekt</h2>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+    </div>
+
+    <div id="contact-team">
+        <h2>Über uns</h2>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+    </div>
+
+    <div id="contact-contact">
+        <h2>So kontaktierst du uns!</h2>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+        <div data-bind="module: 'components/LoremIpsum'"></div>
+    </div>
+</div>

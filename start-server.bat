@@ -1,1 +1,1 @@
-gradlew.bat bootRun
+gradlew.bat bootRun & PAUSE

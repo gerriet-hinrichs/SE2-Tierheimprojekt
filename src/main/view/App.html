@@ -1,0 +1,14 @@
+<div class="header">
+    <h1>SE2 Tierheimprojekt &copy;</h1>
+    {{#module: { name: 'components/Logo', data: { isAnimated: false, isVisible: true } } /}}
+</div>
+<div id="navigation" data-bind="module: { name: 'components/Navigation',
+    data: { items: navigationItems, currentComponent: currentComponent } }"></div>
+
+<!-- Pseudo routing via component bindings (modules) -->
+<div class="content" data-bind="module: './tabs/' + currentComponent()"></div>
+<!-- /////////////////////////////////////////////// -->
+
+<div class="footer">
+    <span>Tierheimprojekt &copy;</span>
+</div>

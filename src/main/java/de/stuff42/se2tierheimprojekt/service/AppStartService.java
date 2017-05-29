@@ -47,8 +47,4 @@ public class AppStartService extends BaseService {
                 "1970-01-01T00:00:00.000+00:00"
         ));
     }
-
-    public Boolean isDebug() {
-        return SystemConfig.get("BUILD", "Debug", Boolean.class, false);
-    }
 }

@@ -46,14 +46,4 @@ public class AppStartModel {
         // create date object from time
         return "new Date('" + service.getBuildTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + "')";
     }
-
-    public Boolean getIsDebug() {
-        return service.isDebug();
-    }
-
-    public String getDebugJS() {
-
-        // properly stringify
-        return String.valueOf(service.isDebug());
-    }
 }

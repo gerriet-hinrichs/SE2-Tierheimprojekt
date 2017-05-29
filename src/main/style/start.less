@@ -1,0 +1,13 @@
+@import "globals";
+@import "scrollbar";
+@import "flexbox";
+
+div#start {
+  .scrollbar(@selected-color, 5px);
+  padding: 50px;
+
+  > h2 {
+    .flex-grow(0);
+
+  }
+}

@@ -25,15 +25,17 @@
 // configure module loading
 requirejs.config({
 
-    // base uri for script files
+    // base uri for script files20
     baseUrl: "static/view/",
     paths: {
 
         // for libraries we explicitly use CDNs and have to list them here
         // (we only choose the minified version if we are not on debug)
-        "jquery": "//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery" + (DEBUG ? "" : ".min"),
-        "knockout": "//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout" + (DEBUG ? "-debug" : "-min"),
-        "knockout.punches": "//mbest.github.io/knockout.punches/knockout.punches" + (DEBUG ? "" : ".min"),
+        "jquery": "//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min",
+        "knockout": "//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min",
+        "knockout.punches": "//mbest.github.io/knockout.punches/knockout.punches.min",
+        "knockout-amd-helpers": "/static/vendor/knockout-amd-helpers",
+        "require-text": "//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min"
     }
 });
 

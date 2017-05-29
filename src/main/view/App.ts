@@ -26,35 +26,124 @@
 import "jquery";
 import * as ko from "knockout";
 import "knockout.punches";
-import {TestApi} from "./api/TestApi";
+import "knockout-amd-helpers";
+import {NavigationItem} from "./components/Navigation";
+import {QuestionData} from "./components/Question";
 
 // app class
 export class App {
+    /**
+     * Items for navigation and sidebar
+     */
+    public navigationItems = ko.observableArray<NavigationItem>();
+    public questionItems = ko.observableArray<QuestionData>();
 
-    public knockoutWorkingMessage: string = "Knockout is working!";
+    /**
+     * Current component name for intern pseudo routing via module binding.
+     * Default 'Start' for selected component on startup
+     */
+    public currentComponent: KnockoutObservable<string>;
 
-    public itemList = ko.observableArray<TestEntity>([]);
+    /**
+     * Sidebar to display
+     */
+    public IsSidebarVisible: KnockoutObservable<boolean>;
 
-    public textInput = ko.observable<string>("");
+    /**
+     * Margins for app-body to create moderate centered view
+     */
+    public viewMarginTop = ko.observable<string>("");
+    public viewMarginBottom = ko.observable<string>("");
+    // Left and right margin shall be always the same (horizontal centered)
+    public viewMarginLeftRight = ko.observable<string>("");
+
+    /**
+     * Index for automatic slideshow
+     */
+    public index = 0;
 
     public constructor() {
-        // if we get here, requireJS has properly loaded jQuery and this file
-        $("#requireWorks").text("RequireJS works!");
+        this.currentComponent = ko.observable<string>("Start");
+        this.IsSidebarVisible = ko.observable<boolean>(false);
 
-        this.loadAsync();
+        this.setViewPort();
+        this.prepareNavigationItems();
+        this.prepareQuestionItems();
+
+        // Automatic slide show icon
+        //this.slideShow();
     }
 
-    public loadAsync() {
-        TestApi.getList().done(x => {
-            this.itemList(x);
+    public setViewPort() {
+        this.viewMarginTop("20px");
+        this.viewMarginBottom("150px");
+        this.viewMarginLeftRight("20px");
+    }
+
+    public prepareNavigationItems() {
+        this.navigationItems.push({
+                Name: "Start",
+                Title: "Start",
+                IsSelected: ko.observable<boolean>(true)
+            },
+            {
+                Name: "Fragen",
+                Title: "Hier gehts zum Fragebogen!",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Impressum",
+                Title: "Impressum",
+                IsSelected: ko.observable<boolean>(false)
+            },
+            {
+                Name: "Kontakt",
+                Title: "Über uns",
+                IsSelected: ko.observable<boolean>(false)
+            });
+    }
+
+    public prepareQuestionItems() {
+        this.questionItems.push({
+            Name: "Question 1",
+            Description: "This is question #1"
+        }, {
+            Name: "Question 2",
+            Description: "This is question #2"
+        }, {
+            Name: "Question 3",
+            Description: "This is question #3"
+        }, {
+            Name: "Question 4",
+            Description: "This is question #4"
         });
     }
 
-    public sentText() {
-        TestApi.add(this.textInput()).done(x => {
-            this.textInput("");
-            this.itemList.push(x);
-        });
+    /**
+     * Automatic slide show for logo
+     */
+    public slideShow() {
+        let container = document.getElementById("logo-icon");
+
+        console.log("container", container);
+
+        if(!!container) {
+            if(this.index == 0) {
+                $("#logo-icon").fadeIn("slow");
+                container.style.backgroundImage = "url('/static/images/logo_1.png')";
+
+                this.index = 1;
+            } else {
+                container.style.backgroundImage = "url('/static/images/logo_2.png')";
+                this.index = 0;
+            }
+        }
+
+        $('#logo-icon').fadeIn("slow");
+
+        setTimeout(function() {
+            this.slideShow()
+        }.bind(this), 2000);
     }
 }
 
@@ -63,5 +152,9 @@ export let app = new App();
 
 // get knockout to work
 (<any>window)['ko'] = ko;
+(<any>ko).amdTemplateEngine.defaultSuffix = ".html";
+(<any>ko).amdTemplateEngine.defaultPath = "";
+(<any>ko).amdTemplateEngine.defaultRequireTextPluginName = "require-text";
+(<any>ko).bindingHandlers.module.multiExportHandling = true;
 (<any>ko).punches.enableAll();
 ko.applyBindings(app);
