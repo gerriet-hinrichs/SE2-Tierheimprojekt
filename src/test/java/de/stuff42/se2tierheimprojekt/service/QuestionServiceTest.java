@@ -24,6 +24,7 @@
 package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -41,6 +42,7 @@ import static org.junit.Assert.assertNotNull;
 
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.model.rest.*;
 
 @RunWith(SpringRunner.class)
@@ -86,16 +88,7 @@ public class QuestionServiceTest {
         databaseSetupService.clean();
         databaseSetupService.setup();
 
-        List<String> animalType = new ArrayList<>();// dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse
-        animalType.add("dog");
-        animalType.add("cat");
-        animalType.add("bird");
-        animalType.add("fish");
-        animalType.add("reptile");
-        animalType.add("hamster");
-        animalType.add("bunny");
-        animalType.add("guineaPig");
-        animalType.add("mouse");
+        List<AnimalType> animalType = Arrays.asList(AnimalType.values());
         List<String> size = new ArrayList<>();//small, medium, huge
         size.add("small");
         size.add("medium");

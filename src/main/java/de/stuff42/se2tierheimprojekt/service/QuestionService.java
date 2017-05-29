@@ -26,6 +26,7 @@ package de.stuff42.se2tierheimprojekt.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.entity.AnimalDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerDAO;
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
@@ -145,7 +146,7 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire (EvaluationModel answers) {
-      List<String> animalType = answers.animalType;
+      List<AnimalType> animalType = answers.animalType;
       List<String> cost = answers.cost;
       List<String> size = answers.size;
       boolean garden = answers.garden;

@@ -29,6 +29,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+
 @Entity
 public class AnimalEntity {
 
@@ -54,10 +56,8 @@ public class AnimalEntity {
     public String requiredSpace;
 
     // Search properties
-
-    // dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse
     @NotNull
-    public String animalType;
+    public AnimalType animalType;
 
     // small, medium, huge
     @NotNull
@@ -79,7 +79,7 @@ public class AnimalEntity {
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace,
-                        @NotNull String animalType, @NotNull String animalSize, @NotNull String cost, boolean needCare, boolean garden) {
+                        @NotNull AnimalType animalType, @NotNull String animalSize, @NotNull String cost, boolean needCare, boolean garden) {
         // TODO: check for not null
         this.name = name;
         this.race = race;

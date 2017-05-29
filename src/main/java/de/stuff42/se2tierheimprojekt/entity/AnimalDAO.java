@@ -29,6 +29,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+
 public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
 
     @Query("SELECT a FROM AnimalEntity a " +
@@ -38,7 +40,7 @@ public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
             "AND a.needCare = :needCare " +
             "AND a.garden = :garden " +
             "ORDER BY a.name")
-    List<AnimalEntity> getFittingAnimals(@Param("animalType") List<String> animalType,
+    List<AnimalEntity> getFittingAnimals(@Param("animalType") List<AnimalType> animalType,
                                          @Param("animalSize") List<String> animalSize,
                                          @Param("cost") List<String> cost,
                                          @Param("needCare") boolean needCare,

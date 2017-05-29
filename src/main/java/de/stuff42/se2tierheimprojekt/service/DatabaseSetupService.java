@@ -23,10 +23,11 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import de.stuff42.se2tierheimprojekt.entity.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+import de.stuff42.se2tierheimprojekt.entity.*;
 
 /**
  * Service that fills the database with data.
@@ -57,72 +58,72 @@ public class DatabaseSetupService extends BaseService {
      */
     public void setup() {
         // Questions & Answers
-        addQuestionWithAnswers(1,"How many square meters are available for animal husbandry?",
+        addQuestionWithAnswers(1, "How many square meters are available for animal husbandry?",
                 "<35", "35-55", ">55");
-        addQuestionWithAnswers(1,"Can the animal be kept in the garden?",
+        addQuestionWithAnswers(1, "Can the animal be kept in the garden?",
                 "Yes", "No");
-        addQuestionWithAnswers(1,"In which environment is the animal kept?",
+        addQuestionWithAnswers(1, "In which environment is the animal kept?",
                 "Country / village", "Residential area without main roads in direct vicinity", "On a main road or in the city center");
-        addQuestionWithAnswers(1,"How many hours do they have an average time per day for the animal?",
+        addQuestionWithAnswers(1, "How many hours do they have an average time per day for the animal?",
                 "<1", "1-4", "5-8", "All day");
-        addQuestionWithAnswers(1,"Should the animal also be supplied by children?",
+        addQuestionWithAnswers(1, "Should the animal also be supplied by children?",
                 "Yes", "No");
-        addQuestionWithAnswers(1,"How much should the monthly cost be? (Without basic equipment)",
+        addQuestionWithAnswers(1, "How much should the monthly cost be? (Without basic equipment)",
                 "20-30", "30-60", "60-80");
 
         // Dogs
-        addAnimal("Didi","Mischling","Maennlich","Jung","Klein",
-                  "dog","medium","expensive",false,false);
-        addAnimal("Slushi","Jack-Russell-Terrier-Mischling","Maennlich","Jung","Klein",
-                "dog","small","medium",false,false);
-        addAnimal("Sandor","Malinois","Maennlich","Jung","Gross",
-                "dog","huge","expensive",false,false);
-        addAnimal("Thelma","Mischling","Weiblich","Ausgewachsen","Mittel",
-                "dog","medium","expensive",false,true);
-        addAnimal("Anuk","Thai Ridgeback","Weiblich","Alt","Mittel",
-                "dog","medium","expensive",true,false);
+        addAnimal("Didi", "Mischling", "Maennlich", "Jung", "Klein",
+                AnimalType.DOG, "medium", "expensive", false, false);
+        addAnimal("Slushi", "Jack-Russell-Terrier-Mischling", "Maennlich", "Jung", "Klein",
+                AnimalType.DOG, "small", "medium", false, false);
+        addAnimal("Sandor", "Malinois", "Maennlich", "Jung", "Gross",
+                AnimalType.DOG, "huge", "expensive", false, false);
+        addAnimal("Thelma", "Mischling", "Weiblich", "Ausgewachsen", "Mittel",
+                AnimalType.DOG, "medium", "expensive", false, true);
+        addAnimal("Anuk", "Thai Ridgeback", "Weiblich", "Alt", "Mittel",
+                AnimalType.DOG, "medium", "expensive", true, false);
 
         // Cats
-        addAnimal("Tobi","Europaeisch Kurzhaat","Maennlich","Alt","Klein",
-                "cat","small","medium",false,false);
-        addAnimal("Mia","Siam","Weiblich","Jung","Klein",
-                "cat","small","medium",false,false);
-        addAnimal("Lisa","Kartaeuser-Mischling","Weiblich","Ausgewachsen","Klein",
-                "cat","small","medium",false,false);
-        addAnimal("Jenny","Europaeisch Kurzhaat","Maennlich","Alt","Klein",
-                "cat","small","medium",false,false);
+        addAnimal("Tobi", "Europaeisch Kurzhaat", "Maennlich", "Alt", "Klein",
+                AnimalType.CAT, "small", "medium", false, false);
+        addAnimal("Mia", "Siam", "Weiblich", "Jung", "Klein",
+                AnimalType.CAT, "small", "medium", false, false);
+        addAnimal("Lisa", "Kartaeuser-Mischling", "Weiblich", "Ausgewachsen", "Klein",
+                AnimalType.CAT, "small", "medium", false, false);
+        addAnimal("Jenny", "Europaeisch Kurzhaat", "Maennlich", "Alt", "Klein",
+                AnimalType.CAT, "small", "medium", false, false);
 
         // Bunnies
-        addAnimal("Peach","Kaninchen","Weiblich","Jung","Klein",
-                "bunny","small","cheap",false,false);
-        addAnimal("Chipman","Loewenkopf-Kaninchen","Maennlich","Ausgewachsen","Klein",
-                "bunny","small","cheap",false,false);
+        addAnimal("Peach", "Kaninchen", "Weiblich", "Jung", "Klein",
+                AnimalType.BUNNY, "small", "cheap", false, false);
+        addAnimal("Chipman", "Loewenkopf-Kaninchen", "Maennlich", "Ausgewachsen", "Klein",
+                AnimalType.BUNNY, "small", "cheap", false, false);
 
         // Birds
-        addAnimal("Jewels und Yellow","Kanarienvogel","Weiblich","Ausgewachsen","Mittel",
-                "bird","small","cheap",false,false);
-        addAnimal("Vasco","Graupapagei","Maennlich","Alt","Gross",
-                "bird","small","expensive",false,false);
+        addAnimal("Jewels und Yellow", "Kanarienvogel", "Weiblich", "Ausgewachsen", "Mittel",
+                AnimalType.BIRD, "small", "cheap", false, false);
+        addAnimal("Vasco", "Graupapagei", "Maennlich", "Alt", "Gross",
+                AnimalType.BIRD, "small", "expensive", false, false);
 
         // Guinea Pig
-        addAnimal("Rambo","Meerschweinchen","Maennlich","Ausgewachsen","Klein",
-                "guineaPig","small","cheap",false,false);
+        addAnimal("Rambo", "Meerschweinchen", "Maennlich", "Ausgewachsen", "Klein",
+                AnimalType.GUINEA_PIG, "small", "cheap", false, false);
 
         // Mouses
-        addAnimal("Perdita","Chinchilla","Weiblich","Alt","Klein",
-                "mouse","small","cheap",false,false);
-        addAnimal("Bibi und Tina","Chinchilla","Weiblich","Jung","Klein",
-                "mouse","small","cheap",false,false);
+        addAnimal("Perdita", "Chinchilla", "Weiblich", "Alt", "Klein",
+                AnimalType.MOUSE, "small", "cheap", false, false);
+        addAnimal("Bibi und Tina", "Chinchilla", "Weiblich", "Jung", "Klein",
+                AnimalType.MOUSE, "small", "cheap", false, false);
 
         // Reptiles
-        addAnimal("Huenne","Leghorn (Hahn)","Maennlich","Ausgewachsen","Klein",
-                "reptile","small","cheap",false,false);
-        addAnimal("Sting","Echse","Maennlich","Alt","Klein",
-                "reptile","small","cheap",false,false);
-        addAnimal("Noah","Kornnatter","Maennlich","Ausgewachsen","Klein",
-                "reptile","huge","medium",false,false);
-        addAnimal("Horst","Bartagamme","Maennlich","Ausgewachsen","Klein",
-                "reptile","small","cheap",false,false);
+        addAnimal("Huenne", "Leghorn (Hahn)", "Maennlich", "Ausgewachsen", "Klein",
+                AnimalType.REPTILE, "small", "cheap", false, false);
+        addAnimal("Sting", "Echse", "Maennlich", "Alt", "Klein",
+                AnimalType.REPTILE, "small", "cheap", false, false);
+        addAnimal("Noah", "Kornnatter", "Maennlich", "Ausgewachsen", "Klein",
+                AnimalType.REPTILE, "huge", "medium", false, false);
+        addAnimal("Horst", "Bartagamme", "Maennlich", "Ausgewachsen", "Klein",
+                AnimalType.REPTILE, "small", "cheap", false, false);
     }
 
     /**
@@ -143,8 +144,8 @@ public class DatabaseSetupService extends BaseService {
         }
     }
 
-    private void addAnimal( String name, String race, String sex, String age, String requiredSpace,
-                            String animalType, String size, String cost, Boolean needCare, Boolean garden) {
-        animalDAO.save(new AnimalEntity(name, race, sex, age, requiredSpace, animalType, size ,cost, needCare, garden));
+    private void addAnimal(String name, String race, String sex, String age, String requiredSpace,
+                           AnimalType animalType, String size, String cost, Boolean needCare, Boolean garden) {
+        animalDAO.save(new AnimalEntity(name, race, sex, age, requiredSpace, animalType, size, cost, needCare, garden));
     }
 }

@@ -23,8 +23,10 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import javax.validation.constraints.NotNull;
+
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
 
 /**
  * Question from Frontend towards Service/Database.
@@ -35,7 +37,7 @@ public class EvaluationModel {
      * One or more animalType that possible for search.
      */
     @NotNull
-    public List<String> animalType;
+    public List<AnimalType> animalType;
 
     /**
      * One or more size that possible for search.
@@ -64,13 +66,14 @@ public class EvaluationModel {
     /**
      * Creates a Request
      * Spelling is important!
+     *
      * @param animalType dog, cat, bird, fish, reptile, hamster, bunny, guineaPig, mouse. (One or More)
-     * @param size small, medium, huge. (One or More)
-     * @param cost cheap, medium, expensive. (One or More)
-     * @param needCare true, false.
-     * @param garden true, false.
+     * @param size       small, medium, huge. (One or More)
+     * @param cost       cheap, medium, expensive. (One or More)
+     * @param needCare   true, false.
+     * @param garden     true, false.
      */
-    public EvaluationModel(@NotNull List<String> animalType, @NotNull List<String> size, @NotNull List<String> cost, @NotNull Boolean needCare, @NotNull Boolean garden) {
+    public EvaluationModel(@NotNull List<AnimalType> animalType, @NotNull List<String> size, @NotNull List<String> cost, @NotNull Boolean needCare, @NotNull Boolean garden) {
         this.animalType = animalType;
         this.size = size;
         this.cost = cost;

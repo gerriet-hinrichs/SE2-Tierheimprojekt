@@ -26,16 +26,17 @@ package de.stuff42.se2tierheimprojekt.controller.test;
 import java.util.List;
 import java.util.Map;
 
-import de.stuff42.apigenerator.annotation.GenerateClientApi;
-import de.stuff42.se2tierheimprojekt.controller.BaseController;
-import de.stuff42.se2tierheimprojekt.entity.FakeEntity;
-import de.stuff42.se2tierheimprojekt.service.FakeService;
-
+import org.jetbrains.annotations.Contract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import de.stuff42.apigenerator.annotation.GenerateClientApi;
+import de.stuff42.se2tierheimprojekt.controller.BaseController;
+import de.stuff42.se2tierheimprojekt.entity.FakeEntity;
+import de.stuff42.se2tierheimprojekt.service.FakeService;
 
 @RestController
 @GenerateClientApi
@@ -186,14 +187,27 @@ public class TestController extends BaseController<FakeService> {
 
     // test data types for above methods
     public enum TestEnum {
-        FOO, BAR, BAZ
-    }
+        FOO("asdasd"),
+        BAR("sfpiadspofipdsalf"),
+        BAZ("slfkjaldfk");
 
-    static class Base implements Foo {
+        private final String foo;
 
+        TestEnum(String foo) {
+            this.foo = foo;
+        }
+
+        @Contract(pure = true)
+        public String getFoo() {
+            return foo;
+        }
     }
 
     interface Foo {
+
+    }
+
+    static class Base implements Foo {
 
     }
 
