@@ -93,8 +93,11 @@ public class QuestionService extends BaseService {
         if (lastQuestionEntity == null) {
             return null;
         }
-
-        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
+        QuestionEntity nextQuestionEntity = null;
+        try {
+            //TODO: fit that with an other way inside QuestionDAO
+            nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
+        }catch(IndexOutOfBoundsException e){}
         if (nextQuestionEntity == null) {
             return null;
         }
@@ -187,8 +190,6 @@ public class QuestionService extends BaseService {
             }
         }
 
-        //TODO animalDAO gettingFittingAnimals anpassen
-        // return null;
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }
