@@ -21,48 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.model.rest;
+package de.stuff42.se2tierheimprojekt.data;
 
-import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
-
-import org.jetbrains.annotations.NotNull;
-
-/**
- * Data model for sending answer information to the client side.
- */
-public class AnswerModel {
-
-    /**
-     * DB id from answer.
-     */
-    @NotNull
-    public Long id;
-
-    /**
-     * Answer text.
-     */
-    @NotNull
-    public String text;
-
-    /**
-     * Sorting order.
-     */
-    public int sortOrder;
-
-    /**
-     * Belonging question's id.
-     */
-    public long questionId;
-
-    /**
-     * Creates rest model from database entity.
-     *
-     * @param entity Database entity.
-     */
-    public AnswerModel(AnswerEntity entity) {
-        this.id = entity.id;
-        this.text = entity.text;
-        this.sortOrder = entity.sortOrder;
-        this.questionId = entity.question.id;
-    }
+public enum AnimalAge {
+    YOUNG, MATURE, OLD
 }

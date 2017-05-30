@@ -25,6 +25,9 @@ package de.stuff42.se2tierheimprojekt.entity;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -32,11 +35,27 @@ import org.springframework.data.repository.query.Param;
 public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
 
     @Query("select q from QuestionEntity q order by q.sortOrder")
-    QuestionEntity getFirstQuestion();
+    Page<QuestionEntity> getFirstQuestions(Pageable pageable);
+
+    default QuestionEntity getFirstQuestion() {
+        List<QuestionEntity> result = getFirstQuestions(new PageRequest(0, 1)).getContent();
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
+    }
 
     @Query("select q from QuestionEntity q order by q.sortOrder")
     List<QuestionEntity> getSortedList();
 
     @Query("select q from QuestionEntity q where q.sortOrder > :lastQuestionSortOrder order by q.sortOrder")
-    QuestionEntity getNextQuestion(@Param("lastQuestionSortOrder") int lastQuestionSortOrder);
+    Page<QuestionEntity> getNextQuestions(@Param("lastQuestionSortOrder") int lastQuestionSortOrder, Pageable pageable);
+
+    default QuestionEntity getNextQuestion(int lastQuestionSortOrder) {
+        List<QuestionEntity> result = getNextQuestions(lastQuestionSortOrder, new PageRequest(0, 1)).getContent();
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
+    }
 }

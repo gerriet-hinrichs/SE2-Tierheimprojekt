@@ -23,9 +23,14 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import de.stuff42.se2tierheimprojekt.Application;
+import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
+import de.stuff42.se2tierheimprojekt.model.rest.AnimalModel;
+import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,18 +42,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import de.stuff42.se2tierheimprojekt.Application;
-import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
-import de.stuff42.se2tierheimprojekt.model.rest.*;
-
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-//@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
-//@Transactional
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
+@Transactional
 public class QuestionServiceTest {
 
     @Autowired
@@ -59,19 +60,6 @@ public class QuestionServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /*
-        @BeforeClass
-        public static void setUpClass(){
-
-            // TODO: Connect to Database (Maybe don't need to make a new Application)
-            // TODO: Fill Database with Dummy's
-        }
-
-        @AfterClass
-        public static void cleanUpClass(){
-            // TODO: Clean Database (if Transactional don't makes it)
-        }
-    */
     @Before
     public void before() {
         logger.info("--------------- Start Test ---------------");
@@ -83,28 +71,59 @@ public class QuestionServiceTest {
         logger.info("");
     }
 
-//    @Test
-//    public void delateMe() {
-//        databaseSetupService.clean();
-//        databaseSetupService.setup();
-//
-//        List<AnimalType> animalType = Arrays.asList(AnimalType.values());
-//        List<String> size = new ArrayList<>();//small, medium, huge
-//        size.add("small");
-//        size.add("medium");
-//        size.add("huge");
-//        List<String> cost = new ArrayList<>();// cheap, medium, expensive
-//        cost.add("cheap");
-//        cost.add("medium");
-//        cost.add("expensive");
-//
-//        EvaluationModel eva = new EvaluationModel(animalType, size, cost, false, false);
-//        ResultModel model = questionService.evaluateQuestionaire(eva);
-//
-//        for (AnimalModel entry : model.foundAnimals) {
-//            logger.info(entry.name);
-//        }
-//    }
+    @Test
+    public void questionConnection() {
+        assertNotNull(questionService);
+    }
+
+    @Test
+    public void setupConnection() {
+        assertNotNull(databaseSetupService);
+    }
+
+    @Test
+    public void superBasicTest() {
+        logger.info("Beginn");
+
+        logger.info("DatabaseAction");
+        databaseSetupService.clean();
+        databaseSetupService.setup();
+
+        logger.info("Get First Question");
+        Map<Long, List<Long>> answers = new HashMap<>();
+        QuestionModel qm = questionService.getFirstWithAnswers();
+        AnswerModel am;
+        boolean end = false;
+
+        logger.info("Question/Answer Loop");
+        while (!end) {
+            logger.info(qm.text);
+            logger.info(qm.answers.get(qm.answers.size() - 1).text);
+
+            am = qm.answers.get(qm.answers.size() - 1);
+            Long qId = qm.id;
+            Long aId = am.id;
+            answers.put(qId, make(aId));
+            qm = questionService.getNextForAnswer(qId, aId);
+            if (qm == null) {
+                end = true;
+            }
+        }
+
+        logger.info("GetResult");
+        ResultModel model = questionService.evaluateQuestionnaire(answers);
+
+        logger.info("Print Result");
+        for (AnimalModel entry : model.foundAnimals) {
+            logger.info(entry.name);
+        }
+    }
+
+    private List<Long> make(Long... listContend) {
+        List<Long> list = new LinkedList<>();
+        Collections.addAll(list, listContend);
+        return list;
+    }
 
     //@Test
     public void getFirstWithAnswers() {
@@ -124,8 +143,8 @@ public class QuestionServiceTest {
 
     //@Test
     public void getNextforAnswer() {
-        logger.info("getNextforAnswer");
-        QuestionModel methodReturnValue = questionService.getNextforAnswer(0L, 0L);
+        logger.info("getNextForAnswer");
+        QuestionModel methodReturnValue = questionService.getNextForAnswer(0L, 0L);
         logger.info("methodReturnValue: " + methodReturnValue.toString());
         assertNotNull(methodReturnValue);
     }

@@ -38,6 +38,7 @@ public class ExceptionPrinter {
      * Line separator.
      */
     private static final String LINE_SEPARATOR = System.lineSeparator();
+
     /**
      * Hide the default constructor since this class only contains static
      * methods.

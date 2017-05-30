@@ -23,11 +23,8 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.repository.CrudRepository;
 
-@Transactional
 public interface OtherFakeDAO extends CrudRepository<OtherFakeEntity, Long> {
 
 }

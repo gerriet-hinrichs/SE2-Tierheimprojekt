@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Configuration class providing database system configuration.
  */
-public class DatabaseConfig {
+class DatabaseConfig {
 
     /**
      * Logger instance to be used.

@@ -22,19 +22,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *  Logo component
+ *  Auswertung component
  */
-export interface ILogoParams {
-    isAnimated: boolean;
-    isVisible: boolean;
-}
 
-export class Navigation {
-    public IsAnimated: KnockoutObservable<boolean>;
-    public IsVisible: KnockoutObservable<boolean>;
+export class Auswertung {
 
-    constructor(params: ILogoParams) {
-        this.IsAnimated = ko.observable<boolean>(params.isAnimated);
-        this.IsVisible = ko.observable<boolean>(params.isVisible);
+    constructor() {
+
     }
 }

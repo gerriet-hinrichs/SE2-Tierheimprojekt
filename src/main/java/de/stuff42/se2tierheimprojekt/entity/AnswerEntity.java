@@ -23,7 +23,14 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
+import java.util.Set;
 import javax.persistence.*;
+
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class AnswerEntity {
@@ -37,14 +44,48 @@ public class AnswerEntity {
     public String text;
 
     @ManyToOne
+    @JoinColumn
     public QuestionEntity question;
+
+    // Search properties
+    @ElementCollection
+    public Set<AnimalType> animalType;
+
+    @ElementCollection
+    public Set<AnimalSize> animalSize;
+
+    @ElementCollection
+    public Set<AnimalCost> cost;
+
+    public boolean needCare;
+
+    public boolean garden;
 
     protected AnswerEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public AnswerEntity(int sortOrder, String text, QuestionEntity question) {
+    /**
+     * Creates an answer for a Question.
+     * And adds attributes for evaluate.
+     *
+     * @param sortOrder  for sorting answers.
+     * @param text       text of answer.
+     * @param question   the question from the answer.
+     * @param animalType Null or properties, that are sorted out by evaluating.
+     * @param animalSize Null or properties, that are sorted out by evaluating.
+     * @param cost       Null or properties, that are sorted out by evaluating.
+     * @param needCare   true to be sorted out.
+     * @param garden     true to be sorted out.
+     */
+    public AnswerEntity(int sortOrder, String text, QuestionEntity question,
+                        @NotNull Set<AnimalType> animalType, @NotNull Set<AnimalSize> animalSize, @NotNull Set<AnimalCost> cost, boolean needCare, boolean garden) {
+        this.animalType = animalType;
+        this.animalSize = animalSize;
+        this.cost = cost;
+        this.needCare = needCare;
+        this.garden = garden;
         this.sortOrder = sortOrder;
         this.text = text;
         this.question = question;

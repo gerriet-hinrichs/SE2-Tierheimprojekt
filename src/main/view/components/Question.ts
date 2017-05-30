@@ -31,7 +31,7 @@ export type QuestionData = {
 
 export interface IQuestionParams {
     question: QuestionData;
-};
+}
 
 export class Question {
     public question = ko.observable<QuestionData>();

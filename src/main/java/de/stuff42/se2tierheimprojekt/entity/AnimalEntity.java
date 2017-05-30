@@ -27,9 +27,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
+import de.stuff42.se2tierheimprojekt.data.*;
+
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class AnimalEntity {
@@ -39,38 +40,33 @@ public class AnimalEntity {
     public long id;
 
     // Animal
-    // <""> or <attributeText>
     @NotNull
-    public String name;
+    public String name = "";
 
     @NotNull
-    public String race;
+    public String race = "";
 
     @NotNull
-    public String sex;
+    public AnimalSex sex = AnimalSex.FEMALE;
 
     @NotNull
-    public String age;
+    public AnimalAge age = AnimalAge.YOUNG;
 
     @NotNull
-    public String requiredSpace;
+    public AnimalSpace requiredSpace = AnimalSpace.HUGE;
 
     // Search properties
     @NotNull
-    public AnimalType animalType;
+    public AnimalType animalType = AnimalType.BIRD;
 
-    // small, medium, huge
     @NotNull
-    public String animalSize;
+    public AnimalSize animalSize = AnimalSize.HUGE;
 
-    // cheap, medium, expensive
     @NotNull
-    public String cost;
+    public AnimalCost cost = AnimalCost.CHEAP;
 
-    // true, false
     public boolean needCare;
 
-    // true, false
     public boolean garden;
 
     public AnimalEntity() {
@@ -78,9 +74,8 @@ public class AnimalEntity {
         // it shouldn't be used directly
     }
 
-    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull String animalSize, @NotNull String cost, boolean needCare, boolean garden) {
-        // TODO: check for not null
+    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
         this.name = name;
         this.race = race;
         this.sex = sex;

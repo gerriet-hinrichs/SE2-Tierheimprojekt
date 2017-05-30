@@ -55,7 +55,7 @@ public class DatabaseSetupController extends BaseController<DatabaseSetupService
     @RequestMapping(value = "/setup/fill", method = RequestMethod.GET)
     @ResponseBody
     public String fill() {
-        service.clean();
+        service.setup();
         return "Filled database.";
     }
 

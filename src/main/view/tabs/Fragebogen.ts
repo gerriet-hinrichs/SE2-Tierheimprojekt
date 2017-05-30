@@ -24,43 +24,77 @@
 /**
  *  Fragebogen component
  */
-import {SidebarItem} from "../components/Sidebar";
+import {Sidebar, SidebarItem} from "../components/Sidebar";
+import {QuestionApi} from "../clientApi/QuestionApi";
+import QuestionModel = Api.QuestionModel;
+import AnswerModel = Api.AnswerModel;
+import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
+
+export type answer = AnswerModel & {
+    isChecked: KnockoutObservable<boolean>;
+}
+
+export type question = QuestionModel & {
+    answerList: KnockoutObservableArray<answer>;
+}
 
 export class Fragebogen {
     public IsSidebarVisible: KnockoutObservable<boolean>;
     public sidebarItems = ko.observableArray<SidebarItem>();
 
-    constructor() {
-        // No sidebar on component 'Kontakt'
-        this.IsSidebarVisible = ko.observable<boolean>(true);
+    public questionList = ko.observableArray<question>(null);
 
-        this.prepareSidebarItems();
+    public get hasItems() {
+        return this.questionList().length > 0;
     }
 
-    public prepareSidebarItems() {
-        this.sidebarItems.push({
-                Name: "Frage 1",
-                Title: "Frage 1",
-                Anker: "#f1",
-                IsSelected: ko.observable<boolean>(true)
-            },
-            {
-                Name: "Frage 2",
-                Title: "Frage 2",
-                Anker: "#f2",
-                IsSelected: ko.observable<boolean>(false)
-            },
-            {
-                Name: "Frage 3",
-                Title: "Frage 3",
-                Anker: "#f3",
-                IsSelected: ko.observable<boolean>(false)
-            },
-            {
-                Name: "Frage 4",
-                Title: "Frage 4",
-                Anker: "#f4",
-                IsSelected: ko.observable<boolean>(false)
+    constructor() {
+        // Sidebar on component 'Fragebogen'
+        this.IsSidebarVisible = ko.observable<boolean>(true);
+        this.loadAsync();
+    }
+
+    public loadAsync() {
+        // TODO: getFirstWithAnswers() Fragebogen aufbauen
+
+        QuestionApi.getList().done((response: QuestionModel[]) => {
+            response.forEach((q: QuestionModel) => {
+                let sidebarItem: SidebarItem = {
+                    Name: "Frage #" + q.sortOrder,
+                    Title: q.text,
+                    Anker: "#f" + q.sortOrder,
+                    IsSelected: ko.observable<boolean>(false)
+                } as SidebarItem;
+
+                let answerList = ko.observableArray<answer>();
+                QuestionApi.getAnswersForQuestion(q.id).done((r: AnswerModel[]) => {
+                    r.forEach((r: AnswerModel) => {
+                        let answer = {
+                            text: r.text,
+                            sortOrder: r.sortOrder,
+                            questionId: r.questionId,
+                            isChecked: ko.observable<boolean>(false)
+                        } as answer;
+
+                        answerList.push(answer);
+                    });
+                });
+
+                let question = {
+                    text: q.text,
+                    sortOrder: q.sortOrder,
+                    answers: q.answers,
+                    answerList: answerList
+                } as question;
+
+                this.sidebarItems.push(sidebarItem);
+                this.questionList.push(question);
             });
+        });
+    }
+
+    public evaluate(component: KnockoutObservable<string>) {
+        // TODO: Let the service evaluate chosen answers
+        component("Auswertung");
     }
 }

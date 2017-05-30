@@ -23,18 +23,19 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
 import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.entity.*;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class QuestionService extends BaseService {
@@ -84,7 +85,7 @@ public class QuestionService extends BaseService {
      *
      * @return Next question
      */
-    public QuestionModel getNextforAnswer(long questionId, long answerId) {
+    public QuestionModel getNextForAnswer(long questionId, long answerId) {
 
         // TODO: Load next question based on answer and not only on sort order.
 
@@ -124,7 +125,7 @@ public class QuestionService extends BaseService {
      *
      * @return List with all answers of the question or null if the question doesn't exist
      */
-    public List<AnswerModel> getAnswersForQuestion(int questionId) {
+    public List<AnswerModel> getAnswersForQuestion(long questionId) {
         List<AnswerEntity> answerEntities = answerDAO.getSortedListForQuestion(questionId);
 
         List<AnswerModel> answerModels = new ArrayList<>(answerEntities.size());
@@ -136,20 +137,56 @@ public class QuestionService extends BaseService {
     }
 
     /**
-     * Gets all answers of the Questionaire and returns the Evaluation.
+     * Gets all answers of the Questionnaire and returns the Evaluation.
      *
-     * @param answers All selected answers of the questionaire
+     * @param answers All selected answers of the questionnaire
      *
-     * @return
+     * @return Evaluation result.
      */
-    public ResultModel evaluateQuestionaire(Map<Long, List<Long>> answers) {
-        // TODO
+    public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
+        List<AnswerEntity> answerList = new LinkedList<>();
 
-        List<AnimalType> animalType = new ArrayList<>();
-        List<String> cost = new ArrayList<>();
-        List<String> size = new ArrayList<>();
-        boolean garden = false;
-        boolean needSpecialCare = false;
+        //Get all answers
+        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
+            long questionId = entry.getKey();
+            List<Long> answerIds = entry.getValue();
+            for (Long answerId : answerIds) {
+                answerList.add(answerDAO.getAnswer(questionId, answerId));
+            }
+        }
+
+        //Create and fill Result Lists
+        List<AnimalType> animalType = new LinkedList<>();
+        animalType.addAll(Arrays.asList(AnimalType.values()));
+        List<AnimalCost> cost = new LinkedList<>();
+        cost.addAll(Arrays.asList(AnimalCost.values()));
+        List<AnimalSize> size = new LinkedList<>();
+        size.addAll(Arrays.asList(AnimalSize.values()));
+        boolean garden = true;
+        boolean needSpecialCare = true;
+
+        //Remove results
+        for (AnswerEntity answer : answerList) {
+            if (answer.animalType != null) {
+                animalType.removeAll(answer.animalType);
+            }
+
+            if (answer.cost != null) {
+                cost.removeAll(answer.cost);
+            }
+
+            if (answer.animalSize != null) {
+                size.removeAll(answer.animalSize);
+            }
+
+            if (answer.garden) {
+                garden = false;
+            }
+
+            if (answer.needCare) {
+                needSpecialCare = false;
+            }
+        }
 
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }

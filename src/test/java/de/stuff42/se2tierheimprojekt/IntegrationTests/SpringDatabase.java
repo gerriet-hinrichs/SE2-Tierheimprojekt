@@ -108,10 +108,10 @@ public class SpringDatabase {
         logger.info("Read and Check:");
         logger.info("-------------------------------");
         logger.info("Entry number FakeDAO:");
-        assertEquals(java.util.Optional.ofNullable(fakeTable.count()).orElse(0L), numberOfEntries);
+        assertEquals(java.util.Optional.of(fakeTable.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry number OtherFakeDAO:");
-        assertEquals(java.util.Optional.ofNullable(otherFakeDAO.count()).orElse(0L), numberOfEntries);
+        assertEquals(java.util.Optional.of(otherFakeDAO.count()).orElse(0L), numberOfEntries);
         logger.info("check");
         logger.info("Entry Attributes:");
         for (FakeEntity entry : fakeTable.findAll()) {

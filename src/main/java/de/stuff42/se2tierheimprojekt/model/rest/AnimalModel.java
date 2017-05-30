@@ -23,7 +23,11 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
-import javax.validation.constraints.NotNull;
+import de.stuff42.se2tierheimprojekt.data.AnimalAge;
+import de.stuff42.se2tierheimprojekt.data.AnimalSex;
+import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An single Animal with his attributes.
@@ -37,24 +41,24 @@ public class AnimalModel {
     public String race;
 
     @NotNull
-    public String sex;
+    public AnimalSex sex;
+
+    public AnimalAge age;
 
     @NotNull
-    public String age;
-
-    @NotNull
-    public String requiredSpace;
+    public AnimalSpace requiredSpace;
 
     /**
      * An single Animal.
      * Empty String or Text.
-     * @param name <""> or <attributeText>.
-     * @param race <""> or <attributeText>.
-     * @param sex <""> or <attributeText>.
-     * @param age <""> or <attributeText>.
+     *
+     * @param name          <""> or <attributeText>.
+     * @param race          <""> or <attributeText>.
+     * @param sex           <""> or <attributeText>.
+     * @param age           <""> or <attributeText>.
      * @param requiredSpace <""> or <attributeText>.
      */
-    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace) {
+    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace) {
         this.name = name;
         this.race = race;
         this.sex = sex;

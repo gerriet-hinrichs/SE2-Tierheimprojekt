@@ -72,11 +72,15 @@ export class App {
 
         // Automatic slide show icon
         //this.slideShow();
+
+        $(function () {
+            location.hash = '';
+        });
     }
 
     public setViewPort() {
         this.viewMarginTop("20px");
-        this.viewMarginBottom("150px");
+        this.viewMarginBottom("15px");
         this.viewMarginLeftRight("20px");
     }
 
@@ -127,8 +131,8 @@ export class App {
 
         console.log("container", container);
 
-        if(!!container) {
-            if(this.index == 0) {
+        if (!!container) {
+            if (this.index == 0) {
                 $("#logo-icon").fadeIn("slow");
                 container.style.backgroundImage = "url('/static/images/logo_1.png')";
 
@@ -141,7 +145,7 @@ export class App {
 
         $('#logo-icon').fadeIn("slow");
 
-        setTimeout(function() {
+        setTimeout(function () {
             this.slideShow()
         }.bind(this), 2000);
     }
