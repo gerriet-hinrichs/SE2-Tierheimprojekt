@@ -29,6 +29,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalAge;
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSex;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
+import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
 import de.stuff42.se2tierheimprojekt.data.AnimalType;
 
 @Entity
@@ -47,13 +52,13 @@ public class AnimalEntity {
     public String race;
 
     @NotNull
-    public String sex;
+    public AnimalSex sex;
+    
+    @NotNull
+    public AnimalAge age;
 
     @NotNull
-    public String age;
-
-    @NotNull
-    public String requiredSpace;
+    public AnimalSpace requiredSpace;
 
     // Search properties
     @NotNull
@@ -61,11 +66,11 @@ public class AnimalEntity {
 
     // small, medium, huge
     @NotNull
-    public String animalSize;
+    public AnimalSize animalSize;
 
     // cheap, medium, expensive
     @NotNull
-    public String cost;
+    public AnimalCost cost;
 
     // true, false
     public boolean needCare;
@@ -78,8 +83,8 @@ public class AnimalEntity {
         // it shouldn't be used directly
     }
 
-    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull String sex, @NotNull String age, @NotNull String requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull String animalSize, @NotNull String cost, boolean needCare, boolean garden) {
+    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace,
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
         // TODO: check for not null
         this.name = name;
         this.race = race;
