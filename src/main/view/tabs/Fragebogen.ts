@@ -28,6 +28,7 @@ import {Sidebar, SidebarItem} from "../components/Sidebar";
 import {QuestionApi} from "../clientApi/QuestionApi";
 import QuestionModel = Api.QuestionModel;
 import AnswerModel = Api.AnswerModel;
+import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
 
 export type answer = AnswerModel & {
     isChecked: KnockoutObservable<boolean>;
@@ -64,7 +65,7 @@ export class Fragebogen {
                 } as SidebarItem;
 
                 let answerList = ko.observableArray<answer>();
-                QuestionApi.getAnswersForQuestion(3).done((r: AnswerModel[]) => {
+                QuestionApi.getAnswersForQuestion(8).done((r: AnswerModel[]) => {
                     r.forEach((r: AnswerModel) => {
                         let answer = {
                             text: r.text,
@@ -88,5 +89,10 @@ export class Fragebogen {
                 this.questionList.push(question);
             });
         });
+    }
+
+    public evaluate(component: KnockoutObservable<string>) {
+        // TODO: Let the service evaluate chosen answers
+        component("Auswertung");
     }
 }
