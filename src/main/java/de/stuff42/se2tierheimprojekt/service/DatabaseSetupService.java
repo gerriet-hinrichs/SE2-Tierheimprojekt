@@ -23,10 +23,7 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
@@ -68,6 +65,7 @@ public class DatabaseSetupService extends BaseService {
      * Fills database with static data.
      */
     public void setup() {
+
         // Questions & Answers
         addQuestionWithAnswers("How many square meters are available for animal husbandry?",
                 new AnswerContent("<35",
@@ -230,13 +228,14 @@ public class DatabaseSetupService extends BaseService {
      */
     private void addQuestionWithAnswers(String questionText, AnswerContent... answerContent) {
         QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText);
-        questionDAO.save(question);
+        question = questionDAO.save(question);
+        question.answers = new ArrayList<>(answerContent.length);
 
         int answerSortOrder = 1;
         for (AnswerContent currentAnswerContent : answerContent) {
             AnswerEntity answer = new AnswerEntity(answerSortOrder++, currentAnswerContent.text, question,
                     currentAnswerContent.animalType, currentAnswerContent.animalSize, currentAnswerContent.cost, currentAnswerContent.needCare, currentAnswerContent.garden);
-            answerDAO.save(answer);
+            question.answers.add(answerDAO.save(answer));
         }
     }
 
