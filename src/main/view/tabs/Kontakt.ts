@@ -49,11 +49,12 @@ export class Kontakt {
                 Anker: "#contact-team",
                 IsSelected: ko.observable<boolean>(false)
             },
-            {
+           /* {
                 Name: "Kontakt",
                 Title: "So erreichst du uns",
                 Anker: "#contact-contact",
                 IsSelected: ko.observable<boolean>(false)
-            });
+            }*/
+            );
     }
 }
