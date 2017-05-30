@@ -47,12 +47,15 @@ public class AnswerEntity {
 
     // Search properties
     @NotNull
+    @ElementCollection
     public Set<AnimalType> animalType;
 
     @NotNull
+    @ElementCollection
     public Set<AnimalSize> animalSize;
 
     @NotNull
+    @ElementCollection
     public Set<AnimalCost> cost;
 
     public boolean needCare;
