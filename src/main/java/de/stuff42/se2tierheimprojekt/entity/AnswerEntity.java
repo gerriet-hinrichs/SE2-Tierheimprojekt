@@ -23,7 +23,13 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 public class AnswerEntity {
@@ -38,6 +44,20 @@ public class AnswerEntity {
 
     @ManyToOne
     public QuestionEntity question;
+
+    // Search properties
+    @NotNull
+    public Set<AnimalType> animalType;
+
+    @NotNull
+    public Set<AnimalSize> animalSize;
+
+    @NotNull
+    public Set<AnimalCost> cost;
+
+    public boolean needCare;
+
+    public boolean garden;
 
     protected AnswerEntity() {
         // no-args constructor required by JPA spec
