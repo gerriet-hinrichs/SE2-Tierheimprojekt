@@ -69,14 +69,19 @@ public class Parameter extends DataElement<VariableElement> {
         // path variable?
         PathVariable pathVariable = element.getAnnotation(PathVariable.class);
         if (pathVariable != null) {
-            method.addPathVariable("".equals(pathVariable.name()) ? element.getSimpleName().toString() : pathVariable.name(),
+            method.addPathVariable("".equals(pathVariable.name())
+                            ? ("".equals(pathVariable.value()) ? element.getSimpleName().toString() : pathVariable.value())
+                            : pathVariable.name(),
                     element.getSimpleName().toString());
         }
 
         // query parameter?
         RequestParam requestParam = element.getAnnotation(RequestParam.class);
         if (requestParam != null) {
-            method.addQueryParameter("".equals(requestParam.name()) ? element.getSimpleName().toString() : requestParam.name(),
+            method.addQueryParameter(
+                    "".equals(requestParam.name())
+                            ? ("".equals(requestParam.value()) ? element.getSimpleName().toString() : requestParam.value())
+                            : requestParam.name(),
                     element.getSimpleName().toString());
         }
 
