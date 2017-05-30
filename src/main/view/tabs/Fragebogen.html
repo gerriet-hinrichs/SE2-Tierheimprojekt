@@ -1,4 +1,22 @@
-{{#if: !!IsSidebarVisible()}}
+{{#if: !!IsSidebarVisible() && !!hasItems}}
 <div id="sidebar" class="column"
      data-bind="module: { name: 'components/Sidebar', data: { items: sidebarItems } }"></div>
+{{/if}}
+
+{{#if: !!hasItems}}
+<div id="fragebogen" class="content column" foreach="{{questionList}}">
+    <!-- Question -->
+    <div data-bind="text: sortOrder + '. ' + text, attr: { 'href': 'f' + sortOrder }"></div>
+    <!-- Answers -->
+    {{#foreach: answerList}}
+    <div class="row" >
+        <input class="clickable" type="radio" name="sortOrder" data-bind="checked: isChecked"/>
+        <span data-bind="text: text"></span>
+    </div>
+    {{/foreach}}
+</div>
+{{/if}}
+
+{{#if: !hasItems}}
+<div class="content centered">No questions available</div>
 {{/if}}

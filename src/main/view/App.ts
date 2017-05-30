@@ -72,6 +72,10 @@ export class App {
 
         // Automatic slide show icon
         //this.slideShow();
+
+        $(function() {
+            location.hash = '';
+        });
     }
 
     public setViewPort() {
