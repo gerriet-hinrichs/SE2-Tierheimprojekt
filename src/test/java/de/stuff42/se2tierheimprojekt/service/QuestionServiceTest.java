@@ -25,6 +25,13 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.*;
 
+import de.stuff42.se2tierheimprojekt.Application;
+import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
+import de.stuff42.se2tierheimprojekt.model.rest.AnimalModel;
+import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
+import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
+import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,18 +42,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-
-import de.stuff42.se2tierheimprojekt.Application;
-import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
-import de.stuff42.se2tierheimprojekt.model.rest.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
-//@Transactional
+@Transactional
 public class QuestionServiceTest {
 
     @Autowired private DatabaseSetupService databaseSetupService;
