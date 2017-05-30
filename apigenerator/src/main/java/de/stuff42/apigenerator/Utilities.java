@@ -25,6 +25,8 @@ package de.stuff42.apigenerator;
 
 import java.util.List;
 
+import javax.lang.model.type.TypeMirror;
+
 import de.stuff42.apigenerator.data.type.TypeDataElement;
 
 import org.jetbrains.annotations.Contract;
@@ -143,5 +145,18 @@ public class Utilities {
             return "(" + string + ")";
         }
         return string;
+    }
+
+    /**
+     * Extracts the actual type name from the given type mirror.
+     *
+     * @param mirror Type mirror.
+     *
+     * @return Actual type name.
+     */
+    public static String getTypeName(TypeMirror mirror) {
+
+        // the result of toString() might contain annotation information so we need to strip them
+        return mirror.toString().replaceAll("^(\\(.*?:: )?(.*?)\\)?$", "$2");
     }
 }

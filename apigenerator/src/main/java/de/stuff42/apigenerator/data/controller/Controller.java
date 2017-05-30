@@ -29,6 +29,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.data.DataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
@@ -59,7 +60,7 @@ public class Controller extends DataElement<TypeElement> {
     public Controller(TypeElement element, RestControllerProcessor processor) {
         super(element, processor);
         name = new Lazy<>(() -> {
-            String fullJavaName = element.asType().toString();
+            String fullJavaName = Utilities.getTypeName(element.asType());
             return fullJavaName.replaceAll(".*\\.(.*?)(Controller)?$", "$1Api");
         });
         methods = new Lazy<>(() -> {
