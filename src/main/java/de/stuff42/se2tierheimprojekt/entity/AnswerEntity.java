@@ -29,6 +29,7 @@ import de.stuff42.se2tierheimprojekt.data.AnimalType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -67,7 +68,38 @@ public class AnswerEntity {
         // this one is protected since it shouldn't be used directly
     }
 
-    public AnswerEntity(int sortOrder, String text, QuestionEntity question) {
+    /**
+     * Creates an answer for a Question.
+     * And adds attributes for evaluate.
+     * @param sortOrder for sorting answers.
+     * @param text text of answer.
+     * @param question the question from the answer.
+     * @param animalType Null or properties, that are sorted out by evaluating.
+     * @param animalSize Null or properties, that are sorted out by evaluating.
+     * @param cost Null or properties, that are sorted out by evaluating.
+     * @param needCare true to be sorted out.
+     * @param garden true to be sorted out.
+     */
+    public AnswerEntity(int sortOrder, String text, QuestionEntity question,
+                        Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, boolean needCare, boolean garden) {
+        if(animalType == null){
+            this.animalType = new HashSet<>();
+        }else{
+            this.animalType = animalType;
+        }
+        if(animalSize == null){
+            this.animalSize = new HashSet<>();
+        }else{
+            this.animalSize = animalSize;
+        }
+        if(cost == null){
+            this.cost = new HashSet<>();
+        }else{
+            this.cost = cost;
+        }
+
+        this.needCare = needCare;
+        this.garden = garden;
         this.sortOrder = sortOrder;
         this.text = text;
         this.question = question;
