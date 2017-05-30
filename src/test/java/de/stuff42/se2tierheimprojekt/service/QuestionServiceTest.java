@@ -45,9 +45,9 @@ import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.model.rest.*;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-//@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ContextConfiguration(classes = {Application.class}, initializers = {TestApplicationInitializer.class})
 //@Transactional
 public class QuestionServiceTest {
 
@@ -83,10 +83,23 @@ public class QuestionServiceTest {
         logger.info("");
     }
 
-//    @Test
-//    public void delateMe() {
-//        databaseSetupService.clean();
-//        databaseSetupService.setup();
+    @Test
+    public void questionConnection() {
+        assertNotNull(questionService);
+    }
+
+    @Test
+    public void setupConnection() {
+        assertNotNull(databaseSetupService);
+    }
+
+    @Test
+    public void delateMe() {
+        assertNotNull(databaseSetupService);
+
+
+        databaseSetupService.clean();
+        databaseSetupService.setup();
 //
 //        List<AnimalType> animalType = Arrays.asList(AnimalType.values());
 //        List<String> size = new ArrayList<>();//small, medium, huge
@@ -104,7 +117,7 @@ public class QuestionServiceTest {
 //        for (AnimalModel entry : model.foundAnimals) {
 //            logger.info(entry.name);
 //        }
-//    }
+    }
 
     //@Test
     public void getFirstWithAnswers() {
