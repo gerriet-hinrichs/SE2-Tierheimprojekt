@@ -55,6 +55,8 @@ export class Fragebogen {
     }
 
     public loadAsync() {
+        // TODO: getFirstWithAnswers() Fragebogen aufbauen
+
         QuestionApi.getList().done((response: QuestionModel[]) => {
             response.forEach((q: QuestionModel) => {
                 let sidebarItem: SidebarItem = {
@@ -65,7 +67,7 @@ export class Fragebogen {
                 } as SidebarItem;
 
                 let answerList = ko.observableArray<answer>();
-                QuestionApi.getAnswersForQuestion(8).done((r: AnswerModel[]) => {
+                QuestionApi.getAnswersForQuestion(q.id).done((r: AnswerModel[]) => {
                     r.forEach((r: AnswerModel) => {
                         let answer = {
                             text: r.text,
