@@ -23,15 +23,16 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import de.stuff42.se2tierheimprojekt.data.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import de.stuff42.se2tierheimprojekt.entity.*;
-
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.stuff42.se2tierheimprojekt.data.*;
+import de.stuff42.se2tierheimprojekt.entity.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Service that fills the database with data.
@@ -39,9 +40,15 @@ import java.util.Set;
 @Service
 public class DatabaseSetupService extends BaseService {
 
-    @Autowired private QuestionDAO questionDAO;
-    @Autowired private AnswerDAO answerDAO;
-    @Autowired private AnimalDAO animalDAO;
+    @Autowired
+    private QuestionDAO questionDAO;
+
+    @Autowired
+    private AnswerDAO answerDAO;
+
+    @Autowired
+    private AnimalDAO animalDAO;
+
     private int questionSortOrder;
 
     public DatabaseSetupService() {
@@ -64,13 +71,13 @@ public class DatabaseSetupService extends BaseService {
         // Questions & Answers
         addQuestionWithAnswers("How many square meters are available for animal husbandry?",
                 new AnswerContent("<35",
-                        make(AnimalType.DOG, AnimalType.CAT),
-                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
+                        new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
                         false, false),
                 new AnswerContent("35-55",
                         null,
-                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
                         false, false),
                 new AnswerContent(">55",
@@ -103,19 +110,19 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         false, false),
                 new AnswerContent("On a main road or in the city center",
-                        make(AnimalType.DOG),
+                        new HashSet<>(Collections.singletonList(AnimalType.DOG)),
                         null,
                         null,
                         false, false)
         );
         addQuestionWithAnswers("How many hours do they have an average time per day for the animal?",
                 new AnswerContent("<1",
-                        make(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD),
-                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD)),
+                        new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
                         true, false),
                 new AnswerContent("1-4",
-                        make(AnimalType.DOG, AnimalType.BIRD),
+                        new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD)),
                         null,
                         null,
                         true, false),
@@ -132,7 +139,7 @@ public class DatabaseSetupService extends BaseService {
         );
         addQuestionWithAnswers("Should the animal also be supplied by children?",
                 new AnswerContent("Yes",
-                        make(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY),
+                        new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY)),
                         null,
                         null,
                         true, false),
@@ -144,13 +151,13 @@ public class DatabaseSetupService extends BaseService {
         );
         addQuestionWithAnswers("How much should the monthly cost be? (Without basic equipment)",
                 new AnswerContent("20-30",
-                        make(AnimalType.DOG, AnimalType.CAT),
-                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
+                        new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
                         false, false),
                 new AnswerContent("30-60",
-                        make(AnimalType.DOG),
-                        make(AnimalSize.HUGE),
+                        new HashSet<>(Collections.singletonList(AnimalType.DOG)),
+                        new HashSet<>(Collections.singletonList(AnimalSize.HUGE)),
                         null,
                         false, false),
                 new AnswerContent("60-80",
@@ -217,8 +224,9 @@ public class DatabaseSetupService extends BaseService {
 
     /**
      * Adds a question with answers to the database.
-     * @param questionText      Question text.
-     * @param answerContent     Content of answers.
+     *
+     * @param questionText  Question text.
+     * @param answerContent Content of answers.
      */
     private void addQuestionWithAnswers(String questionText, AnswerContent... answerContent) {
         QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText);
@@ -227,31 +235,23 @@ public class DatabaseSetupService extends BaseService {
         int answerSortOrder = 1;
         for (AnswerContent currentAnswerContent : answerContent) {
             AnswerEntity answer = new AnswerEntity(answerSortOrder++, currentAnswerContent.text, question,
-                    currentAnswerContent.animalType,  currentAnswerContent.animalSize,  currentAnswerContent.cost, currentAnswerContent.needCare, currentAnswerContent.garden);
+                    currentAnswerContent.animalType, currentAnswerContent.animalSize, currentAnswerContent.cost, currentAnswerContent.needCare, currentAnswerContent.garden);
             answerDAO.save(answer);
         }
     }
 
-    /**
-     * Can produce runtime errors is false uses!
-     * Take care!
-     * @param setContend Params of one type.
-     * @param <T> Should be, AnimalType, AnimalSize or AnimalCost.
-     * @return Set made from Params.
-     */
-    @SuppressWarnings({"unchecked", "varargs"})
-    private <T> Set<T> make(T... setContend ){
-        Set<T> set = new HashSet<>();
-        Collections.addAll(set, setContend);
-        return set;
-    }
+    private class AnswerContent {
 
-    private class AnswerContent{
         String text;
+
         Set<AnimalType> animalType;
+
         Set<AnimalSize> animalSize;
+
         Set<AnimalCost> cost;
+
         boolean needCare;
+
         boolean garden;
 
         AnswerContent(String answerText, Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, boolean needCare, boolean garden) {

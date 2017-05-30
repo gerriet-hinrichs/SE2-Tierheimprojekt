@@ -33,4 +33,7 @@ public interface AnswerDAO extends CrudRepository<AnswerEntity, Long> {
 
     @Query("select a from AnswerEntity a where a.question.id = :questionId order by a.sortOrder")
     List<AnswerEntity> getSortedListForQuestion(@Param("questionId") long questionId);
+    
+    @Query("select a from AnswerEntity a where a.question.id = :questionId and a.id = :answerId")
+    AnswerEntity getAnswer(@Param("questionId")long questionId, @Param("answerId")long answerId);
 }

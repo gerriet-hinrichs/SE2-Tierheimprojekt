@@ -24,12 +24,18 @@
 package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
 import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.entity.*;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
@@ -124,7 +130,7 @@ public class QuestionService extends BaseService {
      *
      * @return List with all answers of the question or null if the question doesn't exist
      */
-    public List<AnswerModel> getAnswersForQuestion(int questionId) {
+    public List<AnswerModel> getAnswersForQuestion(long questionId) {
         List<AnswerEntity> answerEntities = answerDAO.getSortedListForQuestion(questionId);
 
         List<AnswerModel> answerModels = new ArrayList<>(answerEntities.size());
@@ -143,14 +149,51 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire(Map<Long, List<Long>> answers) {
-        // TODO
-
-        List<AnimalType> animalType = new ArrayList<>();
-        List<String> cost = new ArrayList<>();
-        List<String> size = new ArrayList<>();
-        boolean garden = false;
-        boolean needSpecialCare = false;
-
-        return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+      List<AnswerEntity> answerList = new LinkedList<>();
+      
+      //Get all answers
+      Iterator<Entry<Long, List<Long>>> iterator = answers.entrySet().iterator();
+      while(iterator.hasNext()) {
+        Entry<Long,List<Long>> entry = iterator.next();
+        long questionId = entry.getKey();
+        List<Long> answerIds = entry.getValue();
+        Iterator<Long> answerIdIterator = answerIds.iterator();
+        while(answerIdIterator.hasNext()) {
+          long answerId = answerIdIterator.next();
+          answerList.add(answerDAO.getAnswer(questionId, answerId));
+        }
+      }
+      
+      //Create and fill Result Lists
+      List<AnimalType> animalType = new LinkedList<>();
+      animalType.addAll(Arrays.asList(AnimalType.values()));
+      List<AnimalCost> cost = new LinkedList<>();
+      cost.addAll(Arrays.asList(AnimalCost.values()));
+      List<AnimalSize> size = new LinkedList<>();
+      size.addAll(Arrays.asList(AnimalSize.values()));
+      boolean garden = true;
+      boolean needSpecialCare = true;
+      
+      //Remove results
+      Iterator<AnswerEntity> answerIterator = answerList.iterator();
+      while(answerIterator.hasNext()) {
+        AnswerEntity answer = answerIterator.next();
+        
+        //TODO Just marks likely error source
+        animalType.removeAll(answer.animalType);
+        cost.removeAll(answer.cost);
+        size.removeAll(answer.animalSize);
+        
+        if(answer.garden) {
+          garden = false;
+        }
+        if(answer.needCare) {
+          needSpecialCare = false;
+        }
+      }
+      
+      //TODO animalDAO gettingFittingAnimals anpassen
+      // return null;
+      return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }

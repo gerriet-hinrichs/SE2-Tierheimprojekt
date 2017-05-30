@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.type.TypeMirror;
 
+import de.stuff42.apigenerator.Utilities;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
@@ -63,6 +64,9 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
         primitiveTypes.put("double", new PrimitiveTypeInfo("number", false));
         primitiveTypes.put("java.lang.Double", new PrimitiveTypeInfo("number", true));
 
+        // number
+        primitiveTypes.put("java.lang.Number", new PrimitiveTypeInfo("number", true));
+
         // string
         primitiveTypes.put("char", new PrimitiveTypeInfo("string", false));
         primitiveTypes.put("java.lang.Char", new PrimitiveTypeInfo("string", true));
@@ -92,14 +96,14 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
     public PrimitiveType(TypeMirror element, RestControllerProcessor processor) {
         super(element, processor);
         name = new Lazy<>(() -> {
-            PrimitiveTypeInfo typeInfo = primitiveTypes.get(element.toString());
+            PrimitiveTypeInfo typeInfo = primitiveTypes.get(Utilities.getTypeName(element));
             if (typeInfo == null) {
                 return "any";
             }
             return typeInfo.tyescriptName;
         });
         typeSupportsNull = new Lazy<>(() -> {
-            PrimitiveTypeInfo typeInfo = primitiveTypes.get(element.toString());
+            PrimitiveTypeInfo typeInfo = primitiveTypes.get(Utilities.getTypeName(element));
             return typeInfo == null || typeInfo.supportsNull;
         });
     }
@@ -112,7 +116,7 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
      * @return If the given mirror element is a primitive type.
      */
     public static boolean isPrimitive(TypeMirror typeMirror) {
-        return primitiveTypes.containsKey(typeMirror.toString());
+        return primitiveTypes.containsKey(Utilities.getTypeName(typeMirror));
     }
 
     @Override
@@ -133,7 +137,7 @@ public class PrimitiveType extends TypeDataElement<TypeMirror> {
 
     @Override
     public boolean ignoreWithinBondsAndInheritance() {
-        return "java.lang.Object".equals(element.toString());
+        return true;
     }
 
     @Override
