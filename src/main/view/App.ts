@@ -76,7 +76,7 @@ export class App {
 
     public setViewPort() {
         this.viewMarginTop("20px");
-        this.viewMarginBottom("150px");
+        this.viewMarginBottom("15px");
         this.viewMarginLeftRight("20px");
     }
 

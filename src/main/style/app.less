@@ -92,6 +92,35 @@ div.inner-content {
   overflow: auto;
 }
 
+// Corner ribbon ---------------------
+.corner-ribbon{
+  width: 200px;
+  background: #e43;
+  text-align: center;
+  line-height: 50px;
+  letter-spacing: 1px;
+  color: #f0f0f0;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.corner-ribbon.sticky{
+  position: fixed;
+}
+
+.corner-ribbon.shadow{
+  box-shadow: 0 0 3px rgba(0,0,0,.3);
+}
+
+.corner-ribbon.top-left{
+  top: 20px;
+  left: -55px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+// -----------------------------------
+
 button.button-fragebogen {
   margin: 20px 100px;
   height: 50px;
@@ -138,7 +167,15 @@ div.footer {
 }
 
 .selected-nav-item  {
-  border: 1px solid white !important;
+  &:before {
+    content: ">\00a0";
+    color: white;
+  }
+
+  &:after {
+    content: "\00a0<";
+    color: white;
+  }
 }
 
 .underlined {
@@ -174,6 +211,7 @@ div#navigation {
 div.content {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
+  padding-bottom: 24px;
 }
 
 div#inner-project, div#contact-team, div#contact-contact {
