@@ -77,7 +77,7 @@ public class QuestionServiceTest {
     @Test
     public void superBasicTest() {
         logger.info("Beginn");
-/*
+
         logger.info("DatabaseAction");
         databaseSetupService.clean();
         databaseSetupService.setup();
@@ -110,7 +110,6 @@ public class QuestionServiceTest {
         for (AnimalModel entry : model.foundAnimals) {
             logger.info(entry.name);
         }
-        */
     }
 
     private List<Long> make(Long... listContend ){
