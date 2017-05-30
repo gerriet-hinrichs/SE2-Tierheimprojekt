@@ -64,18 +64,14 @@ public class AnimalEntity {
     @NotNull
     public AnimalType animalType;
 
-    // small, medium, huge
     @NotNull
     public AnimalSize animalSize;
 
-    // cheap, medium, expensive
     @NotNull
     public AnimalCost cost;
 
-    // true, false
     public boolean needCare;
 
-    // true, false
     public boolean garden;
 
     public AnimalEntity() {
