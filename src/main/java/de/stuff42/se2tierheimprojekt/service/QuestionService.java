@@ -149,7 +149,7 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire(Map<Long, List<Long>> answers) {
-      List<AnswerEntity> answerList = new LinkedList<AnswerEntity>();
+      List<AnswerEntity> answerList = new LinkedList<>();
       
       //Get all answers
       Iterator<Entry<Long, List<Long>>> iterator = answers.entrySet().iterator();
@@ -193,7 +193,7 @@ public class QuestionService extends BaseService {
       }
       
       //TODO animalDAO gettingFittingAnimals anpassen
-      return null;
-      //return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+      // return null;
+      return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }
