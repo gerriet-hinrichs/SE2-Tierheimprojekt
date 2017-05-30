@@ -60,11 +60,27 @@ public class QuestionService extends BaseService {
      * @return Returns the first question or null if there isn't a first question.
      */
     public QuestionModel getFirstWithAnswers() {
-        QuestionEntity questionEntity = questionDAO.getFirstQuestion();
+        // TODO: get a single via JQL
+        //QuestionEntity questionEntity = questionDAO.getFirstQuestion();
+        // temp
+        List<QuestionModel> qList = this.getList();
+        QuestionModel qm = null;
+        for (QuestionModel entry : qList){
+            if(qm == null){
+                qm = entry;
+            }else if(qm.sortOrder > entry.sortOrder){
+                qm = entry;
+            }
+        }
+        qm.answers = this.getAnswersForQuestion(qm.id);
+        return qm;
+        // temp
+        /*
         if (questionEntity == null) {
             return null;
         }
         return new QuestionModel(questionEntity);
+        */
     }
 
     /**
@@ -99,12 +115,29 @@ public class QuestionService extends BaseService {
             return null;
         }
 
+        // temp
+        List<QuestionModel> qList = this.getList();
+        QuestionModel qm = null;
+        for (QuestionModel entry : qList){
+            if(entry.sortOrder == (lastQuestionEntity.sortOrder+1)){
+                qm = entry;
+            }
+        }
+        if (qm == null) {
+            return null;
+        }
+        qm.answers = this.getAnswersForQuestion(qm.id);
+        return qm;
+        // temp
+
+        /*
         QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
         if (nextQuestionEntity == null) {
             return null;
         }
 
         return new QuestionModel(nextQuestionEntity);
+        */
     }
 
     /**
@@ -173,7 +206,7 @@ public class QuestionService extends BaseService {
       size.addAll(Arrays.asList(AnimalSize.values()));
       boolean garden = true;
       boolean needSpecialCare = true;
-      
+
       //Remove results
       Iterator<AnswerEntity> answerIterator = answerList.iterator();
       while(answerIterator.hasNext()) {
@@ -191,7 +224,7 @@ public class QuestionService extends BaseService {
           needSpecialCare = false;
         }
       }
-      
+
       //TODO animalDAO gettingFittingAnimals anpassen
       // return null;
       return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
