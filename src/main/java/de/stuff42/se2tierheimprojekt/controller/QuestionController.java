@@ -27,15 +27,15 @@ package de.stuff42.se2tierheimprojekt.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionAndAnswerIDModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import de.stuff42.se2tierheimprojekt.service.QuestionService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @GenerateClientApi
@@ -45,7 +45,6 @@ public class QuestionController extends BaseController<QuestionService> {
     public QuestionController(QuestionService serviceInstance) {
         super(serviceInstance);
     }
-
 
     /**
      * Returns the first question of the questionnaire with all of its answers.
@@ -73,14 +72,13 @@ public class QuestionController extends BaseController<QuestionService> {
     /**
      * Returns the next question for the given answer in the questionnaire.
      *
-     * @param questionId ID of the answered question.
-     * @param answerId   ID of the answer of the last question.
+     * @param ids Question with selected answer.
      *
      * @return Next question
      */
     @RequestMapping(value = "/Question/answer", method = RequestMethod.POST)
     public QuestionModel getNextforAnswer(QuestionAndAnswerIDModel ids) {
-        return service.getNextforAnswer(ids.questionID, ids.answerID);
+        return service.getNextForAnswer(ids.questionID, ids.answerID);
     }
 
     /**
@@ -106,15 +104,15 @@ public class QuestionController extends BaseController<QuestionService> {
     }
 
     /**
-     * Gets all answers of the Questionaire and returns the Evaluation.
+     * Gets all answers of the Questionnaire and returns the Evaluation.
      *
-     * @param answers All selected answers of the questionaire
+     * @param answers All selected answers of the questionnaire.
      *
-     * @return
+     * @return Evaluation for given answers.
      */
     @RequestMapping(value = "/Questions/evaluate", method = RequestMethod.POST)
-    public ResultModel evaluateQuestionaire(@RequestBody Map<Long, List<Long>> answers) {
-        return service.evaluateQuestionaire(answers);
+    public ResultModel evaluateQuestionnaire(@RequestBody Map<Long, List<Long>> answers) {
+        return service.evaluateQuestionnaire(answers);
     }
 
 }

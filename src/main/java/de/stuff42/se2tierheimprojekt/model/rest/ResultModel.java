@@ -43,6 +43,7 @@ public class ResultModel {
 
     /**
      * All result Animals.
+     *
      * @param foundAnimals list of AnimalEntity from Database.
      */
     public ResultModel(@NotNull List<AnimalEntity> foundAnimals) {

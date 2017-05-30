@@ -27,7 +27,6 @@
 export interface ICheckBoxParams {
 
 }
-;
 
 export class Checkbox {
 

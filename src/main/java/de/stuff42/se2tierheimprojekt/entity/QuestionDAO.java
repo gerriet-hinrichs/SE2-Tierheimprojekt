@@ -38,7 +38,11 @@ public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
     Page<QuestionEntity> getFirstQuestions(Pageable pageable);
 
     default QuestionEntity getFirstQuestion() {
-        return getFirstQuestions(new PageRequest(0, 1)).getContent().get(0);
+        List<QuestionEntity> result = getFirstQuestions(new PageRequest(0, 1)).getContent();
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
 
     @Query("select q from QuestionEntity q order by q.sortOrder")
@@ -48,6 +52,10 @@ public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
     Page<QuestionEntity> getNextQuestions(@Param("lastQuestionSortOrder") int lastQuestionSortOrder, Pageable pageable);
 
     default QuestionEntity getNextQuestion(int lastQuestionSortOrder) {
-        return getNextQuestions(lastQuestionSortOrder, new PageRequest(0, 1)).getContent().get(0);
+        List<QuestionEntity> result = getNextQuestions(lastQuestionSortOrder, new PageRequest(0, 1)).getContent();
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
 }

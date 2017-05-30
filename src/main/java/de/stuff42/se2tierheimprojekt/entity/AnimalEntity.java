@@ -40,31 +40,30 @@ public class AnimalEntity {
     public long id;
 
     // Animal
-    // <""> or <attributeText>
     @NotNull
-    public String name;
+    public String name = "";
 
     @NotNull
-    public String race;
+    public String race = "";
 
     @NotNull
-    public AnimalSex sex;
+    public AnimalSex sex = AnimalSex.FEMALE;
 
     @NotNull
-    public AnimalAge age;
+    public AnimalAge age = AnimalAge.YOUNG;
 
     @NotNull
-    public AnimalSpace requiredSpace;
+    public AnimalSpace requiredSpace = AnimalSpace.HUGE;
 
     // Search properties
     @NotNull
-    public AnimalType animalType;
+    public AnimalType animalType = AnimalType.BIRD;
 
     @NotNull
-    public AnimalSize animalSize;
+    public AnimalSize animalSize = AnimalSize.HUGE;
 
     @NotNull
-    public AnimalCost cost;
+    public AnimalCost cost = AnimalCost.CHEAP;
 
     public boolean needCare;
 
@@ -75,9 +74,8 @@ public class AnimalEntity {
         // it shouldn't be used directly
     }
 
-    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace,
+    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
                         @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
-        // TODO: check for not null
         this.name = name;
         this.race = race;
         this.sex = sex;

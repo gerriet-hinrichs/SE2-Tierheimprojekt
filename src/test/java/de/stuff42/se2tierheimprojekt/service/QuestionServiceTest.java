@@ -52,8 +52,12 @@ import static org.junit.Assert.assertNotNull;
 @Transactional
 public class QuestionServiceTest {
 
-    @Autowired private DatabaseSetupService databaseSetupService;
-    @Autowired private QuestionService questionService;
+    @Autowired
+    private DatabaseSetupService databaseSetupService;
+
+    @Autowired
+    private QuestionService questionService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Before
@@ -88,26 +92,26 @@ public class QuestionServiceTest {
         logger.info("Get First Question");
         Map<Long, List<Long>> answers = new HashMap<>();
         QuestionModel qm = questionService.getFirstWithAnswers();
-        AnswerModel   am;
+        AnswerModel am;
         boolean end = false;
 
         logger.info("Question/Answer Loop");
-        while(end){
+        while (!end) {
             logger.info(qm.text);
-            logger.info(qm.answers.get(qm.answers.size()-1).text);
+            logger.info(qm.answers.get(qm.answers.size() - 1).text);
 
-            am = qm.answers.get(qm.answers.size()-1);
+            am = qm.answers.get(qm.answers.size() - 1);
             Long qId = qm.id;
             Long aId = am.id;
-            answers.put(qId , make(aId));
-            qm = questionService.getNextforAnswer( qId, aId);
-            if(qm == null){
+            answers.put(qId, make(aId));
+            qm = questionService.getNextForAnswer(qId, aId);
+            if (qm == null) {
                 end = true;
             }
         }
 
         logger.info("GetResult");
-        ResultModel model = questionService.evaluateQuestionaire(answers);
+        ResultModel model = questionService.evaluateQuestionnaire(answers);
 
         logger.info("Print Result");
         for (AnimalModel entry : model.foundAnimals) {
@@ -115,7 +119,7 @@ public class QuestionServiceTest {
         }
     }
 
-    private List<Long> make(Long... listContend ){
+    private List<Long> make(Long... listContend) {
         List<Long> list = new LinkedList<>();
         Collections.addAll(list, listContend);
         return list;
@@ -139,8 +143,8 @@ public class QuestionServiceTest {
 
     //@Test
     public void getNextforAnswer() {
-        logger.info("getNextforAnswer");
-        QuestionModel methodReturnValue = questionService.getNextforAnswer(0L, 0L);
+        logger.info("getNextForAnswer");
+        QuestionModel methodReturnValue = questionService.getNextForAnswer(0L, 0L);
         logger.info("methodReturnValue: " + methodReturnValue.toString());
         assertNotNull(methodReturnValue);
     }

@@ -55,8 +55,7 @@ public final class PathUtils {
             // we're in environment from application distribution plugin
             // so application root is the parent directory
             path = path.getParent();
-        }
-        else if(path.getParent().endsWith("build")) {
+        } else if (path.getParent().endsWith("build")) {
 
             // we're in gradle environment within temporary build directory
             if (path.endsWith("libs")) {
