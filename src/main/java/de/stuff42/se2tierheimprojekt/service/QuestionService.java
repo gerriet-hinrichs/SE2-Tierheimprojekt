@@ -206,7 +206,7 @@ public class QuestionService extends BaseService {
       size.addAll(Arrays.asList(AnimalSize.values()));
       boolean garden = true;
       boolean needSpecialCare = true;
-
+      
       //Remove results
       Iterator<AnswerEntity> answerIterator = answerList.iterator();
       while(answerIterator.hasNext()) {
@@ -224,7 +224,7 @@ public class QuestionService extends BaseService {
           needSpecialCare = false;
         }
       }
-
+      
       //TODO animalDAO gettingFittingAnimals anpassen
       // return null;
       return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));

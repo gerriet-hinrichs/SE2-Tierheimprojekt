@@ -34,6 +34,7 @@ import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -108,7 +109,9 @@ public class Method extends DataElement<ExecutableElement> {
             }
             parameter.generateTypescript(sb, 0, "");
         }
-        sb.append("): JQueryDeferred<").append(processor.getTypeAlias(getAliasBaseName() + "$result", returnType.value())).append("> {\n");
+        sb.append("): JQueryDeferred<").append(
+                processor.getTypeAlias(getAliasBaseName() + "$result", returnType.value(), element.getAnnotation(NotNull.class) != null)
+        ).append("> {\n");
 
         // method body
         sb.append(indentationSingle).append("return <any>jQuery.ajax({\n");

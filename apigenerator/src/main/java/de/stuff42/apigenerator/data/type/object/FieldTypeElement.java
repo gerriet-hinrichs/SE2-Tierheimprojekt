@@ -30,6 +30,8 @@ import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Field type element.
  */
@@ -69,7 +71,13 @@ public class FieldTypeElement extends TypeDataElement<VariableElement> {
 
     @Override
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
-        sb.append(indentation).append(name.value()).append(": ").append(type.value().getNullAwareTypescriptName()).append(",\n");
+        sb.append(indentation).append(name.value()).append(": ");
+        if (element.getAnnotation(NotNull.class) != null) {
+            sb.append(type.value().getTypescriptName());
+        } else {
+            sb.append(type.value().getNullAwareTypescriptName());
+        }
+        sb.append(",\n");
     }
 
     @Override
