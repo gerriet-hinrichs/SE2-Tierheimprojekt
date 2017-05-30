@@ -23,16 +23,8 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import de.stuff42.se2tierheimprojekt.data.AnimalCost;
 import de.stuff42.se2tierheimprojekt.data.AnimalSize;
@@ -41,6 +33,9 @@ import de.stuff42.se2tierheimprojekt.entity.*;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class QuestionService extends BaseService {
@@ -60,27 +55,11 @@ public class QuestionService extends BaseService {
      * @return Returns the first question or null if there isn't a first question.
      */
     public QuestionModel getFirstWithAnswers() {
-        // TODO: get a single via JQL
-        //QuestionEntity questionEntity = questionDAO.getFirstQuestion();
-        // temp
-        List<QuestionModel> qList = this.getList();
-        QuestionModel qm = null;
-        for (QuestionModel entry : qList){
-            if(qm == null){
-                qm = entry;
-            }else if(qm.sortOrder > entry.sortOrder){
-                qm = entry;
-            }
-        }
-        qm.answers = this.getAnswersForQuestion(qm.id);
-        return qm;
-        // temp
-        /*
+        QuestionEntity questionEntity = questionDAO.getFirstQuestion();
         if (questionEntity == null) {
             return null;
         }
         return new QuestionModel(questionEntity);
-        */
     }
 
     /**
@@ -115,29 +94,12 @@ public class QuestionService extends BaseService {
             return null;
         }
 
-        // temp
-        List<QuestionModel> qList = this.getList();
-        QuestionModel qm = null;
-        for (QuestionModel entry : qList){
-            if(entry.sortOrder == (lastQuestionEntity.sortOrder+1)){
-                qm = entry;
-            }
-        }
-        if (qm == null) {
-            return null;
-        }
-        qm.answers = this.getAnswersForQuestion(qm.id);
-        return qm;
-        // temp
-
-        /*
         QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
         if (nextQuestionEntity == null) {
             return null;
         }
 
         return new QuestionModel(nextQuestionEntity);
-        */
     }
 
     /**
@@ -182,51 +144,51 @@ public class QuestionService extends BaseService {
      * @return
      */
     public ResultModel evaluateQuestionaire(Map<Long, List<Long>> answers) {
-      List<AnswerEntity> answerList = new LinkedList<>();
-      
-      //Get all answers
-      Iterator<Entry<Long, List<Long>>> iterator = answers.entrySet().iterator();
-      while(iterator.hasNext()) {
-        Entry<Long,List<Long>> entry = iterator.next();
-        long questionId = entry.getKey();
-        List<Long> answerIds = entry.getValue();
-        Iterator<Long> answerIdIterator = answerIds.iterator();
-        while(answerIdIterator.hasNext()) {
-          long answerId = answerIdIterator.next();
-          answerList.add(answerDAO.getAnswer(questionId, answerId));
+        List<AnswerEntity> answerList = new LinkedList<>();
+
+        //Get all answers
+        Iterator<Entry<Long, List<Long>>> iterator = answers.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<Long, List<Long>> entry = iterator.next();
+            long questionId = entry.getKey();
+            List<Long> answerIds = entry.getValue();
+            Iterator<Long> answerIdIterator = answerIds.iterator();
+            while (answerIdIterator.hasNext()) {
+                long answerId = answerIdIterator.next();
+                answerList.add(answerDAO.getAnswer(questionId, answerId));
+            }
         }
-      }
-      
-      //Create and fill Result Lists
-      List<AnimalType> animalType = new LinkedList<>();
-      animalType.addAll(Arrays.asList(AnimalType.values()));
-      List<AnimalCost> cost = new LinkedList<>();
-      cost.addAll(Arrays.asList(AnimalCost.values()));
-      List<AnimalSize> size = new LinkedList<>();
-      size.addAll(Arrays.asList(AnimalSize.values()));
-      boolean garden = true;
-      boolean needSpecialCare = true;
-      
-      //Remove results
-      Iterator<AnswerEntity> answerIterator = answerList.iterator();
-      while(answerIterator.hasNext()) {
-        AnswerEntity answer = answerIterator.next();
-        
-        //TODO Just marks likely error source
-        animalType.removeAll(answer.animalType);
-        cost.removeAll(answer.cost);
-        size.removeAll(answer.animalSize);
-        
-        if(answer.garden) {
-          garden = false;
+
+        //Create and fill Result Lists
+        List<AnimalType> animalType = new LinkedList<>();
+        animalType.addAll(Arrays.asList(AnimalType.values()));
+        List<AnimalCost> cost = new LinkedList<>();
+        cost.addAll(Arrays.asList(AnimalCost.values()));
+        List<AnimalSize> size = new LinkedList<>();
+        size.addAll(Arrays.asList(AnimalSize.values()));
+        boolean garden = true;
+        boolean needSpecialCare = true;
+
+        //Remove results
+        Iterator<AnswerEntity> answerIterator = answerList.iterator();
+        while (answerIterator.hasNext()) {
+            AnswerEntity answer = answerIterator.next();
+
+            //TODO Just marks likely error source
+            animalType.removeAll(answer.animalType);
+            cost.removeAll(answer.cost);
+            size.removeAll(answer.animalSize);
+
+            if (answer.garden) {
+                garden = false;
+            }
+            if (answer.needCare) {
+                needSpecialCare = false;
+            }
         }
-        if(answer.needCare) {
-          needSpecialCare = false;
-        }
-      }
-      
-      //TODO animalDAO gettingFittingAnimals anpassen
-      // return null;
-      return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+
+        //TODO animalDAO gettingFittingAnimals anpassen
+        // return null;
+        return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }
