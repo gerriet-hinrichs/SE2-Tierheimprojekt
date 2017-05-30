@@ -45,6 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -69,17 +70,19 @@ public class QuestionServiceTest {
 
     @Test
     public void questionConnection() {
+        logger.info("questionConnection");
         assertNotNull(questionService);
     }
 
     @Test
     public void setupConnection() {
+        logger.info("setupConnection");
         assertNotNull(databaseSetupService);
     }
 
     @Test
-    public void superBasicTest() {
-        logger.info("Beginn");
+    public void firstToLastQuestionWithoutResult() {
+        logger.info("firstToLastQuestionWithoutResult");
 
         logger.info("DatabaseAction");
         databaseSetupService.clean();
@@ -88,30 +91,75 @@ public class QuestionServiceTest {
         logger.info("Get First Question");
         Map<Long, List<Long>> answers = new HashMap<>();
         QuestionModel qm = questionService.getFirstWithAnswers();
+        assertNotNull(qm);
         AnswerModel   am;
-        boolean end = false;
 
         logger.info("Question/Answer Loop");
-        while(end){
-            logger.info(qm.text);
-            logger.info(qm.answers.get(qm.answers.size()-1).text);
+        while(true){
+            logger.info(qm.text.toString());
+            logger.info(qm.answers.get(qm.answers.size()-1).text.toString());
 
             am = qm.answers.get(qm.answers.size()-1);
+            assertNotNull(qm);
+            assertNotNull(am);
             Long qId = qm.id;
             Long aId = am.id;
             answers.put(qId , make(aId));
             qm = questionService.getNextforAnswer( qId, aId);
             if(qm == null){
-                end = true;
+                break;
             }
         }
 
         logger.info("GetResult");
         ResultModel model = questionService.evaluateQuestionaire(answers);
+        assertNotNull(model);
+        assertNotNull(model.foundAnimals);
+        assertTrue(model.foundAnimals.isEmpty());
+
+    }
+
+    @Test
+    public void firstToLastQuestionWithResult() {
+        logger.info("firstToLastQuestionWithResult");
+
+        logger.info("DatabaseAction");
+        databaseSetupService.clean();
+        databaseSetupService.setup();
+
+        logger.info("Get First Question");
+        Map<Long, List<Long>> answers = new HashMap<>();
+        QuestionModel qm = questionService.getFirstWithAnswers();
+        assertNotNull(qm);
+        AnswerModel   am;
+
+        logger.info("Question/Answer Loop");
+        while(true){
+            logger.info(qm.text.toString());
+            logger.info(qm.answers.get(qm.answers.size()-1).text.toString());
+
+            am = qm.answers.get(1);
+            assertNotNull(qm);
+            assertNotNull(am);
+            Long qId = qm.id;
+            Long aId = am.id;
+            answers.put(qId , make(aId));
+            qm = questionService.getNextforAnswer( qId, aId);
+            if(qm == null){
+                break;
+            }
+        }
+
+        logger.info("GetResult");
+        ResultModel model = questionService.evaluateQuestionaire(answers);
+        assertNotNull(model);
+        assertNotNull(model.foundAnimals);
+        assertFalse(model.foundAnimals.isEmpty());
 
         logger.info("Print Result");
         for (AnimalModel entry : model.foundAnimals) {
-            logger.info(entry.name);
+            assertNotNull(entry);
+            logger.info(entry.name.toString());
         }
     }
 
