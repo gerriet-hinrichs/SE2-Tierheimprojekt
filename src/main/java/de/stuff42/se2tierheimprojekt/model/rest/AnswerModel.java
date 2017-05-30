@@ -33,6 +33,12 @@ import org.jetbrains.annotations.NotNull;
 public class AnswerModel {
 
     /**
+     * DB id from answer.
+     */
+    @NotNull
+    public Long id;
+
+    /**
      * Answer text.
      */
     @NotNull
@@ -54,8 +60,9 @@ public class AnswerModel {
      * @param entity Database entity.
      */
     public AnswerModel(AnswerEntity entity) {
-        text = entity.text;
-        sortOrder = entity.sortOrder;
-        questionId = entity.question.id;
+        this.id = entity.id;
+        this.text = entity.text;
+        this.sortOrder = entity.sortOrder;
+        this.questionId = entity.question.id;
     }
 }
