@@ -51,10 +51,11 @@ public class AnimalModel {
     /**
      * An single Animal.
      * Empty String or Text.
-     * @param name <""> or <attributeText>.
-     * @param race <""> or <attributeText>.
-     * @param sex <""> or <attributeText>.
-     * @param age <""> or <attributeText>.
+     *
+     * @param name          <""> or <attributeText>.
+     * @param race          <""> or <attributeText>.
+     * @param sex           <""> or <attributeText>.
+     * @param age           <""> or <attributeText>.
      * @param requiredSpace <""> or <attributeText>.
      */
     public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace) {

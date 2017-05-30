@@ -36,7 +36,7 @@ public class ExtendedPatternLayout extends PatternLayoutBase<ILoggingEvent> {
     /**
      * Converter map (we need a custom one here to keep the original pattern layout as it is).
      */
-    private static final Map<String, String> converterMap = new HashMap<String, String>();
+    private static final Map<String, String> converterMap = new HashMap<>();
 
     static {
 

@@ -85,7 +85,7 @@ public class QuestionService extends BaseService {
      *
      * @return Next question
      */
-    public QuestionModel getNextforAnswer(long questionId, long answerId) {
+    public QuestionModel getNextForAnswer(long questionId, long answerId) {
 
         // TODO: Load next question based on answer and not only on sort order.
 
@@ -140,24 +140,20 @@ public class QuestionService extends BaseService {
     }
 
     /**
-     * Gets all answers of the Questionaire and returns the Evaluation.
+     * Gets all answers of the Questionnaire and returns the Evaluation.
      *
-     * @param answers All selected answers of the questionaire
+     * @param answers All selected answers of the questionnaire
      *
-     * @return
+     * @return Evaluation result.
      */
-    public ResultModel evaluateQuestionaire(Map<Long, List<Long>> answers) {
+    public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
         List<AnswerEntity> answerList = new LinkedList<>();
 
         //Get all answers
-        Iterator<Entry<Long, List<Long>>> iterator = answers.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Entry<Long, List<Long>> entry = iterator.next();
+        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
             long questionId = entry.getKey();
             List<Long> answerIds = entry.getValue();
-            Iterator<Long> answerIdIterator = answerIds.iterator();
-            while (answerIdIterator.hasNext()) {
-                long answerId = answerIdIterator.next();
+            for (Long answerId : answerIds) {
                 answerList.add(answerDAO.getAnswer(questionId, answerId));
             }
         }
@@ -173,18 +169,23 @@ public class QuestionService extends BaseService {
         boolean needSpecialCare = true;
 
         //Remove results
-        Iterator<AnswerEntity> answerIterator = answerList.iterator();
-        while (answerIterator.hasNext()) {
-            AnswerEntity answer = answerIterator.next();
+        for (AnswerEntity answer : answerList) {
+            if (answer.animalType != null) {
+                animalType.removeAll(answer.animalType);
+            }
 
-            //TODO Just marks likely error source
-            animalType.removeAll(answer.animalType);
-            cost.removeAll(answer.cost);
-            size.removeAll(answer.animalSize);
+            if (answer.cost != null) {
+                cost.removeAll(answer.cost);
+            }
+
+            if (answer.animalSize != null) {
+                size.removeAll(answer.animalSize);
+            }
 
             if (answer.garden) {
                 garden = false;
             }
+
             if (answer.needCare) {
                 needSpecialCare = false;
             }

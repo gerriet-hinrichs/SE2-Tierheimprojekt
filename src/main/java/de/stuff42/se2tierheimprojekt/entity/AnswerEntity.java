@@ -23,7 +23,6 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -49,15 +48,12 @@ public class AnswerEntity {
     public QuestionEntity question;
 
     // Search properties
-    @NotNull
     @ElementCollection
     public Set<AnimalType> animalType;
 
-    @NotNull
     @ElementCollection
     public Set<AnimalSize> animalSize;
 
-    @NotNull
     @ElementCollection
     public Set<AnimalCost> cost;
 
@@ -84,23 +80,10 @@ public class AnswerEntity {
      * @param garden     true to be sorted out.
      */
     public AnswerEntity(int sortOrder, String text, QuestionEntity question,
-                        Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, boolean needCare, boolean garden) {
-        if (animalType == null) {
-            this.animalType = new HashSet<>();
-        } else {
-            this.animalType = animalType;
-        }
-        if (animalSize == null) {
-            this.animalSize = new HashSet<>();
-        } else {
-            this.animalSize = animalSize;
-        }
-        if (cost == null) {
-            this.cost = new HashSet<>();
-        } else {
-            this.cost = cost;
-        }
-
+                        @NotNull Set<AnimalType> animalType, @NotNull Set<AnimalSize> animalSize, @NotNull Set<AnimalCost> cost, boolean needCare, boolean garden) {
+        this.animalType = animalType;
+        this.animalSize = animalSize;
+        this.cost = cost;
         this.needCare = needCare;
         this.garden = garden;
         this.sortOrder = sortOrder;

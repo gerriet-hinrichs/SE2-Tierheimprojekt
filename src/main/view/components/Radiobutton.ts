@@ -27,7 +27,6 @@
 export interface IRadioButtonParams {
 
 }
-;
 
 export class Radiobutton {
 

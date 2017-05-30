@@ -53,8 +53,12 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class QuestionServiceTest {
 
-    @Autowired private DatabaseSetupService databaseSetupService;
-    @Autowired private QuestionService questionService;
+    @Autowired
+    private DatabaseSetupService databaseSetupService;
+
+    @Autowired
+    private QuestionService questionService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Before
@@ -163,7 +167,7 @@ public class QuestionServiceTest {
         }
     }
 
-    private List<Long> make(Long... listContend ){
+    private List<Long> make(Long... listContend) {
         List<Long> list = new LinkedList<>();
         Collections.addAll(list, listContend);
         return list;
@@ -187,8 +191,8 @@ public class QuestionServiceTest {
 
     //@Test
     public void getNextforAnswer() {
-        logger.info("getNextforAnswer");
-        QuestionModel methodReturnValue = questionService.getNextforAnswer(0L, 0L);
+        logger.info("getNextForAnswer");
+        QuestionModel methodReturnValue = questionService.getNextForAnswer(0L, 0L);
         logger.info("methodReturnValue: " + methodReturnValue.toString());
         assertNotNull(methodReturnValue);
     }

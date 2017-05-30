@@ -29,6 +29,7 @@ import java.util.List;
 
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+
 import org.jetbrains.annotations.NotNull;
 
 public class QuestionModel {

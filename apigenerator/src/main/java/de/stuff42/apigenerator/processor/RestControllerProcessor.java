@@ -430,18 +430,6 @@ public class RestControllerProcessor extends AbstractProcessor {
      *
      * @param suggestedName Suggested alias name.
      * @param type          Type to be aliased.
-     *
-     * @return Actual alias name for use in code.
-     */
-    public String getTypeAlias(String suggestedName, TypeDataElement<?> type) {
-        return getTypeAlias(suggestedName, type, false);
-    }
-
-    /**
-     * Creates a type alias for the given type.
-     *
-     * @param suggestedName Suggested alias name.
-     * @param type          Type to be aliased.
      * @param excludeNull   If null has to be excluded due to context.
      *
      * @return Actual alias name for use in code.

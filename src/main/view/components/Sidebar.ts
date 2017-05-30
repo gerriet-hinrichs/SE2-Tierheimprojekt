@@ -33,7 +33,7 @@ export type SidebarItem = {
 
 export interface ISidebarParams {
     items: SidebarItem[];
-};
+}
 
 export class Sidebar {
     public itemList = ko.observableArray<SidebarItem>();

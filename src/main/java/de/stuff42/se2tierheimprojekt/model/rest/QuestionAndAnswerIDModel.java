@@ -26,19 +26,19 @@ package de.stuff42.se2tierheimprojekt.model.rest;
 
 public class QuestionAndAnswerIDModel {
 
-  /**
-   * ID of the question
-   */
-  public long questionID;
-  
-  /**
-   * ID of the selceted answer
-   */
-  public long answerID;
-  
-  public QuestionAndAnswerIDModel (int answerID, int questionID) {
-    this.answerID = answerID;
-    this.questionID = questionID;
-  }
-  
+    /**
+     * ID of the question
+     */
+    public long questionID;
+
+    /**
+     * ID of the selceted answer
+     */
+    public long answerID;
+
+    public QuestionAndAnswerIDModel(int answerID, int questionID) {
+        this.answerID = answerID;
+        this.questionID = questionID;
+    }
+
 }

@@ -27,11 +27,11 @@ import java.util.List;
 
 import de.stuff42.se2tierheimprojekt.data.AnimalCost;
 import de.stuff42.se2tierheimprojekt.data.AnimalSize;
+import de.stuff42.se2tierheimprojekt.data.AnimalType;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
 
 public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
 

@@ -4,16 +4,27 @@
 {{/if}}
 
 {{#if: !!hasItems}}
-<div id="fragebogen" class="content column" foreach="{{questionList}}">
-    <!-- Question -->
-    <div data-bind="text: sortOrder + '. ' + text, attr: { 'href': 'f' + sortOrder }"></div>
-    <!-- Answers -->
-    {{#foreach: answerList}}
-    <div class="row" >
-        <input class="clickable" type="radio" name="sortOrder" data-bind="checked: isChecked"/>
-        <span data-bind="text: text"></span>
+<div class="column grow">
+    <div id="fragebogen" class="content inner-content column" foreach="{{questionList}}">
+        <!-- Question -->
+        <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + sortOrder }"></div>
+        <div class="column answer">
+            <!-- Answers -->
+            {{#foreach: answerList}}
+            <div class="row">
+                <input class="clickable" type="radio" name="sortOrder" data-bind="checked: isChecked"/>
+                <span data-bind="text: text"></span>
+            </div>
+            {{/foreach}}
+        </div>
     </div>
-    {{/foreach}}
+    <div class="auswertung">
+        <button class="button-auswerten"
+                click="{{function() { evaluate($parent.currentComponent) } }}"
+                title="Click mich und ich werte deine Antworten aus!">
+            Auswerten!
+        </button>
+    </div>
 </div>
 {{/if}}
 

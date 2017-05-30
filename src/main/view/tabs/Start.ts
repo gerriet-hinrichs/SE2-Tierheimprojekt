@@ -25,7 +25,6 @@
  *  Start component
  *  Selected component on startup
  */
-import {SidebarItem} from "../components/Sidebar";
 
 export class Start {
     public IsSidebarVisible: KnockoutObservable<boolean>;
