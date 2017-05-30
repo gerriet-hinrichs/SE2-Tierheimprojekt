@@ -38,13 +38,13 @@ public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
     @Query("SELECT a FROM AnimalEntity a " +
             "WHERE a.animalType IN :animalType " +
             "AND a.animalSize IN :animalSize " +
-            "AND a.cost IN :cost " +
+            "AND a.animalCost IN :animalCost " +
             "AND a.needCare = :needCare " +
             "AND a.garden = :garden " +
             "ORDER BY a.name")
     List<AnimalEntity> getFittingAnimals(@Param("animalType") List<AnimalType> animalType,
                                          @Param("animalSize") List<AnimalSize> animalSize,
-                                         @Param("cost") List<AnimalCost> cost,
+                                         @Param("animalCost") List<AnimalCost> animalCost,
                                          @Param("needCare") boolean needCare,
                                          @Param("garden") boolean garden);
 

@@ -64,7 +64,7 @@ public class AnimalEntity {
     public AnimalSize animalSize;
 
     @NotNull
-    public AnimalCost cost;
+    public AnimalCost animalCost;
 
     public boolean needCare;
 
@@ -76,7 +76,7 @@ public class AnimalEntity {
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, boolean needCare, boolean garden) {
         // TODO: check for not null
         this.name = name;
         this.race = race;
@@ -85,7 +85,7 @@ public class AnimalEntity {
         this.requiredSpace = requiredSpace;
         this.animalType = animalType;
         this.animalSize = animalSize;
-        this.cost = cost;
+        this.animalCost = animalCost;
         this.needCare = needCare;
         this.garden = garden;
     }
