@@ -25,6 +25,8 @@ package de.stuff42.se2tierheimprojekt.entity;
 
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.data.AnimalCost;
+import de.stuff42.se2tierheimprojekt.data.AnimalSize;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -41,8 +43,8 @@ public interface AnimalDAO extends CrudRepository<AnimalEntity, Long> {
             "AND a.garden = :garden " +
             "ORDER BY a.name")
     List<AnimalEntity> getFittingAnimals(@Param("animalType") List<AnimalType> animalType,
-                                         @Param("animalSize") List<String> animalSize,
-                                         @Param("cost") List<String> cost,
+                                         @Param("animalSize") List<AnimalSize> animalSize,
+                                         @Param("cost") List<AnimalCost> cost,
                                          @Param("needCare") boolean needCare,
                                          @Param("garden") boolean garden);
 
