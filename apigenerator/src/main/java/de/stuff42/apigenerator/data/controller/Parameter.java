@@ -30,6 +30,7 @@ import de.stuff42.apigenerator.data.type.TypeDataElement;
 import de.stuff42.apigenerator.processor.RestControllerProcessor;
 import de.stuff42.utils.data.Lazy;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,7 +86,8 @@ public class Parameter extends DataElement<VariableElement> {
         }
 
         // generate header
-        sb.append(element.getSimpleName()).append(": ").append(processor.getTypeAlias(getAliasBaseName(), type.value()));
+        sb.append(element.getSimpleName()).append(": ")
+                .append(processor.getTypeAlias(getAliasBaseName(), type.value(), element.getAnnotation(NotNull.class) != null));
     }
 
     /**

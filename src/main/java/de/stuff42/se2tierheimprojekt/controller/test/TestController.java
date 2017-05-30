@@ -26,17 +26,15 @@ package de.stuff42.se2tierheimprojekt.controller.test;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.Contract;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.controller.BaseController;
 import de.stuff42.se2tierheimprojekt.entity.FakeEntity;
 import de.stuff42.se2tierheimprojekt.service.FakeService;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @GenerateClientApi
@@ -183,6 +181,17 @@ public class TestController extends BaseController<FakeService> {
     @RequestMapping(method = RequestMethod.GET, value = "/_GenericObject3_")
     public TestObjectC<? extends Base, Bar<TestObjectA, TestObjectB>> _GenericObject3_() {
         return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_NullableStuff_/{a}")
+    public Long _NullableStuff_(@PathVariable("a") Long b, @RequestParam("c") Long d) {
+        return b + d;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/_NotNullableStuff_/{a}")
+    @NotNull
+    public Long _NotNullableStuff_(@NotNull @PathVariable("a") Long b, @NotNull @RequestParam("c") Long d) {
+        return b + d;
     }
 
     // test data types for above methods

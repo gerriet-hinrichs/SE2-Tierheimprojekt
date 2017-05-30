@@ -53,15 +53,14 @@ public abstract class TypeDataElement<T> extends DataElement<T> {
      */
     public String getNullAwareTypescriptName() {
         String typescriptName = getTypescriptName();
-        if ("any".equals(typescriptName)) {
+        if ("any".equals(typescriptName) || !supportsNull()) {
 
-            // no need to add null information to "any"
+            // no need to add null information to "any" or types that do not support null
             return typescriptName;
         }
 
-        // only add parenthesis if
-
-        return Utilities.addRequiredSurroundingParenthesis(typescriptName, '|') + (supportsNull() ? " | null" : "");
+        // add required parenthesis before adding null information
+        return Utilities.addRequiredSurroundingParenthesis(typescriptName, '|') + " | null";
     }
 
     /**
