@@ -29,8 +29,15 @@ import java.util.List;
 
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class QuestionModel {
+
+    /**
+     * DB id from question.
+     */
+    @NotNull
+    public Long id;
 
     /**
      * Question text.
@@ -63,8 +70,9 @@ public class QuestionModel {
      * @param includeAnswers Flag if answers should be included.
      */
     public QuestionModel(QuestionEntity entity, boolean includeAnswers) {
-        text = entity.text;
-        sortOrder = entity.sortOrder;
+        this.id = entity.id;
+        this.text = entity.text;
+        this.sortOrder = entity.sortOrder;
 
         if (includeAnswers) {
             // load answer model list
