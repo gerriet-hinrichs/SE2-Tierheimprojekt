@@ -23,6 +23,7 @@
  */
 package de.stuff42.se2tierheimprojekt.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -48,6 +49,6 @@ public class QuestionEntity {
     public QuestionEntity(int sortOrder, String text) {
         this.sortOrder = sortOrder;
         this.text = text;
+        answers = new ArrayList<>();
     }
-
 }

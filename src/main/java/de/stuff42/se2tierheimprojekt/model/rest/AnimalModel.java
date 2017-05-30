@@ -23,11 +23,11 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
-import javax.validation.constraints.NotNull;
-
 import de.stuff42.se2tierheimprojekt.data.AnimalAge;
 import de.stuff42.se2tierheimprojekt.data.AnimalSex;
 import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An single Animal with his attributes.

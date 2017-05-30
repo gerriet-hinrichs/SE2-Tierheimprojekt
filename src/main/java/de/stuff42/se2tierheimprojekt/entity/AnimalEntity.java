@@ -27,14 +27,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalAge;
-import de.stuff42.se2tierheimprojekt.data.AnimalCost;
-import de.stuff42.se2tierheimprojekt.data.AnimalSex;
-import de.stuff42.se2tierheimprojekt.data.AnimalSize;
-import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
+import de.stuff42.se2tierheimprojekt.data.*;
+
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class AnimalEntity {
@@ -53,7 +49,7 @@ public class AnimalEntity {
 
     @NotNull
     public AnimalSex sex;
-    
+
     @NotNull
     public AnimalAge age;
 

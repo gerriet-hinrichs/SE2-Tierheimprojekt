@@ -23,12 +23,12 @@
  */
 package de.stuff42.se2tierheimprojekt.model.rest;
 
-import de.stuff42.se2tierheimprojekt.entity.AnimalEntity;
-
-import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import de.stuff42.se2tierheimprojekt.entity.AnimalEntity;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Creates a return from Service/Database towards Frontend.
