@@ -23,16 +23,15 @@
  */
 package de.stuff42.se2tierheimprojekt.service;
 
+import de.stuff42.se2tierheimprojekt.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalAge;
-import de.stuff42.se2tierheimprojekt.data.AnimalCost;
-import de.stuff42.se2tierheimprojekt.data.AnimalSex;
-import de.stuff42.se2tierheimprojekt.data.AnimalSize;
-import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.entity.*;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Service that fills the database with data.
@@ -40,14 +39,14 @@ import de.stuff42.se2tierheimprojekt.entity.*;
 @Service
 public class DatabaseSetupService extends BaseService {
 
-    @Autowired
-    private QuestionDAO questionDAO;
+    @Autowired private QuestionDAO questionDAO;
+    @Autowired private AnswerDAO answerDAO;
+    @Autowired private AnimalDAO animalDAO;
+    private int questionSortOrder;
 
-    @Autowired
-    private AnswerDAO answerDAO;
-
-    @Autowired
-    private AnimalDAO animalDAO;
+    public DatabaseSetupService() {
+        this.questionSortOrder = 1;
+    }
 
     /**
      * Clean database.
@@ -63,18 +62,103 @@ public class DatabaseSetupService extends BaseService {
      */
     public void setup() {
         // Questions & Answers
-        addQuestionWithAnswers(1, "How many square meters are available for animal husbandry?",
-                "<35", "35-55", ">55");
-        addQuestionWithAnswers(1, "Can the animal be kept in the garden?",
-                "Yes", "No");
-        addQuestionWithAnswers(1, "In which environment is the animal kept?",
-                "Country / village", "Residential area without main roads in direct vicinity", "On a main road or in the city center");
-        addQuestionWithAnswers(1, "How many hours do they have an average time per day for the animal?",
-                "<1", "1-4", "5-8", "All day");
-        addQuestionWithAnswers(1, "Should the animal also be supplied by children?",
-                "Yes", "No");
-        addQuestionWithAnswers(1, "How much should the monthly cost be? (Without basic equipment)",
-                "20-30", "30-60", "60-80");
+        addQuestionWithAnswers("How many square meters are available for animal husbandry?",
+                new AnswerContent("<35",
+                        make(AnimalType.DOG, AnimalType.CAT),
+                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        null,
+                        false, false),
+                new AnswerContent("35-55",
+                        null,
+                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        null,
+                        false, false),
+                new AnswerContent(">55",
+                        null,
+                        null,
+                        null,
+                        false, false)
+        );
+        addQuestionWithAnswers("Can the animal be kept in the garden?",
+                new AnswerContent("Yes",
+                        null,
+                        null,
+                        null,
+                        false, false),
+                new AnswerContent("No",
+                        null,
+                        null,
+                        null,
+                        false, true)
+        );
+        addQuestionWithAnswers("In which environment is the animal kept?",
+                new AnswerContent("Country / village",
+                        null,
+                        null,
+                        null,
+                        false, false),
+                new AnswerContent("Residential area without main roads in direct vicinity",
+                        null,
+                        null,
+                        null,
+                        false, false),
+                new AnswerContent("On a main road or in the city center",
+                        make(AnimalType.DOG),
+                        null,
+                        null,
+                        false, false)
+        );
+        addQuestionWithAnswers("How many hours do they have an average time per day for the animal?",
+                new AnswerContent("<1",
+                        make(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD),
+                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        null,
+                        true, false),
+                new AnswerContent("1-4",
+                        make(AnimalType.DOG, AnimalType.BIRD),
+                        null,
+                        null,
+                        true, false),
+                new AnswerContent("5-8",
+                        null,
+                        null,
+                        null,
+                        true, false),
+                new AnswerContent("All day",
+                        null,
+                        null,
+                        null,
+                        false, false)
+        );
+        addQuestionWithAnswers("Should the animal also be supplied by children?",
+                new AnswerContent("Yes",
+                        make(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY),
+                        null,
+                        null,
+                        true, false),
+                new AnswerContent("No",
+                        null,
+                        null,
+                        null,
+                        false, false)
+        );
+        addQuestionWithAnswers("How much should the monthly cost be? (Without basic equipment)",
+                new AnswerContent("20-30",
+                        make(AnimalType.DOG, AnimalType.CAT),
+                        make(AnimalSize.MEDIUM, AnimalSize.HUGE),
+                        null,
+                        false, false),
+                new AnswerContent("30-60",
+                        make(AnimalType.DOG),
+                        make(AnimalSize.HUGE),
+                        null,
+                        false, false),
+                new AnswerContent("60-80",
+                        null,
+                        null,
+                        null,
+                        false, false)
+        );
 
         // Dogs
         addAnimal("Didi", "Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
@@ -133,19 +217,50 @@ public class DatabaseSetupService extends BaseService {
 
     /**
      * Adds a question with answers to the database.
-     *
-     * @param questionSortOrder Question sort order.
      * @param questionText      Question text.
-     * @param answers           Ordered answers.
+     * @param answerContent     Content of answers.
      */
-    private void addQuestionWithAnswers(int questionSortOrder, String questionText, String... answers) {
-        QuestionEntity question = new QuestionEntity(questionSortOrder, questionText);
+    private void addQuestionWithAnswers(String questionText, AnswerContent... answerContent) {
+        QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText);
         questionDAO.save(question);
 
         int answerSortOrder = 1;
-        for (String answerText : answers) {
-            AnswerEntity answer = new AnswerEntity(answerSortOrder++, answerText, question);
+        for (AnswerContent currentAnswerContent : answerContent) {
+            AnswerEntity answer = new AnswerEntity(answerSortOrder++, currentAnswerContent.text, question,
+                    currentAnswerContent.animalType,  currentAnswerContent.animalSize,  currentAnswerContent.cost, currentAnswerContent.needCare, currentAnswerContent.garden);
             answerDAO.save(answer);
+        }
+    }
+
+    /**
+     * Can produce runtime errors is false uses!
+     * Take care!
+     * @param setContend Params of one type.
+     * @param <T> Should be, AnimalType, AnimalSize or AnimalCost.
+     * @return Set made from Params.
+     */
+    @SuppressWarnings({"unchecked", "varargs"})
+    private <T> Set<T> make(T... setContend ){
+        Set<T> set = new HashSet<>();
+        Collections.addAll(set, setContend);
+        return set;
+    }
+
+    private class AnswerContent{
+        String text;
+        Set<AnimalType> animalType;
+        Set<AnimalSize> animalSize;
+        Set<AnimalCost> cost;
+        boolean needCare;
+        boolean garden;
+
+        AnswerContent(String answerText, Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, boolean needCare, boolean garden) {
+            this.text = answerText;
+            this.animalType = animalType;
+            this.animalSize = animalSize;
+            this.cost = cost;
+            this.needCare = needCare;
+            this.garden = garden;
         }
     }
 
