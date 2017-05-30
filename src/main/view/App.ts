@@ -72,11 +72,15 @@ export class App {
 
         // Automatic slide show icon
         //this.slideShow();
+
+        $(function() {
+            location.hash = '';
+        });
     }
 
     public setViewPort() {
         this.viewMarginTop("20px");
-        this.viewMarginBottom("150px");
+        this.viewMarginBottom("15px");
         this.viewMarginLeftRight("20px");
     }
 
