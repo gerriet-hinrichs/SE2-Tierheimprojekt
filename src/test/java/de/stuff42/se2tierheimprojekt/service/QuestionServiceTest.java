@@ -53,11 +53,8 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class QuestionServiceTest {
 
-    @Autowired
-    private DatabaseSetupService databaseSetupService;
-
-    @Autowired
-    private QuestionService questionService;
+    @Autowired private DatabaseSetupService databaseSetupService;
+    @Autowired private QuestionService questionService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -109,14 +106,14 @@ public class QuestionServiceTest {
             Long qId = qm.id;
             Long aId = am.id;
             answers.put(qId , make(aId));
-            qm = questionService.getNextforAnswer( qId, aId);
+            qm = questionService.getNextForAnswer(qId, aId);
             if(qm == null){
                 break;
             }
         }
 
         logger.info("GetResult");
-        ResultModel model = questionService.evaluateQuestionaire(answers);
+        ResultModel model = questionService.evaluateQuestionnaire(answers);
         assertNotNull(model);
         assertNotNull(model.foundAnimals);
         assertTrue(model.foundAnimals.isEmpty());
@@ -148,14 +145,14 @@ public class QuestionServiceTest {
             Long qId = qm.id;
             Long aId = am.id;
             answers.put(qId , make(aId));
-            qm = questionService.getNextforAnswer( qId, aId);
+            qm = questionService.getNextForAnswer(qId, aId);
             if(qm == null){
                 break;
             }
         }
 
         logger.info("GetResult");
-        ResultModel model = questionService.evaluateQuestionaire(answers);
+        ResultModel model = questionService.evaluateQuestionnaire(answers);
         assertNotNull(model);
         assertNotNull(model.foundAnimals);
         assertFalse(model.foundAnimals.isEmpty());

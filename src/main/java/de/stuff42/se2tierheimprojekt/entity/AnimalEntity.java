@@ -75,7 +75,7 @@ public class AnimalEntity {
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, boolean needCare, boolean garden) {
         this.name = name;
         this.race = race;
         this.sex = sex;
