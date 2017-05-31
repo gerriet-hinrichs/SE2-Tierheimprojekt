@@ -53,6 +53,19 @@ export class Fragebogen {
         return this.questionList().length > 0;
     }
 
+    public lastQuestion = ko.pureComputed<question | null>(() => {
+        let items = this.questionList();
+        if (items.length == 0) {
+            return null;
+        }
+        return items[items.length - 1];
+    });
+
+    public showNextButton = ko.pureComputed<boolean>(() => {
+        let last = this.lastQuestion();
+        return last != null ? last.isAnswered() : false;
+    });
+
     constructor() {
         // Sidebar on component 'Fragebogen'
         this.IsSidebarVisible = ko.observable<boolean>(true);
@@ -115,35 +128,24 @@ export class Fragebogen {
         console.log(params);
 
         this.IsBusy(true);
-        QuestionApi.getNextForAnswer(params).done((response: QuestionModel) => {
+        QuestionApi.getNextForAnswer(params).done((r: QuestionModel) => {
 
             // Build up sidebar
             let sItem = {
-                Name: "Frage #" + q.sortOrder,
-                Anker: "#f" + q.id,
-                Title: q.text
+                Name: "Frage #" + r.sortOrder,
+                Anker: "#f" + r.id,
+                Title: r.text
             } as SidebarItem;
             this.sidebarItems.push(sItem);
 
-            let answerList = ko.observableArray<AnswerModel>([]);
-            let a = q.answers;
-            if (!!a) {
-                a.forEach((answer: AnswerModel) => {
-                    let aItem = {
-                        id: answer.id,
-                        text: answer.text,
-                        sortOrder: answer.sortOrder
-                    } as AnswerModel;
-                    answerList.push(aItem);
-                });
-            }
+            let answerList = ko.observableArray<AnswerModel | null>(r.answers);
 
             let qItem = {
-                id: q.id,
-                text: q.text,
-                sortOrder: q.sortOrder,
-                answers: q.answers,
-                answerList: !!a ? answerList : [],
+                id: r.id,
+                text: r.text,
+                sortOrder: r.sortOrder,
+                answers: r.answers,
+                answerList: answerList,
                 isAnswered: ko.observable<boolean>(false),
                 selectedAnswer: ko.observable<number>()
             } as question;
@@ -155,5 +157,12 @@ export class Fragebogen {
     public evaluate(component: KnockoutObservable<string>) {
         // TODO: Let the service evaluate chosen answers
         component("Auswertung");
+    }
+
+    public next() {
+        let q = this.lastQuestion();
+        if(q != null) {
+            this.continue(q);
+        }
     }
 }
