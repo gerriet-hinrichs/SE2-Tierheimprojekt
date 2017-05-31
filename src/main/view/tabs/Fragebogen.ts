@@ -115,7 +115,7 @@ export class Fragebogen {
         console.log(params);
 
         this.IsBusy(true);
-        QuestionApi.getNextforAnswer(params).done((response: QuestionModel) => {
+        QuestionApi.getNextForAnswer(params).done((response: QuestionModel) => {
 
             // Build up sidebar
             let sItem = {

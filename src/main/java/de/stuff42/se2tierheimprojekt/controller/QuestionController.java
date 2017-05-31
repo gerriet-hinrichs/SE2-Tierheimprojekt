@@ -77,7 +77,7 @@ public class QuestionController extends BaseController<QuestionService> {
      * @return Next question
      */
     @RequestMapping(value = "/Question/answer", method = RequestMethod.POST)
-    public QuestionModel getNextforAnswer(QuestionAndAnswerIDModel ids) {
+    public QuestionModel getNextForAnswer(@RequestBody QuestionAndAnswerIDModel ids) {
         return service.getNextForAnswer(ids.questionID, ids.answerID);
     }
 
