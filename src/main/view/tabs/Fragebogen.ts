@@ -30,19 +30,24 @@ import QuestionModel = Api.QuestionModel;
 import AnswerModel = Api.AnswerModel;
 import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
 
-export type answer = AnswerModel & {
-    isChecked: KnockoutObservable<boolean>;
-}
 
 export type question = QuestionModel & {
-    answerList: KnockoutObservableArray<answer>;
+    answerList: KnockoutObservableArray<AnswerModel>;
+    isAnswered: KnockoutObservable<boolean>;
+    selectedAnswer: KnockoutObservable<number>;
 }
 
 export class Fragebogen {
     public IsSidebarVisible: KnockoutObservable<boolean>;
-    public sidebarItems = ko.observableArray<SidebarItem>();
 
-    public questionList = ko.observableArray<question>(null);
+    // Observable lists for ad hoc rendering
+    public sidebarItems = ko.observableArray<SidebarItem>([]);
+    public questionList = ko.observableArray<question>([]);
+
+    /**
+     * Busy indicator
+     */
+    public IsBusy = ko.observable<boolean>(false);
 
     public get hasItems() {
         return this.questionList().length > 0;
@@ -52,45 +57,99 @@ export class Fragebogen {
         // Sidebar on component 'Fragebogen'
         this.IsSidebarVisible = ko.observable<boolean>(true);
         this.loadAsync();
+
+        // Subscription on answeList to check if question has at least one answer checked
+        this.questionList.subscribe((a) => {
+            console.log("subscription: ", a);
+
+        });
     }
 
     public loadAsync() {
-        // TODO: getFirstWithAnswers() Fragebogen aufbauen
+        this.IsBusy(true);
+        this.questionList.removeAll();
+        QuestionApi.getFirstWithAnswers().done((q: QuestionModel) => {
 
-        QuestionApi.getList().done((response: QuestionModel[]) => {
-            response.forEach((q: QuestionModel) => {
-                let sidebarItem: SidebarItem = {
-                    Name: "Frage #" + q.sortOrder,
-                    Title: q.text,
-                    Anker: "#f" + q.sortOrder,
-                    IsSelected: ko.observable<boolean>(false)
-                } as SidebarItem;
+            // Build up sidebar
+            let sItem = {
+                Name: "Frage #" + q.sortOrder,
+                Anker: "#f" + q.id,
+                Title: q.text
+            } as SidebarItem;
+            this.sidebarItems.push(sItem);
 
-                let answerList = ko.observableArray<answer>();
-                QuestionApi.getAnswersForQuestion(q.id).done((r: AnswerModel[]) => {
-                    r.forEach((r: AnswerModel) => {
-                        let answer = {
-                            text: r.text,
-                            sortOrder: r.sortOrder,
-                            questionId: r.questionId,
-                            isChecked: ko.observable<boolean>(false)
-                        } as answer;
-
-                        answerList.push(answer);
-                    });
+            let answerList = ko.observableArray<AnswerModel>([]);
+            let a = q.answers;
+            if (!!a) {
+                a.forEach((answer: AnswerModel) => {
+                    let aItem = {
+                        id: answer.id,
+                        text: answer.text,
+                        sortOrder: answer.sortOrder
+                    } as AnswerModel;
+                    answerList.push(aItem);
                 });
+            }
 
-                let question = {
-                    text: q.text,
-                    sortOrder: q.sortOrder,
-                    answers: q.answers,
-                    answerList: answerList
-                } as question;
+            let selectedAnswerObservable = ko.observable<number>();
+            let qItem = {
+                id: q.id,
+                text: q.text,
+                sortOrder: q.sortOrder,
+                answers: q.answers,
+                answerList: !!a ? answerList : [],
+                isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
+                selectedAnswer: selectedAnswerObservable
+            } as question;
+            this.questionList.push(qItem);
 
-                this.sidebarItems.push(sidebarItem);
-                this.questionList.push(question);
-            });
-        });
+        }).always(() => this.IsBusy(false));
+    }
+
+    public continue(q: question) {
+        let params = {
+            questionID: q.id,
+            answerID: q.selectedAnswer()
+        } as QuestionAndAnswerIDModel;
+
+        console.log(params);
+
+        this.IsBusy(true);
+        QuestionApi.getNextforAnswer(params).done((response: QuestionModel) => {
+
+            // Build up sidebar
+            let sItem = {
+                Name: "Frage #" + q.sortOrder,
+                Anker: "#f" + q.id,
+                Title: q.text
+            } as SidebarItem;
+            this.sidebarItems.push(sItem);
+
+            let answerList = ko.observableArray<AnswerModel>([]);
+            let a = q.answers;
+            if (!!a) {
+                a.forEach((answer: AnswerModel) => {
+                    let aItem = {
+                        id: answer.id,
+                        text: answer.text,
+                        sortOrder: answer.sortOrder
+                    } as AnswerModel;
+                    answerList.push(aItem);
+                });
+            }
+
+            let qItem = {
+                id: q.id,
+                text: q.text,
+                sortOrder: q.sortOrder,
+                answers: q.answers,
+                answerList: !!a ? answerList : [],
+                isAnswered: ko.observable<boolean>(false),
+                selectedAnswer: ko.observable<number>()
+            } as question;
+            this.questionList.push(qItem);
+
+        }).always(() => this.IsBusy(false));
     }
 
     public evaluate(component: KnockoutObservable<string>) {

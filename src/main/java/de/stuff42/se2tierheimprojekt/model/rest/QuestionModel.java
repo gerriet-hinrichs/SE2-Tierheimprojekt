@@ -86,4 +86,9 @@ public class QuestionModel {
             answers.sort(Comparator.comparingInt(a -> a.sortOrder));
         }
     }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public QuestionModel() {}
 }

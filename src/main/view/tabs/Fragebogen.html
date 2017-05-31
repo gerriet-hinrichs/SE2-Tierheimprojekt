@@ -7,16 +7,23 @@
 <div class="column grow">
     <div id="fragebogen" class="content inner-content column" foreach="{{questionList}}">
         <!-- Question -->
-        <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + sortOrder }"></div>
+        <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + id }"></div>
         <div class="column answer">
             <!-- Answers -->
             {{#foreach: answerList}}
             <div class="row">
-                <input class="clickable" type="radio" name="sortOrder" data-bind="checked: isChecked"/>
+                <input class="clickable" type="radio" name="$parent.id" value="{{id}}" data-bind="checked: $parent.selectedAnswer"/>
                 <span data-bind="text: text"></span>
             </div>
             {{/foreach}}
         </div>
+        {{#if: isAnswered}}
+        <button class="button-weiter"
+                click="{{function() { $parent.continue($data) } }}"
+                title="Nächste Frage">
+            Weiter
+        </button>
+        {{/if}}
     </div>
     <div class="auswertung">
         <button class="button-auswerten"

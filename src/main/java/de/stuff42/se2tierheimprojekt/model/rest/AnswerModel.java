@@ -65,4 +65,9 @@ public class AnswerModel {
         this.sortOrder = entity.sortOrder;
         this.questionId = entity.question.id;
     }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public AnswerModel() {}
 }
