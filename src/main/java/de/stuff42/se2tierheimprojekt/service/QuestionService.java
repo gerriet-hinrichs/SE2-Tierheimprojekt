@@ -26,9 +26,7 @@ package de.stuff42.se2tierheimprojekt.service;
 import java.util.*;
 import java.util.Map.Entry;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalCost;
-import de.stuff42.se2tierheimprojekt.data.AnimalSize;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
+import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
@@ -157,8 +155,10 @@ public class QuestionService extends BaseService {
         cost.addAll(Arrays.asList(AnimalCost.values()));
         List<AnimalSize> size = new LinkedList<>();
         size.addAll(Arrays.asList(AnimalSize.values()));
-        boolean garden = true;
-        boolean needSpecialCare = true;
+        List<AnimalGardenSpace> garden = new LinkedList<>();
+        garden.addAll(Arrays.asList(AnimalGardenSpace.values()));
+        List<AnimalCareTyp> needSpecialCare = new LinkedList<>();
+        needSpecialCare.addAll(Arrays.asList(AnimalCareTyp.values()));
 
         //Remove results
         for (AnswerEntity answer : answerList) {
@@ -174,12 +174,12 @@ public class QuestionService extends BaseService {
                 size.removeAll(answer.animalSize);
             }
 
-            if (answer.garden) {
-                garden = false;
+            if (answer.garden != null) {
+                garden.removeAll(answer.garden);
             }
 
-            if (answer.needCare) {
-                needSpecialCare = false;
+            if (answer.needCare != null) {
+                needSpecialCare.removeAll(answer.needCare);
             }
         }
 

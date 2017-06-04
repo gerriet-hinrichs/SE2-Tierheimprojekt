@@ -27,6 +27,7 @@ import java.util.*;
 
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
+import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.model.rest.AnimalModel;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
@@ -53,9 +54,9 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class QuestionServiceTest {
 
-    @Autowired private DatabaseSetupService databaseSetupService;
-    @Autowired private QuestionService questionService;
 
+    @Autowired private QuestionService questionService;
+    @Autowired private DatabaseSetupService databaseSetupService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Before
@@ -87,7 +88,7 @@ public class QuestionServiceTest {
 
         logger.info("DatabaseAction");
         databaseSetupService.clean();
-        databaseSetupService.setup();
+        this.setup();
 
         logger.info("Get First Question");
         Map<Long, List<Long>> answers = new HashMap<>();
@@ -97,10 +98,10 @@ public class QuestionServiceTest {
 
         logger.info("Question/Answer Loop");
         while(true){
-            logger.info(qm.text.toString());
-            logger.info(qm.answers.get(qm.answers.size()-1).text.toString());
+            logger.info(qm.text);
+            logger.info(qm.answers.get(0).text);
 
-            am = qm.answers.get(qm.answers.size()-1);
+            am = qm.answers.get(0);
             assertNotNull(qm);
             assertNotNull(am);
             Long qId = qm.id;
@@ -126,7 +127,7 @@ public class QuestionServiceTest {
 
         logger.info("DatabaseAction");
         databaseSetupService.clean();
-        databaseSetupService.setup();
+        this.setup();
 
         logger.info("Get First Question");
         Map<Long, List<Long>> answers = new HashMap<>();
@@ -136,10 +137,10 @@ public class QuestionServiceTest {
 
         logger.info("Question/Answer Loop");
         while(true){
-            logger.info(qm.text.toString());
-            logger.info(qm.answers.get(qm.answers.size()-1).text.toString());
+            logger.info(qm.text);
+            logger.info(qm.answers.get(qm.answers.size()-1).text);
 
-            am = qm.answers.get(1);
+            am = qm.answers.get(qm.answers.size()-1);
             assertNotNull(qm);
             assertNotNull(am);
             Long qId = qm.id;
@@ -160,7 +161,7 @@ public class QuestionServiceTest {
         logger.info("Print Result");
         for (AnimalModel entry : model.foundAnimals) {
             assertNotNull(entry);
-            logger.info(entry.name.toString());
+            logger.info(entry.name);
         }
     }
 
@@ -221,4 +222,26 @@ public class QuestionServiceTest {
             assertNotNull(entry);
         }
     }
+
+
+        private void setup() {
+            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
+                    new AnswerContent("Return nothing",
+                            new HashSet<>(Arrays.asList(AnimalType.values())),
+                            new HashSet<>(Arrays.asList(AnimalSize.values())),
+                            new HashSet<>(Arrays.asList(AnimalCost.values())),
+                            new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
+                            new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
+                    new AnswerContent("Return all",
+                            null,
+                            null,
+                            null,
+                            null,
+                            null)
+            );
+
+            databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
+                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+        }
+
 }
