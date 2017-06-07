@@ -65,4 +65,9 @@ public class AnimalModel {
         this.age = age;
         this.requiredSpace = requiredSpace;
     }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public AnimalModel() {}
 }

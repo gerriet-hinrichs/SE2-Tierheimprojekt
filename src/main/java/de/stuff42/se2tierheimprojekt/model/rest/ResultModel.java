@@ -55,4 +55,9 @@ public class ResultModel {
 
         this.foundAnimals = animals;
     }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public ResultModel() {}
 }

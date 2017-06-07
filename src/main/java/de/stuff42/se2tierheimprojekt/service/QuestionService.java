@@ -66,7 +66,6 @@ public class QuestionService extends BaseService {
      * Returns the question with the ID and all of its answers.
      *
      * @param id the ID of the wanted question.
-     *
      * @return the question with the ID or null if there is no question with this ID.
      */
     public QuestionModel getByIDWithAnswers(long id) {
@@ -82,7 +81,6 @@ public class QuestionService extends BaseService {
      *
      * @param questionId ID of the answered question.
      * @param answerId   ID of the answer of the last question.
-     *
      * @return Next question
      */
     public QuestionModel getNextForAnswer(long questionId, long answerId) {
@@ -93,15 +91,11 @@ public class QuestionService extends BaseService {
         if (lastQuestionEntity == null) {
             return null;
         }
-        QuestionEntity nextQuestionEntity = null;
-        try {
-            //TODO: fit that with an other way inside QuestionDAO
-            nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
-        }catch(IndexOutOfBoundsException e){}
+
+        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
         if (nextQuestionEntity == null) {
             return null;
         }
-
         return new QuestionModel(nextQuestionEntity);
     }
 
@@ -125,7 +119,6 @@ public class QuestionService extends BaseService {
      * Returns a List with all answers of the question with the specified ID
      *
      * @param questionId ID of the question
-     *
      * @return List with all answers of the question or null if the question doesn't exist
      */
     public List<AnswerModel> getAnswersForQuestion(long questionId) {
@@ -143,7 +136,6 @@ public class QuestionService extends BaseService {
      * Gets all answers of the Questionnaire and returns the Evaluation.
      *
      * @param answers All selected answers of the questionnaire
-     *
      * @return Evaluation result.
      */
     public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
