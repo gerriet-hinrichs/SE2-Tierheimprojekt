@@ -182,7 +182,10 @@ public class QuestionService extends BaseService {
                 needSpecialCare = false;
             }
         }
-
+        
+        if(animalType.size()==0||cost.size()==0||size.size()==0) {
+          return new ResultModel(new LinkedList<AnimalEntity>());
+        }
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 }
