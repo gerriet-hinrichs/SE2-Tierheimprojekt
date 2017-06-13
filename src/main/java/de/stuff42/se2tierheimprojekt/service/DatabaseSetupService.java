@@ -67,8 +67,8 @@ public class DatabaseSetupService extends BaseService {
     public void setup() {
 
         // Questions & Answers
-        addQuestionWithAnswers("How many square meters are available for animal husbandry?",
-                new AnswerContent("<35",
+        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?",
+                new AnswerContent(" Weniger als 35",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
@@ -80,48 +80,48 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null,
                         null),
-                new AnswerContent(">55",
+                new AnswerContent("Mehr als 55",
                         null,
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("Can the animal be kept in the garden?",
-                new AnswerContent("Yes",
+        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?",
+                new AnswerContent("Ja",
                         null,
                         null,
                         null,
                         null,
                         null),
-                new AnswerContent("No",
+                new AnswerContent("Nein",
                         null,
                         null,
                         null,
                         null,
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.SMALL, AnimalGardenSpace.MEDIUM, AnimalGardenSpace.HUGE)))
         );
-        addQuestionWithAnswers("In which environment is the animal kept?",
-                new AnswerContent("Country / village",
+        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?",
+                new AnswerContent("Land / Dorf",
                         null,
                         null,
                         null,
                         null,
                         null),
-                new AnswerContent("Residential area without main roads in direct vicinity",
+                new AnswerContent("Wohngebiet ohne Hauptstraße in direkter Umgebung",
                         null,
                         null,
                         null,
                         null,
                         null),
-                new AnswerContent("On a main road or in the city center",
+                new AnswerContent("An einer Hauptstraße oder in Stadtkern",
                         new HashSet<>(Collections.singletonList(AnimalType.DOG)),
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("How many hours do they have an average time per day for the animal?",
+        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich täglich Zeit für das Tier?",
                 new AnswerContent("<1",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -147,21 +147,21 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Should the animal also be supplied by children?",
-                new AnswerContent("Yes",
+        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
+                new AnswerContent("Ja",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY)),
                         null,
                         null,
                         new HashSet<>(Arrays.asList(AnimalCareTyp.SOME, AnimalCareTyp.MUCH)),
                         null),
-                new AnswerContent("No",
+                new AnswerContent("Nein",
                         null,
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("How much should the monthly cost be? (Without basic equipment)",
+        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
                 new AnswerContent("20-30",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -181,6 +181,50 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
+        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?",
+        		new AnswerContent("Keine bestimmte",
+        				null,
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Hund",
+        				new HashSet<>(Arrays.asList(AnimalType.CAT, AnimalType.BIRD, AnimalType.FISH, AnimalType.REPTILE, AnimalType.HAMSTER, AnimalType.BUNNY, AnimalType.GUINEA_PIG, AnimalType.MOUSE)),
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Katze",
+        				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.FISH, AnimalType.REPTILE, AnimalType.HAMSTER, AnimalType.BUNNY, AnimalType.GUINEA_PIG, AnimalType.MOUSE)),
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Vogel",
+        				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.FISH, AnimalType.REPTILE, AnimalType.HAMSTER, AnimalType.BUNNY, AnimalType.GUINEA_PIG, AnimalType.MOUSE)),
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Fisch",
+        				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD, AnimalType.REPTILE, AnimalType.HAMSTER, AnimalType.BUNNY, AnimalType.GUINEA_PIG, AnimalType.MOUSE)),
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Reptil",
+        				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD, AnimalType.FISH, AnimalType.HAMSTER, AnimalType.BUNNY, AnimalType.GUINEA_PIG, AnimalType.MOUSE)),
+        				null,
+        				null,
+        				null,
+        				null),
+        		new AnswerContent("Kleintiere (Hamster, Kaninchen, Meerschweinchen, Mäuse, u.ä.)",
+        				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD, AnimalType.FISH, AnimalType.REPTILE)),
+        				null,
+        				null,
+        				null,
+        				null)
+        );
 
         // Dogs
         addAnimal("Didi", "Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
@@ -195,13 +239,13 @@ public class DatabaseSetupService extends BaseService {
                 AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE);
 
         // Cats
-        addAnimal("Tobi", "Europaeisch Kurzhaat", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
+        addAnimal("Tobi", "Europaeisch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
         addAnimal("Mia", "Siam", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
         addAnimal("Lisa", "Kartaeuser-Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
-        addAnimal("Jenny", "Europaeisch Kurzhaat", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
+        addAnimal("Jenny", "Europaeisch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
 
         // Bunnies
