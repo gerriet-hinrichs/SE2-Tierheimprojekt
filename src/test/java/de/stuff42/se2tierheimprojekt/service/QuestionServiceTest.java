@@ -241,7 +241,7 @@ public class QuestionServiceTest {
             );
 
             databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
         }
 
 }
