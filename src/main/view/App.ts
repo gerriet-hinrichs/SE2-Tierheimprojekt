@@ -29,6 +29,9 @@ import "knockout.punches";
 import "knockout-amd-helpers";
 import {NavigationItem} from "./components/Navigation";
 import {QuestionData} from "./components/Question";
+import ResultModel = Api.ResultModel;
+import AnswerModel = Api.AnswerModel;
+import QuestionModel = Api.QuestionModel;
 
 // app class
 export class App {
@@ -43,6 +46,17 @@ export class App {
      * Default 'Start' for selected component on startup
      */
     public currentComponent: KnockoutObservable<string>;
+
+    /**
+     * Global progress store to bypass parameter passing through components
+     */
+    public questionList: KnockoutObservableArray<QuestionModel>;
+    public questionnaireResult: KnockoutObservable<ResultModel>;
+
+    /**
+     * Indicator whether the user already started questionnaire
+     */
+    public hasStartedQuestionnaire: KnockoutObservable<boolean>;
 
     /**
      * Sidebar to display
@@ -63,12 +77,16 @@ export class App {
     public index = 0;
 
     public constructor() {
+        // Initializing
         this.currentComponent = ko.observable<string>("Start");
+        this.hasStartedQuestionnaire = ko.observable<boolean>(false);
+        this.questionList = ko.observableArray<QuestionModel>([]);
+        this.questionnaireResult = ko.observable<ResultModel>(null);
+
         this.IsSidebarVisible = ko.observable<boolean>(false);
 
         this.setViewPort();
         this.prepareNavigationItems();
-        this.prepareQuestionItems();
 
         // Automatic slide show icon
         //this.slideShow();
@@ -105,22 +123,6 @@ export class App {
                 Title: "Über uns",
                 IsSelected: ko.observable<boolean>(false)
             });
-    }
-
-    public prepareQuestionItems() {
-        this.questionItems.push({
-            Name: "Question 1",
-            Description: "This is question #1"
-        }, {
-            Name: "Question 2",
-            Description: "This is question #2"
-        }, {
-            Name: "Question 3",
-            Description: "This is question #3"
-        }, {
-            Name: "Question 4",
-            Description: "This is question #4"
-        });
     }
 
     /**

@@ -1,1 +1,20 @@
-<div>Auswertung</div>
+{{#if: !!IsSidebarVisible() && !!hasItems}}
+<div id="sidebar" class="column"
+     data-bind="module: { name: 'components/Sidebar', data: { items: sidebarItems } }"></div>
+{{/if}}
+
+<div data-bind="click: loadAsync($parent)"></div>
+
+{{#if: !!hasItems}}
+<div class="column grow">
+    {{#with: questionnaireResult}}
+    <div id="auswertung" class="content inner-content column" foreach="{{foundAnimals}}">
+        <div data-bind="name: $data"></div>
+    </div>
+    {{/with}}
+</div>
+{{/if}}
+
+{{#if: !hasItems}}
+<div class="content centered">No result available</div>
+{{/if}}
