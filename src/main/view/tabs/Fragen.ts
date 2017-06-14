@@ -41,7 +41,8 @@ export class Fragen {
 
     }
 
-    public showQuestions(component: KnockoutObservable<string>) {
+    public showQuestions(component: KnockoutObservable<string>, hasStartedQuestionnaire: KnockoutObservable<boolean>) {
+        hasStartedQuestionnaire(true);
         component("Fragebogen");
     }
 }

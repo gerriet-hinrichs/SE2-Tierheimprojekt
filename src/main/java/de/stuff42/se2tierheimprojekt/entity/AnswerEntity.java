@@ -26,9 +26,7 @@ package de.stuff42.se2tierheimprojekt.entity;
 import java.util.Set;
 import javax.persistence.*;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalCost;
-import de.stuff42.se2tierheimprojekt.data.AnimalSize;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
+import de.stuff42.se2tierheimprojekt.data.*;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,9 +55,11 @@ public class AnswerEntity {
     @ElementCollection
     public Set<AnimalCost> cost;
 
-    public boolean needCare;
+    @ElementCollection
+    public Set<AnimalCareTyp> needCare;
 
-    public boolean garden;
+    @ElementCollection
+    public Set<AnimalGardenSpace> garden;
 
     protected AnswerEntity() {
         // no-args constructor required by JPA spec
@@ -80,7 +80,7 @@ public class AnswerEntity {
      * @param garden     true to be sorted out.
      */
     public AnswerEntity(int sortOrder, String text, QuestionEntity question,
-                        @NotNull Set<AnimalType> animalType, @NotNull Set<AnimalSize> animalSize, @NotNull Set<AnimalCost> cost, boolean needCare, boolean garden) {
+                        @NotNull Set<AnimalType> animalType, @NotNull Set<AnimalSize> animalSize, @NotNull Set<AnimalCost> cost, @NotNull Set<AnimalCareTyp> needCare, @NotNull Set<AnimalGardenSpace> garden) {
         this.animalType = animalType;
         this.animalSize = animalSize;
         this.cost = cost;

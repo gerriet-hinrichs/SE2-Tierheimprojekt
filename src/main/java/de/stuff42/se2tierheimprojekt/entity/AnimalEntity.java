@@ -65,9 +65,11 @@ public class AnimalEntity {
     @NotNull
     public AnimalCost animalCost;
 
-    public boolean needCare;
+    @NotNull
+    public AnimalCareTyp needCare;
 
-    public boolean garden;
+    @NotNull
+    public AnimalGardenSpace garden;
 
     public AnimalEntity() {
         // no-args constructor required by JPA spec
@@ -75,7 +77,7 @@ public class AnimalEntity {
     }
 
     public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, boolean needCare, boolean garden) {
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, @NotNull AnimalCareTyp needCare, @NotNull AnimalGardenSpace garden) {
         this.name = name;
         this.race = race;
         this.sex = sex;

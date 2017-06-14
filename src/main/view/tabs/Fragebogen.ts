@@ -29,6 +29,7 @@ import {QuestionApi} from "../clientApi/QuestionApi";
 import QuestionModel = Api.QuestionModel;
 import AnswerModel = Api.AnswerModel;
 import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
+import {App} from "../App";
 
 
 export type question = QuestionModel & {
@@ -70,12 +71,6 @@ export class Fragebogen {
         // Sidebar on component 'Fragebogen'
         this.IsSidebarVisible = ko.observable<boolean>(true);
         this.loadAsync();
-
-        // Subscription on answeList to check if question has at least one answer checked
-        this.questionList.subscribe((a) => {
-            console.log("subscription: ", a);
-
-        });
     }
 
     public loadAsync() {
@@ -154,9 +149,9 @@ export class Fragebogen {
         }).always(() => this.IsBusy(false));
     }
 
-    public evaluate(component: KnockoutObservable<string>) {
-        // TODO: Let the service evaluate chosen answers
-        component("Auswertung");
+    public evaluate(parent: App) {
+        parent.questionList = this.questionList;
+        parent.currentComponent("Auswertung");
     }
 
     public next() {
