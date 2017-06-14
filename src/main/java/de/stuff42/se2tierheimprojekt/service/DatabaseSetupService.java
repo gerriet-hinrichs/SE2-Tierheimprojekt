@@ -183,7 +183,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?", AnswerType.CHECKBOX,
         		new AnswerContent("Keine bestimmte",
         				null,
         				null,
