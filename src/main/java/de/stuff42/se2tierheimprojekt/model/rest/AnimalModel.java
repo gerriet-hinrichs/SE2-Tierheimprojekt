@@ -47,6 +47,8 @@ public class AnimalModel {
 
     @NotNull
     public AnimalSpace requiredSpace;
+    
+    public String picturePath = "";
 
     /**
      * An single Animal.
@@ -58,12 +60,13 @@ public class AnimalModel {
      * @param age           <""> or <attributeText>.
      * @param requiredSpace <""> or <attributeText>.
      */
-    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace) {
+    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace, @NotNull String picturePath) {
         this.name = name;
         this.race = race;
         this.sex = sex;
         this.age = age;
         this.requiredSpace = requiredSpace;
+        this.picturePath = picturePath;
     }
 
     /**
