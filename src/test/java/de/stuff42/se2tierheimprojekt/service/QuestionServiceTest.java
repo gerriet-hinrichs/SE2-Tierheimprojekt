@@ -82,95 +82,6 @@ public class QuestionServiceTest {
         assertNotNull(databaseSetupService);
     }
 
-    @Test
-    public void firstToLastQuestionWithoutResult() {
-        logger.info("firstToLastQuestionWithoutResult");
-
-        logger.info("DatabaseAction");
-        databaseSetupService.clean();
-        this.setup();
-
-        logger.info("Get First Question");
-        Map<Long, List<Long>> answers = new HashMap<>();
-        QuestionModel qm = questionService.getFirstWithAnswers();
-        assertNotNull(qm);
-        AnswerModel   am;
-
-        logger.info("Question/Answer Loop");
-        while(true){
-            logger.info(qm.text);
-            logger.info(qm.answers.get(0).text);
-
-            am = qm.answers.get(0);
-            assertNotNull(qm);
-            assertNotNull(am);
-            Long qId = qm.id;
-            Long aId = am.id;
-            answers.put(qId , make(aId));
-            qm = questionService.getNextForAnswer(qId, aId);
-            if(qm == null){
-                break;
-            }
-        }
-
-        logger.info("GetResult");
-        ResultModel model = questionService.evaluateQuestionnaire(answers);
-        assertNotNull(model);
-        assertNotNull(model.foundAnimals);
-        assertTrue(model.foundAnimals.isEmpty());
-
-    }
-
-    @Test
-    public void firstToLastQuestionWithResult() {
-        logger.info("firstToLastQuestionWithResult");
-
-        logger.info("DatabaseAction");
-        databaseSetupService.clean();
-        this.setup();
-
-        logger.info("Get First Question");
-        Map<Long, List<Long>> answers = new HashMap<>();
-        QuestionModel qm = questionService.getFirstWithAnswers();
-        assertNotNull(qm);
-        AnswerModel   am;
-
-        logger.info("Question/Answer Loop");
-        while(true){
-            logger.info(qm.text);
-            logger.info(qm.answers.get(qm.answers.size()-1).text);
-
-            am = qm.answers.get(qm.answers.size()-1);
-            assertNotNull(qm);
-            assertNotNull(am);
-            Long qId = qm.id;
-            Long aId = am.id;
-            answers.put(qId , make(aId));
-            qm = questionService.getNextForAnswer(qId, aId);
-            if(qm == null){
-                break;
-            }
-        }
-
-        logger.info("GetResult");
-        ResultModel model = questionService.evaluateQuestionnaire(answers);
-        assertNotNull(model);
-        assertNotNull(model.foundAnimals);
-        assertFalse(model.foundAnimals.isEmpty());
-
-        logger.info("Print Result");
-        for (AnimalModel entry : model.foundAnimals) {
-            assertNotNull(entry);
-            logger.info(entry.name);
-        }
-    }
-
-    private List<Long> make(Long... listContend) {
-        List<Long> list = new LinkedList<>();
-        Collections.addAll(list, listContend);
-        return list;
-    }
-
     //@Test
     public void getFirstWithAnswers() {
         logger.info("getFirstWithAnswers");
@@ -223,25 +134,71 @@ public class QuestionServiceTest {
         }
     }
 
+    @Test
+    public void evaluateQuestionnaire(){
+        logger.info("evaluateQuestionnaire");
+        logger.info("Setup Database");
+        databaseSetupService.clean();
+        databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
+                new AnswerContent("Return nothing",
+                        new HashSet<>(Arrays.asList(AnimalType.values())),
+                        new HashSet<>(Arrays.asList(AnimalSize.values())),
+                        new HashSet<>(Arrays.asList(AnimalCost.values())),
+                        new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
+                        new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
+                new AnswerContent("Return all",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null)
+        );
+        databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
+                AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+        databaseSetupService.addAnimal("DummyCat", "DummyCat", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
+                AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
 
-        private void setup() {
-            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
-                    new AnswerContent("Return nothing",
-                            new HashSet<>(Arrays.asList(AnimalType.values())),
-                            new HashSet<>(Arrays.asList(AnimalSize.values())),
-                            new HashSet<>(Arrays.asList(AnimalCost.values())),
-                            new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
-                            new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
-                    new AnswerContent("Return all",
-                            null,
-                            null,
-                            null,
-                            null,
-                            null)
-            );
+        logger.info("Get dummy question");
+        QuestionModel dummyQuestion = questionService.getFirstWithAnswers();
+        assertNotNull(dummyQuestion);
+        logger.info(dummyQuestion.text);
 
-            databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+        logger.info("Get answers in dummy question");
+        AnswerModel dummyAnswerNothing = dummyQuestion.answers.get(0);
+        AnswerModel dummyAnswerAll = dummyQuestion.answers.get(1);
+        assertNotNull(dummyAnswerNothing);
+        assertNotNull(dummyAnswerAll);
+        logger.info(dummyAnswerNothing.text);
+        logger.info(dummyAnswerAll.text);
+
+        logger.info("Create maps to evaluate from question and answers");
+        Map<Long, List<Long>> mapNothing = new HashMap<>();
+        List<Long> listNothing = new ArrayList<>();
+        listNothing.add(dummyAnswerNothing.id);
+        mapNothing.put(dummyQuestion.id, listNothing);
+
+        Map<Long, List<Long>> mapAll = new HashMap<>();
+        List<Long> listAll = new ArrayList<>();
+        listAll.add(dummyAnswerAll.id);
+        mapAll.put(dummyQuestion.id, listAll);
+
+        logger.info("GetResults");
+        logger.info("Result with no answers");
+        ResultModel resultNothing = questionService.evaluateQuestionnaire(mapNothing);
+        assertNotNull(resultNothing);
+        assertNotNull(resultNothing.foundAnimals);
+        assertTrue(resultNothing.foundAnimals.isEmpty());
+
+        logger.info("Result with answers");
+        ResultModel resultAll = questionService.evaluateQuestionnaire(mapAll);
+        assertNotNull(resultAll);
+        assertNotNull(resultAll.foundAnimals);
+        assertFalse(resultAll.foundAnimals.isEmpty());
+
+        logger.info("Print Result");
+        for (AnimalModel entry : resultAll.foundAnimals) {
+            assertNotNull(entry);
+            logger.info(entry.name);
         }
-
+    }
 }
