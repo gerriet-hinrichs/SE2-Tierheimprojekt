@@ -25,6 +25,7 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
@@ -137,17 +138,6 @@ public class QuestionService extends BaseService {
      * @return Evaluation result.
      */
     public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
-        List<AnswerEntity> answerList = new LinkedList<>();
-
-        //Get all answers
-        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
-            long questionId = entry.getKey();
-            List<Long> answerIds = entry.getValue();
-            for (Long answerId : answerIds) {
-                answerList.add(answerDAO.getAnswer(questionId, answerId));
-            }
-        }
-
         //Create and fill Result Lists
         List<AnimalType> animalType = new LinkedList<>();
         animalType.addAll(Arrays.asList(AnimalType.values()));
@@ -161,25 +151,71 @@ public class QuestionService extends BaseService {
         needSpecialCare.addAll(Arrays.asList(AnimalCareTyp.values()));
 
         //Remove results
-        for (AnswerEntity answer : answerList) {
-            if (answer.animalType != null) {
-                animalType.removeAll(answer.animalType);
-            }
 
-            if (answer.cost != null) {
-                cost.removeAll(answer.cost);
-            }
+        //Get all answers
+        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
+            // Get actual Question
+            QuestionEntity questionEntry = questionDAO.findOne(entry.getKey());
+            // TODO: Maybe switch to if (entry.getValue() > 1)
 
-            if (answer.animalSize != null) {
-                size.removeAll(answer.animalSize);
-            }
+            switch(questionEntry.AnswerType){
+                case AnswerType.SingleAnswer:
+                    // Get the lonely answer from question
+                    AnswerEntity answerEntry = answerDAO.findOne(entry.getValue().get(0));
+                    // Evaluate
+                    if (answerEntry.animalType != null) { animalType.removeAll(answerEntry.animalType); }
+                    if (answerEntry.cost       != null) { cost.removeAll(answerEntry.cost); }
+                    if (answerEntry.animalSize != null) { size.removeAll(answerEntry.animalSize); }
+                    if (answerEntry.garden     != null) { garden.removeAll(answerEntry.garden); }
+                    if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
+                    break;
 
-            if (answer.garden != null) {
-                garden.removeAll(answer.garden);
-            }
+                case AnswerType.MultiAnswer:
+                    // Get all answers from question
+                    Set<AnswerEntity> answerList = new  HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
+                    // Evaluate
+                    // if (all AnswerEntities.EnumSet are not null)
+                    //     remove allEnumTyp.values from
+                    //         (get) all shared values from answers
+                    if (answerList.stream().allMatch(ele -> ele.animalType != null)){
+                        animalType.removeAll(
+                                evaluateHelper(
+                                        AnimalType.values(),
+                                        new HashSet<>(answerList.stream().map(ele -> ele.animalType).collect(Collectors.toSet())))
+                        );
+                    }
+                    if (answerList.stream().allMatch(ele -> ele.cost != null)){
+                        cost.removeAll(
+                                evaluateHelper(
+                                        AnimalCost.values(),
+                                        new HashSet<>(answerList.stream().map(ele -> ele.cost).collect(Collectors.toSet())))
+                        );
+                    }
+                    if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
+                        size.removeAll(
+                                evaluateHelper(
+                                        AnimalSize.values(),
+                                        new HashSet<>(answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toSet())))
+                        );
+                    }
+                    if (answerList.stream().allMatch(ele -> ele.garden != null)){
+                        garden.removeAll(
+                                evaluateHelper(
+                                        AnimalGardenSpace.values(),
+                                        new HashSet<>(answerList.stream().map(ele -> ele.garden).collect(Collectors.toSet())))
+                        );
+                    }
+                    if (answerList.stream().allMatch(ele -> ele.needCare != null)){
+                        needSpecialCare.removeAll(
+                                evaluateHelper(
+                                        AnimalCareTyp.values(),
+                                        new HashSet<>(answerList.stream().map(ele -> ele.needCare).collect(Collectors.toSet())))
+                        );
+                    }
+                    break;
 
-            if (answer.needCare != null) {
-                needSpecialCare.removeAll(answer.needCare);
+                default:
+                    throw new UsefullException();
             }
         }
 
@@ -187,5 +223,18 @@ public class QuestionService extends BaseService {
             return new ResultModel(new LinkedList<>());
         }
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+    }
+
+    //TODO: ADD DOC!!
+    private <T> Set<T> evaluateHelper(T[] enumValues, Set<Set<T>> attributeSets){
+        Set<T> result = new HashSet<>(Arrays.asList(enumValues));
+        for (Set<T> answer : attributeSets){
+            for (T type : result){
+                if(!answer.contains(type)){
+                    result.remove(type);
+                }
+            }
+        }
+        return result;
     }
 }
