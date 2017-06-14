@@ -44,9 +44,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -82,12 +81,34 @@ public class QuestionServiceTest {
         assertNotNull(databaseSetupService);
     }
 
-    //@Test
+    @Test
     public void getFirstWithAnswers() {
         logger.info("getFirstWithAnswers");
+
+        logger.info("Setup Database");
+        databaseSetupService.clean();
+        databaseSetupService.addQuestionWithAnswers("Dummy question one",
+                new AnswerContent("Dummy answer one, from Question one.",
+                        null, null, null, null, null),
+                new AnswerContent("Dummy answer two, from Question one.",
+                        null, null, null, null, null));
+        databaseSetupService.addQuestionWithAnswers("Dummy question two",
+                new AnswerContent("Dummy answer one, from Question two.",
+                        null, null, null, null, null),
+                new AnswerContent("Dummy answer two, from Question two.",
+                        null, null, null, null, null));
+
+        logger.info("Get first Question with Answers");
         QuestionModel methodReturnValue = questionService.getFirstWithAnswers();
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
         assertNotNull(methodReturnValue);
+        assertEquals("Dummy question one", methodReturnValue.text);
+        logger.info("Question: " + methodReturnValue.text);
+
+        assertNotNull(methodReturnValue.answers);
+        assertEquals("Dummy answer one, from Question one.", methodReturnValue.answers.get(0).text);
+        assertEquals("Dummy answer two, from Question one.", methodReturnValue.answers.get(1).text);
+        logger.info("Answer one: " + methodReturnValue.answers.get(0).text);
+        logger.info("Answer two: " + methodReturnValue.answers.get(1).text);
     }
 
     //@Test
@@ -137,16 +158,17 @@ public class QuestionServiceTest {
     @Test
     public void evaluateQuestionnaire(){
         logger.info("evaluateQuestionnaire");
+
         logger.info("Setup Database");
         databaseSetupService.clean();
-        databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
-                new AnswerContent("Return nothing",
+        databaseSetupService.addQuestionWithAnswers("Dummy question, all or nothing?",
+                new AnswerContent("Dummy answer, return nothing.",
                         new HashSet<>(Arrays.asList(AnimalType.values())),
                         new HashSet<>(Arrays.asList(AnimalSize.values())),
                         new HashSet<>(Arrays.asList(AnimalCost.values())),
                         new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
-                new AnswerContent("Return all",
+                new AnswerContent("Dummy answer, return all.",
                         null,
                         null,
                         null,
