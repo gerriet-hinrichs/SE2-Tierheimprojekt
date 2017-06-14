@@ -225,7 +225,7 @@ public class QuestionServiceTest {
 
 
         private void setup() {
-            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
+            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?", AnswerType.CHECKBOX,
                     new AnswerContent("Return nothing",
                             new HashSet<>(Arrays.asList(AnimalType.values())),
                             new HashSet<>(Arrays.asList(AnimalSize.values())),

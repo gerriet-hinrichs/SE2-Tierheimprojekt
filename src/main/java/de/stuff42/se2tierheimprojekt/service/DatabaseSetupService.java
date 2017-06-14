@@ -69,7 +69,7 @@ public class DatabaseSetupService extends BaseService {
     	final String mainpath = "/static-files/images/shelter_animals/";
     	
         // Questions & Answers
-        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?",
+        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?", AnswerType.RADIOBUTTON,
                 new AnswerContent(" Weniger als 35",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -89,7 +89,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?",
+        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Ja",
                         null,
                         null,
@@ -103,7 +103,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.SMALL, AnimalGardenSpace.MEDIUM, AnimalGardenSpace.HUGE)))
         );
-        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?",
+        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Land / Dorf",
                         null,
                         null,
@@ -123,7 +123,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich täglich Zeit für das Tier?",
+        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich täglich Zeit für das Tier?", AnswerType.RADIOBUTTON,
                 new AnswerContent("<1",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -142,14 +142,14 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         new HashSet<>(Arrays.asList(AnimalCareTyp.SOME, AnimalCareTyp.MUCH)),
                         null),
-                new AnswerContent("All day",
+                new AnswerContent("Den ganzen Tag",
                         null,
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
+        addQuestionWithAnswers("Soll das Tier auch von Kindern geplegt werden?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Ja",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY)),
                         null,
@@ -163,7 +163,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
+        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)", AnswerType.RADIOBUTTON,
                 new AnswerContent("20-30",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -183,7 +183,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?",
+        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?", AnswerType.RADIOBUTTON,
         		new AnswerContent("Keine bestimmte",
         				null,
         				null,
@@ -294,8 +294,8 @@ public class DatabaseSetupService extends BaseService {
      * @param questionText  Question text.
      * @param answerContent Content of answers.
      */
-    void addQuestionWithAnswers(String questionText, AnswerContent... answerContent) {
-        QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText);
+    void addQuestionWithAnswers(String questionText, AnswerType answerType, AnswerContent... answerContent) {
+        QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText, answerType);
         question = questionDAO.save(question);
         question.answers = new ArrayList<>(answerContent.length);
 
