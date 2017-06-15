@@ -36,6 +36,8 @@ import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EnumType;
+
 @Service
 public class QuestionService extends BaseService {
 
@@ -150,72 +152,62 @@ public class QuestionService extends BaseService {
         List<AnimalCareTyp> needSpecialCare = new LinkedList<>();
         needSpecialCare.addAll(Arrays.asList(AnimalCareTyp.values()));
 
-        //Remove results
-
-        //Get all answers
+            //Get all answers
         for (Entry<Long, List<Long>> entry : answers.entrySet()) {
-            // Get actual Question
-            QuestionEntity questionEntry = questionDAO.findOne(entry.getKey());
-            // TODO: Maybe switch to if (entry.getValue() > 1)
 
-            switch(questionEntry.AnswerType){
-                case AnswerType.SingleAnswer:
-                    // Get the lonely answer from question
-                    AnswerEntity answerEntry = answerDAO.findOne(entry.getValue().get(0));
+            if(entry.getValue().size() == 1){
+                AnswerEntity answerEntry = answerDAO.findOne(entry.getValue().get(0));
                     // Evaluate
-                    if (answerEntry.animalType != null) { animalType.removeAll(answerEntry.animalType); }
-                    if (answerEntry.cost       != null) { cost.removeAll(answerEntry.cost); }
-                    if (answerEntry.animalSize != null) { size.removeAll(answerEntry.animalSize); }
-                    if (answerEntry.garden     != null) { garden.removeAll(answerEntry.garden); }
-                    if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
-                    break;
+                if (answerEntry.animalType != null) { animalType.removeAll(answerEntry.animalType); }
+                if (answerEntry.cost       != null) { cost.removeAll(answerEntry.cost); }
+                if (answerEntry.animalSize != null) { size.removeAll(answerEntry.animalSize); }
+                if (answerEntry.garden     != null) { garden.removeAll(answerEntry.garden); }
+                if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
 
-                case AnswerType.MultiAnswer:
-                    // Get all answers from question
-                    Set<AnswerEntity> answerList = new  HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
+            }else if(entry.getValue().size() > 1){
+                // TODO: Buttontype check if different possibil
+                Set<AnswerEntity> answerList = new HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
                     // Evaluate
-                    // if (all AnswerEntities.EnumSet are not null)
-                    //     remove allEnumTyp.values from
-                    //         (get) all shared values from answers
-                    if (answerList.stream().allMatch(ele -> ele.animalType != null)){
-                        animalType.removeAll(
-                                evaluateHelper(
-                                        AnimalType.values(),
-                                        new HashSet<>(answerList.stream().map(ele -> ele.animalType).collect(Collectors.toSet())))
-                        );
-                    }
-                    if (answerList.stream().allMatch(ele -> ele.cost != null)){
-                        cost.removeAll(
-                                evaluateHelper(
-                                        AnimalCost.values(),
-                                        new HashSet<>(answerList.stream().map(ele -> ele.cost).collect(Collectors.toSet())))
-                        );
-                    }
-                    if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
-                        size.removeAll(
-                                evaluateHelper(
-                                        AnimalSize.values(),
-                                        new HashSet<>(answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toSet())))
-                        );
-                    }
-                    if (answerList.stream().allMatch(ele -> ele.garden != null)){
-                        garden.removeAll(
-                                evaluateHelper(
-                                        AnimalGardenSpace.values(),
-                                        new HashSet<>(answerList.stream().map(ele -> ele.garden).collect(Collectors.toSet())))
-                        );
-                    }
-                    if (answerList.stream().allMatch(ele -> ele.needCare != null)){
-                        needSpecialCare.removeAll(
-                                evaluateHelper(
-                                        AnimalCareTyp.values(),
-                                        new HashSet<>(answerList.stream().map(ele -> ele.needCare).collect(Collectors.toSet())))
-                        );
-                    }
-                    break;
-
-                default:
-                    throw new UsefullException();
+                // if (all AnswerEntities.EnumSet are not null)
+                //     remove allEnumTyp.values from
+                //         (get) all shared values from answers
+                if (answerList.stream().allMatch(ele -> ele.animalType != null)){
+                    animalType.removeAll(
+                            evaluateHelper(
+                                    AnimalType.values(),
+                                    answerList.stream().map(ele -> ele.animalType).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.cost != null)){
+                    cost.removeAll(
+                            evaluateHelper(
+                                    AnimalCost.values(),
+                                    answerList.stream().map(ele -> ele.cost).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
+                    size.removeAll(
+                            evaluateHelper(
+                                    AnimalSize.values(),
+                                    answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.garden != null)){
+                    garden.removeAll(
+                            evaluateHelper(
+                                    AnimalGardenSpace.values(),
+                                    answerList.stream().map(ele -> ele.garden).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.needCare != null)){
+                    needSpecialCare.removeAll(
+                            evaluateHelper(
+                                    AnimalCareTyp.values(),
+                                    answerList.stream().map(ele -> ele.needCare).collect(Collectors.toList()))
+                    );
+                }
+            }else{
+                logger.error("EvaluateQuestionnaire, Question without answers! " + questionDAO.findOne(entry.getKey()).toString());
             }
         }
 
@@ -225,15 +217,11 @@ public class QuestionService extends BaseService {
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
     }
 
-    //TODO: ADD DOC!!
-    private <T> Set<T> evaluateHelper(T[] enumValues, Set<Set<T>> attributeSets){
+    //TODO: ADD DOC!! && with interface?
+    private <T> Set<T> evaluateHelper(T[] enumValues, List<Set<T>> attributeSets){
         Set<T> result = new HashSet<>(Arrays.asList(enumValues));
         for (Set<T> answer : attributeSets){
-            for (T type : result){
-                if(!answer.contains(type)){
-                    result.remove(type);
-                }
-            }
+            result.retainAll(answer);
         }
         return result;
     }
