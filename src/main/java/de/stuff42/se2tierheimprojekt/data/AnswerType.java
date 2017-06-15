@@ -21,39 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.entity;
+package de.stuff42.se2tierheimprojekt.data;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.*;
-
-import de.stuff42.se2tierheimprojekt.data.AnswerType;
-
-@Entity
-public class QuestionEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
-
-    public int sortOrder;
-
-    public String text;
-    
-    public AnswerType answerType;
-
-    @OneToMany(mappedBy = "question")
-    public List<AnswerEntity> answers;
-
-    protected QuestionEntity() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
-    public QuestionEntity(int sortOrder, String text, AnswerType answerType) {
-        this.sortOrder = sortOrder;
-        this.text = text;
-        this.answerType = answerType;
-        answers = new ArrayList<>();
-    }
+public enum AnswerType {
+	CHECKBOX, RADIOBUTTON, SLIDER
 }

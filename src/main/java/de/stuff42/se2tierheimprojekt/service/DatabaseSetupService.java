@@ -66,8 +66,11 @@ public class DatabaseSetupService extends BaseService {
      */
     public void setup() {
 
+    	final String mainpath = "/static-files/images/shelter_animals/";
+    	final String AE = "\u00c4", ae = "\u00e4", OE = "\u00d6", oe = "\u00f6", UE = "\u00dc", ue = "\u00fc", ss = "\u00df";
+    	
         // Questions & Answers
-        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?",
+        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungef" +ae+ "hr f" +ue+ "r die Tierhaltung zur Verf" +ue+ "gung?", AnswerType.RADIOBUTTON,
                 new AnswerContent(" Weniger als 35",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -87,7 +90,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?",
+        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Ja",
                         null,
                         null,
@@ -101,28 +104,28 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.SMALL, AnimalGardenSpace.MEDIUM, AnimalGardenSpace.HUGE)))
         );
-        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?",
+        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Land / Dorf",
                         null,
                         null,
                         null,
                         null,
                         null),
-                new AnswerContent("Wohngebiet ohne Hauptstraße in direkter Umgebung",
+                new AnswerContent("Wohngebiet ohne Hauptstra" +ss+ "e in direkter Umgebung",
                         null,
                         null,
                         null,
                         null,
                         null),
-                new AnswerContent("An einer Hauptstraße oder in Stadtkern",
+                new AnswerContent("An einer Hauptstra" +ss+ "e oder im Stadtkern",
                         new HashSet<>(Collections.singletonList(AnimalType.DOG)),
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich täglich Zeit für das Tier?",
-                new AnswerContent("<1",
+        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich t" +ae+ "glich Zeit f" +ue+ "r das Tier?", AnswerType.RADIOBUTTON,
+                new AnswerContent("Bis zu 1",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
                         null,
@@ -140,14 +143,14 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         new HashSet<>(Arrays.asList(AnimalCareTyp.SOME, AnimalCareTyp.MUCH)),
                         null),
-                new AnswerContent("All day",
+                new AnswerContent("Den ganzen Tag",
                         null,
                         null,
                         null,
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
+        addQuestionWithAnswers("Soll das Tier auch von Kindern geplegt werden?", AnswerType.RADIOBUTTON,
                 new AnswerContent("Ja",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY)),
                         null,
@@ -161,7 +164,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wie hoch sollten ungefähr die monatlichen Kosten sein? (Ohne Grundausstattung)",
+        addQuestionWithAnswers("Wie hoch sollten ungef" +ae+ "hr die monatlichen Kosten sein? (Ohne Grundausstattung)", AnswerType.RADIOBUTTON,
                 new AnswerContent("20-30",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -181,7 +184,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Interessierst du dich für eine bestimmte Tierart?",
+        addQuestionWithAnswers("Interessierst du dich f" +ue+ "r eine bestimmte Tierart?", AnswerType.CHECKBOX,
         		new AnswerContent("Keine bestimmte",
         				null,
         				null,
@@ -218,7 +221,7 @@ public class DatabaseSetupService extends BaseService {
         				null,
         				null,
         				null),
-        		new AnswerContent("Kleintiere (Hamster, Kaninchen, Meerschweinchen, Mäuse, u.ä.)",
+        		new AnswerContent("Kleintiere (Hamster, Kaninchen, Meerschweinchen, M" +ae+ "use, u." +ae+ ".)",
         				new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD, AnimalType.FISH, AnimalType.REPTILE)),
         				null,
         				null,
@@ -228,57 +231,62 @@ public class DatabaseSetupService extends BaseService {
 
         // Dogs
         addAnimal("Didi", "Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
-                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "didi.jpg");
         addAnimal("Slushi", "Jack-Russell-Terrier-Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
-                AnimalType.DOG, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.DOG, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
         addAnimal("Sandor", "Malinois", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.HUGE,
-                AnimalType.DOG, AnimalSize.HUGE, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.DOG, AnimalSize.HUGE, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "sandor.jpg");
         addAnimal("Thelma", "Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.HUGE);
+                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.HUGE, "");
         addAnimal("Anuk", "Thai Ridgeback", AnimalSex.FEMALE, AnimalAge.OLD, AnimalSpace.MEDIUM,
-                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE);
+                AnimalType.DOG, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE, mainpath + "anuk.jpg");
+        addAnimal("Jimbo", "Pinscher-Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
+        		AnimalType.DOG, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "jimbo.jpg");
+        addAnimal("Bowee", "Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.HUGE, AnimalType.DOG, AnimalSize.MEDIUM,
+        		AnimalCost.EXPENSIVE, AnimalCareTyp.SOME, AnimalGardenSpace.MEDIUM, mainpath + "bowee.jpg");
 
         // Cats
-        addAnimal("Tobi", "Europaeisch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
-                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+        addAnimal("Tobi", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
+                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "tobi.jpg");
         addAnimal("Mia", "Siam", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
-                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "mia.jpg");
         addAnimal("Lisa", "Kartaeuser-Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
-        addAnimal("Jenny", "Europaeisch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
-                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "lisa.jpg");
+        addAnimal("Jerry", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
+                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "jerry.jpg");
 
         // Bunnies
         addAnimal("Peach", "Kaninchen", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
-                AnimalType.BUNNY, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
-        addAnimal("Chipman", "Loewenkopf-Kaninchen", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.BUNNY, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.BUNNY, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "peach.jpg");
+        addAnimal("Chipman", "L" +oe+ "wenkopf-Kaninchen", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
+                AnimalType.BUNNY, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "chipman.jpg");
 
         // Birds
         addAnimal("Jewels und Yellow", "Kanarienvogel", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.BIRD, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.BIRD, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "jewels-yellow.jpg");
         addAnimal("Vasco", "Graupapagei", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.HUGE,
-                AnimalType.BIRD, AnimalSize.SMALL, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
-
+                AnimalType.BIRD, AnimalSize.SMALL, AnimalCost.EXPENSIVE, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "vasco.jpg");
+        addAnimal("H" +ae+ "hne", "Leghorn (Hahn)", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
+                AnimalType.BIRD, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "haehne.jpg");
+        
         // Guinea Pig
         addAnimal("Rambo", "Meerschweinchen", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.GUINEA_PIG, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.GUINEA_PIG, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "rambo.jpg");
 
         // Mouses
         addAnimal("Perdita", "Chinchilla", AnimalSex.FEMALE, AnimalAge.OLD, AnimalSpace.SMALL,
-                AnimalType.MOUSE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.MOUSE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "perdita.jpg");
         addAnimal("Bibi und Tina", "Chinchilla", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalSpace.SMALL,
-                AnimalType.MOUSE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.MOUSE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "bibi-tina.jpg");
 
         // Reptiles
-        addAnimal("Huenne", "Leghorn (Hahn)", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
-        addAnimal("Sting", "Echse", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
-                AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+        addAnimal("Sting", "Berberskink", AnimalSex.MALE, AnimalAge.OLD, AnimalSpace.SMALL,
+                AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "sting.jpg");
         addAnimal("Noah", "Kornnatter", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "noah.jpg");
         addAnimal("Horst", "Bartagamme", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.SMALL,
-                AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "horst.jpg");
+        addAnimal("Chinesische Dreikielschildkr" +oe+ "ten", "Mauremys reevesii", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalSpace.MEDIUM, AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.MEDIUM, mainpath + "chin-schildkroeten.jpg");
     }
 
     /**
@@ -287,8 +295,8 @@ public class DatabaseSetupService extends BaseService {
      * @param questionText  Question text.
      * @param answerContent Content of answers.
      */
-    void addQuestionWithAnswers(String questionText, AnswerContent... answerContent) {
-        QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText);
+    void addQuestionWithAnswers(String questionText, AnswerType answerType, AnswerContent... answerContent) {
+        QuestionEntity question = new QuestionEntity(questionSortOrder++, questionText, answerType);
         question = questionDAO.save(question);
         question.answers = new ArrayList<>(answerContent.length);
 
@@ -301,8 +309,8 @@ public class DatabaseSetupService extends BaseService {
     }
 
     void addAnimal(String name, String race, AnimalSex sex, AnimalAge age, AnimalSpace requiredSpace,
-                           AnimalType animalType, AnimalSize size, AnimalCost cost, AnimalCareTyp needCare, AnimalGardenSpace garden) {
-        animalDAO.save(new AnimalEntity(name, race, sex, age, requiredSpace, animalType, size, cost, needCare, garden));
+                           AnimalType animalType, AnimalSize size, AnimalCost cost, AnimalCareTyp needCare, AnimalGardenSpace garden, String picturePath) {
+        animalDAO.save(new AnimalEntity(name, race, sex, age, requiredSpace, animalType, size, cost, needCare, garden, picturePath));
     }
 }
 

@@ -225,7 +225,7 @@ public class QuestionServiceTest {
 
 
         private void setup() {
-            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?",
+            databaseSetupService.addQuestionWithAnswers("DummyQuestion, all or nothing?", AnswerType.CHECKBOX,
                     new AnswerContent("Return nothing",
                             new HashSet<>(Arrays.asList(AnimalType.values())),
                             new HashSet<>(Arrays.asList(AnimalSize.values())),
@@ -241,7 +241,7 @@ public class QuestionServiceTest {
             );
 
             databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                    AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
         }
 
 }
