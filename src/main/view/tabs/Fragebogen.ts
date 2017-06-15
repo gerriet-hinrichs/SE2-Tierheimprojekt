@@ -92,6 +92,7 @@ export class Fragebogen {
                 text: q.text,
                 sortOrder: q.sortOrder,
                 answers: q.answers,
+                answerType: q.answerType,
                 answerList: !!a ? answerList : [],
                 isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
                 selectedAnswer: selectedAnswerObservable
