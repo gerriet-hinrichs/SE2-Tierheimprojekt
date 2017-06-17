@@ -20,3 +20,27 @@ div.banner {
   background: url('/static/images/Beagle_1.jpg') no-repeat top center;
   background-size: contain;
 }
+
+button.button-fragebogen {
+  margin: 20px 100px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border: 2px solid white;
+  font-size: 2em;
+  font-family: monospace;
+
+  &:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    cursor: pointer;
+  }
+}
+
+span.questionnaire-in-progress {
+  .flex-display();
+  .align-self(center);
+  color: #ff4f31;
+  font-size: 1rem;
+}

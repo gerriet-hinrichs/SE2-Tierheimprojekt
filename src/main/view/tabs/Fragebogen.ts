@@ -31,19 +31,28 @@ import AnswerModel = Api.AnswerModel;
 import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
 import {App} from "../App";
 
+export interface IFragebogenParams {
+    questionList: KnockoutObservableArray<question>;
+}
 
 export type question = QuestionModel & {
     answerList: KnockoutObservableArray<AnswerModel>;
-    isAnswered: KnockoutObservable<boolean>;
+    isAnswered: KnockoutComputed<boolean>;
     selectedAnswer: KnockoutObservable<number>;
 }
 
 export class Fragebogen {
     public IsSidebarVisible: KnockoutObservable<boolean>;
 
+    // Passed question items that are already answered
+    public questionList: KnockoutObservableArray<question>;
+
     // Observable lists for ad hoc rendering
     public sidebarItems = ko.observableArray<SidebarItem>([]);
-    public questionList = ko.observableArray<question>([]);
+    public items = ko.observableArray<question>([]);
+
+    // Indicator for not receiving questions anymore
+    public isLastQuestion = ko.observable<boolean>(false);
 
     /**
      * Busy indicator
@@ -51,11 +60,15 @@ export class Fragebogen {
     public IsBusy = ko.observable<boolean>(false);
 
     public get hasItems() {
-        return this.questionList().length > 0;
+        return this.items().length > 0;
     }
 
+    public itemCount = ko.pureComputed<number>(() => {
+        return this.items().length;
+    });
+
     public lastQuestion = ko.pureComputed<question | null>(() => {
-        let items = this.questionList();
+        let items = this.items();
         if (items.length == 0) {
             return null;
         }
@@ -64,19 +77,41 @@ export class Fragebogen {
 
     public showNextButton = ko.pureComputed<boolean>(() => {
         let last = this.lastQuestion();
-        return last != null ? last.isAnswered() : false;
+        return last != null && !this.isLastQuestion() ? last.isAnswered() : false;
     });
 
-    constructor() {
+    constructor(params: IFragebogenParams) {
+        this.questionList = params.questionList;
         // Sidebar on component 'Fragebogen'
         this.IsSidebarVisible = ko.observable<boolean>(true);
-        this.loadAsync();
+
+        if (this.questionList().length > 0) {
+            // Add already answered questions to current instance
+            // In case of tab switching around
+            this.questionList().forEach(q => {
+                if (!q.answers) return;
+
+                // Build up sidebar
+                let sItem = {
+                    Name: "Frage #" + q.sortOrder,
+                    Anker: "#f" + q.id,
+                    Title: q.text
+                } as SidebarItem;
+                this.sidebarItems.push(sItem);
+
+                this.items.push(q);
+            });
+        } else {
+            this.loadAsync();
+        }
     }
 
     public loadAsync() {
         this.IsBusy(true);
-        this.questionList.removeAll();
+        this.items.removeAll();
         QuestionApi.getFirstWithAnswers().done((q: QuestionModel) => {
+            // objects possibly null
+            if (!q.answers) return;
 
             // Build up sidebar
             let sItem = {
@@ -87,17 +122,15 @@ export class Fragebogen {
             this.sidebarItems.push(sItem);
 
             let answerList = ko.observableArray<AnswerModel>([]);
-            let a = q.answers;
-            if (!!a) {
-                a.forEach((answer: AnswerModel) => {
-                    let aItem = {
-                        id: answer.id,
-                        text: answer.text,
-                        sortOrder: answer.sortOrder
-                    } as AnswerModel;
-                    answerList.push(aItem);
-                });
-            }
+            q.answers.forEach((answer: AnswerModel) => {
+                let aItem = {
+                    id: answer.id,
+                    text: answer.text,
+                    sortOrder: answer.sortOrder
+                } as AnswerModel;
+                answerList.push(aItem);
+            });
+
 
             let selectedAnswerObservable = ko.observable<number>();
             let qItem = {
@@ -105,11 +138,11 @@ export class Fragebogen {
                 text: q.text,
                 sortOrder: q.sortOrder,
                 answers: q.answers,
-                answerList: !!a ? answerList : [],
+                answerList: answerList,
                 isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
                 selectedAnswer: selectedAnswerObservable
             } as question;
-            this.questionList.push(qItem);
+            this.items.push(qItem);
 
         }).always(() => this.IsBusy(false));
     }
@@ -119,8 +152,6 @@ export class Fragebogen {
             questionID: q.id,
             answerID: q.selectedAnswer()
         } as QuestionAndAnswerIDModel;
-
-        console.log(params);
 
         this.IsBusy(true);
         QuestionApi.getNextForAnswer(params).done((r: QuestionModel) => {
@@ -135,29 +166,39 @@ export class Fragebogen {
 
             let answerList = ko.observableArray<AnswerModel | null>(r.answers);
 
+            let selectedAnswerObservable = ko.observable<number>();
             let qItem = {
                 id: r.id,
                 text: r.text,
                 sortOrder: r.sortOrder,
                 answers: r.answers,
                 answerList: answerList,
-                isAnswered: ko.observable<boolean>(false),
-                selectedAnswer: ko.observable<number>()
+                isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
+                selectedAnswer: selectedAnswerObservable
             } as question;
-            this.questionList.push(qItem);
+            this.items.push(qItem);
 
-        }).always(() => this.IsBusy(false));
+            this.scrollTo(sItem.Anker);
+
+        }).fail(() => this.isLastQuestion(true)).always(() => this.IsBusy(false));
     }
 
     public evaluate(parent: App) {
-        parent.questionList = this.questionList;
+        parent.questionList = this.items;
         parent.currentComponent("Auswertung");
     }
 
-    public next() {
+    public next(parent: App) {
         let q = this.lastQuestion();
         if(q != null) {
+            parent.questionList = this.items;
             this.continue(q);
         }
+    }
+
+    public scrollTo(anker: string) {
+        // Fetch sidebar element to scroll to and click it
+        let href: string = "a[href='" + anker + "']";
+        $(href)[0].click();
     }
 }

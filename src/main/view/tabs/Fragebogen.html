@@ -7,25 +7,27 @@
 <div class="column grow">
     <div id="fragebogen" class="content inner-content column">
         <!-- Question -->
-        {{#foreach: questionList}}
-        <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + id }"></div>
-        <div class="column answer">
-            <!-- Answers -->
-            {{#foreach: answerList}}
-            <div class="row">
-                <input class="clickable" type="radio" name="{{questionId}}" value="{{id}}" data-bind="checked: $parent.selectedAnswer"/>
-                <span data-bind="text: text"></span>
+        {{#foreach: items}}
+        <div class="question-container">
+            <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + id }"></div>
+            <div class="row answer">
+                <div class="column">
+                    <!-- Answers -->
+                    {{#foreach: answerList}}
+                    <div class="row">
+                        <input class="clickable"
+                               type="radio"
+                               name="{{'frage#' + $parent.id}}"
+                               value="{{id}}"
+                               disabled="{{$parent.id != $parents[1].lastQuestion().id}}"
+                               checked="{{$parent.selectedAnswer}}"/>
+                        <span data-bind="text: text"></span>
+                    </div>
+                    {{/foreach}}
+                </div>
             </div>
-            {{/foreach}}
         </div>
         {{/foreach}}
-        {{#if: showNextButton}}
-        <button class="button-weiter"
-                click="{{next.bind($data)}}"
-                title="Nächste Frage">
-            Weiter
-        </button>
-        {{/if}}
     </div>
     <div class="auswertung">
         <button class="button-auswerten"
@@ -33,7 +35,18 @@
                 title="Click mich und ich werte deine Antworten aus!">
             Auswerten!
         </button>
+        {{#if: showNextButton()}}
+        <button class="button-auswerten"
+                click="{{function() { next($parent) } }}"
+                title="Nächste Frage, bitte!">
+            Nächste Frage
+        </button>
+        {{/if}}
+        {{#if: !showNextButton() && isLastQuestion()}}
+        <span>Du hast alle Fragen beantwortet!</span>
+        {{/if}}
     </div>
+</div>
 </div>
 {{/if}}
 

@@ -28,18 +28,17 @@ import * as ko from "knockout";
 import "knockout.punches";
 import "knockout-amd-helpers";
 import {NavigationItem} from "./components/Navigation";
-import {QuestionData} from "./components/Question";
 import ResultModel = Api.ResultModel;
 import AnswerModel = Api.AnswerModel;
 import QuestionModel = Api.QuestionModel;
+import {question} from "./tabs/Fragebogen";
 
 // app class
 export class App {
     /**
      * Items for navigation and sidebar
      */
-    public navigationItems = ko.observableArray<NavigationItem>();
-    public questionItems = ko.observableArray<QuestionData>();
+    public navigationItems = ko.observableArray<NavigationItem>([]);
 
     /**
      * Current component name for intern pseudo routing via module binding.
@@ -50,18 +49,11 @@ export class App {
     /**
      * Global progress store to bypass parameter passing through components
      */
-    public questionList: KnockoutObservableArray<QuestionModel>;
+    public questionList: KnockoutObservableArray<question>;
     public questionnaireResult: KnockoutObservable<ResultModel>;
-
-    /**
-     * Indicator whether the user already started questionnaire
-     */
-    public hasStartedQuestionnaire: KnockoutObservable<boolean>;
-
-    /**
-     * Sidebar to display
-     */
-    public IsSidebarVisible: KnockoutObservable<boolean>;
+    public isQuestionnaireInProgress = ko.pureComputed<boolean>(() => {
+        return this.questionList().length > 0;
+    });
 
     /**
      * Margins for app-body to create moderate centered view
@@ -79,11 +71,8 @@ export class App {
     public constructor() {
         // Initializing
         this.currentComponent = ko.observable<string>("Start");
-        this.hasStartedQuestionnaire = ko.observable<boolean>(false);
-        this.questionList = ko.observableArray<QuestionModel>([]);
+        this.questionList = ko.observableArray<question>([]);
         this.questionnaireResult = ko.observable<ResultModel>(null);
-
-        this.IsSidebarVisible = ko.observable<boolean>(false);
 
         this.setViewPort();
         this.prepareNavigationItems();
@@ -123,33 +112,6 @@ export class App {
                 Title: "Über uns",
                 IsSelected: ko.observable<boolean>(false)
             });
-    }
-
-    /**
-     * Automatic slide show for logo
-     */
-    public slideShow() {
-        let container = document.getElementById("logo-icon");
-
-        console.log("container", container);
-
-        if (!!container) {
-            if (this.index == 0) {
-                $("#logo-icon").fadeIn("slow");
-                container.style.backgroundImage = "url('/static/images/logo_1.png')";
-
-                this.index = 1;
-            } else {
-                container.style.backgroundImage = "url('/static/images/logo_2.png')";
-                this.index = 0;
-            }
-        }
-
-        $('#logo-icon').fadeIn("slow");
-
-        setTimeout(function () {
-            this.slideShow()
-        }.bind(this), 2000);
     }
 }
 
