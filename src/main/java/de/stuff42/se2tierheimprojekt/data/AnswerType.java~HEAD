@@ -21,22 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *  Question component
- */
-export type QuestionData = {
-    Name: string,
-    Description: string
-};
+package de.stuff42.se2tierheimprojekt.data;
 
-export interface IQuestionParams {
-    question: QuestionData;
-}
-
-export class Question {
-    public question = ko.observable<QuestionData>();
-
-    constructor(params: IQuestionParams) {
-        this.question(params.question);
-    }
+public enum AnswerType {
+	CHECKBOX, RADIOBUTTON, SLIDER
 }

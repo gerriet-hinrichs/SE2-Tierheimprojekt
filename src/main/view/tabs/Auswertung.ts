@@ -24,10 +24,65 @@
 /**
  *  Auswertung component
  */
+import ResultModel = Api.ResultModel;
+import {QuestionApi} from "../clientApi/QuestionApi";
+import {SidebarItem} from "../components/Sidebar";
+import {App} from "../App";
+import QuestionApi$evaluateQuestionnaire$answers = Alias.QuestionApi$evaluateQuestionnaire$answers;
+import QuestionModel = Api.QuestionModel;
+
+export type auswertung = ResultModel;
+export type question = QuestionModel;
 
 export class Auswertung {
+    public questionList = ko.observableArray<question>([]);
+    public questionnaireResult = ko.observable<ResultModel>();
+    public IsSidebarVisible: KnockoutObservable<boolean>;
+
+    // Observable lists for ad hoc rendering
+    public sidebarItems = ko.observableArray<SidebarItem>([]);
+
+    /**
+     * Busy indicator
+     */
+    public IsBusy = ko.observable<boolean>(false);
+
+    public get hasItems() {
+        return !!this.questionnaireResult();
+    }
 
     constructor() {
+        this.IsSidebarVisible = ko.observable<boolean>(true);
+    }
 
+    public loadAsync(parent: App) {
+        let questions = parent.questionList();
+        this.questionList(questions);
+
+        // Build up the answers object for passing to evaluation
+        // Map: [QUESTION_ID] -> ANSWER_ID[]
+        let answers: QuestionApi$evaluateQuestionnaire$answers = {};
+
+        // TODO: Rework without ANY cast
+        for (let question of questions) {
+            answers[question.id] = (<any>question).answers.map((a: any) => a.id);
+        }
+
+
+        this.IsBusy(true);
+        QuestionApi.evaluateQuestionnaire(answers).done((result: ResultModel) => {
+            this.questionnaireResult(result);
+
+            // TODO: Rework without ANY cast
+            result.foundAnimals.forEach((animal: any) => {
+                this.sidebarItems.push({
+                    Name: animal.name,
+                    Title: animal.race,
+                    Anker: "",
+                    IsSelected: ko.observable<boolean>(false)
+                });
+            });
+
+        }).always(() => this.IsBusy(false));
     }
 }

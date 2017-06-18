@@ -2,11 +2,13 @@
 
 div#fragebogen {
   .align-items(center);
+  .flex(0 0 88%);
 }
 
 div.auswertung {
   .flex-display();
-  .justify-content(center);
+  .flex-shrink(0);
+  .justify-content(space-between);
 }
 
 button.button-auswerten {
@@ -26,10 +28,39 @@ button.button-auswerten {
   }
 }
 
-button.button-weiter {
+div.answer {
+  .align-items(center);
 
+  > div.column > div.row > input {
+    .flex(0 0 auto);
+  }
 }
 
 div.question, div.answer {
   .flex-shrink(0);
+}
+
+div.haken-icon {
+  .flex-shrink(0);
+  width: 52px;
+  height: 40px;
+  background: url('/static/images/haken.png') no-repeat center center transparent;
+  background-size: 52px 40px;
+}
+
+div.question-container {
+  //background-color: hotpink;
+  background: url('/static/images/kartei.png') no-repeat center center transparent;
+  background-size: cover;
+  min-height: 90%;
+  min-width: 600px;
+  margin-bottom: 42px;
+
+  div.question, div.answer > div.column > div.row {
+    font-family: 'Lobster', cursive;
+    font-size: 1.3rem;
+    color: black;
+    margin-left: 50px;
+    margin-right: 50px;
+  }
 }

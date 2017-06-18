@@ -25,6 +25,7 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
@@ -137,17 +138,6 @@ public class QuestionService extends BaseService {
      * @return Evaluation result.
      */
     public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
-        List<AnswerEntity> answerList = new LinkedList<>();
-
-        //Get all answers
-        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
-            long questionId = entry.getKey();
-            List<Long> answerIds = entry.getValue();
-            for (Long answerId : answerIds) {
-                answerList.add(answerDAO.getAnswer(questionId, answerId));
-            }
-        }
-
         //Create and fill Result Lists
         List<AnimalType> animalType = new LinkedList<>();
         animalType.addAll(Arrays.asList(AnimalType.values()));
@@ -160,26 +150,64 @@ public class QuestionService extends BaseService {
         List<AnimalCareTyp> needSpecialCare = new LinkedList<>();
         needSpecialCare.addAll(Arrays.asList(AnimalCareTyp.values()));
 
-        //Remove results
-        for (AnswerEntity answer : answerList) {
-            if (answer.animalType != null) {
-                animalType.removeAll(answer.animalType);
-            }
+            //Get all answers
+        for (Entry<Long, List<Long>> entry : answers.entrySet()) {
 
-            if (answer.cost != null) {
-                cost.removeAll(answer.cost);
-            }
+            if(entry.getValue().size() == 1){
+                AnswerEntity answerEntry = answerDAO.findOne(entry.getValue().get(0));
+                    // Evaluate
+                if (answerEntry.animalType != null) { animalType.removeAll(answerEntry.animalType); }
+                if (answerEntry.cost       != null) { cost.removeAll(answerEntry.cost); }
+                if (answerEntry.animalSize != null) { size.removeAll(answerEntry.animalSize); }
+                if (answerEntry.garden     != null) { garden.removeAll(answerEntry.garden); }
+                if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
 
-            if (answer.animalSize != null) {
-                size.removeAll(answer.animalSize);
-            }
-
-            if (answer.garden != null) {
-                garden.removeAll(answer.garden);
-            }
-
-            if (answer.needCare != null) {
-                needSpecialCare.removeAll(answer.needCare);
+            }else if(entry.getValue().size() > 1){
+                Set<AnswerEntity> answerList = new HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
+                    // Evaluate
+                /*
+                // Example for better evaluate, maybe inside retainEvaluate (rename than)
+                switch(questionDAO.findOne(entry.getKey()).ENUM){
+                    case ENUM.retainAnswers:
+                    case ENUM.removeAllAnswers:
+                }*/
+                if (answerList.stream().allMatch(ele -> ele.animalType != null)){
+                    animalType.removeAll(
+                            retainEvaluate(
+                                    AnimalType.values(),
+                                    answerList.stream().map(ele -> ele.animalType).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.cost != null)){
+                    cost.removeAll(
+                            retainEvaluate(
+                                    AnimalCost.values(),
+                                    answerList.stream().map(ele -> ele.cost).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
+                    size.removeAll(
+                            retainEvaluate(
+                                    AnimalSize.values(),
+                                    answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.garden != null)){
+                    garden.removeAll(
+                            retainEvaluate(
+                                    AnimalGardenSpace.values(),
+                                    answerList.stream().map(ele -> ele.garden).collect(Collectors.toList()))
+                    );
+                }
+                if (answerList.stream().allMatch(ele -> ele.needCare != null)){
+                    needSpecialCare.removeAll(
+                            retainEvaluate(
+                                    AnimalCareTyp.values(),
+                                    answerList.stream().map(ele -> ele.needCare).collect(Collectors.toList()))
+                    );
+                }
+            }else{
+                logger.error("EvaluateQuestionnaire, Question without answers! " + questionDAO.findOne(entry.getKey()).toString());
             }
         }
 
@@ -187,5 +215,14 @@ public class QuestionService extends BaseService {
             return new ResultModel(new LinkedList<>());
         }
         return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+    }
+
+    //TODO: ADD DOC!! && with interface?
+    private <T> Set<T> retainEvaluate(T[] enumValues, List<Set<T>> attributeSets){
+        Set<T> result = new HashSet<>(Arrays.asList(enumValues));
+        for (Set<T> answer : attributeSets){
+            result.retainAll(answer);
+        }
+        return result;
     }
 }

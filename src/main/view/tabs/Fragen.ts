@@ -22,6 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 //import {TestApi} from "../clientApi/TestApi";
+import QuestionModel = Api.QuestionModel;
 /**
  *  Fragen component
  */
@@ -32,13 +33,6 @@ export class Fragen {
     constructor() {
         // No sidebar on component 'Start'
         this.IsSidebarVisible = ko.observable<boolean>(false);
-
-        // Initial load
-        this.loadAsync();
-    }
-
-    public loadAsync() {
-
     }
 
     public showQuestions(component: KnockoutObservable<string>) {

@@ -21,36 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *  Checkbox component
- */
-export interface ICheckBoxParams {
+package de.stuff42.se2tierheimprojekt.data;
 
-}
-
-export class Checkbox {
-
-    // fetch dom element here
-    //public checkbox = $('#checkbox');
-
-    private _isChecked = ko.observable<boolean>(true);
-    public isChecked = ko.pureComputed({
-        read: () => {
-            return this._isChecked();
-        },
-        write: c => {
-            this._isChecked(c);
-        }
-    }).extend({deffered: true, notify: 'always'});
-
-    constructor(params: ICheckBoxParams) {
-
-        this.isChecked.subscribe(c => {
-            // TODO
-        });
-
-        this._isChecked.subscribe(c => {
-            // TODO
-        });
-    }
+public enum AnswerType {
+	CHECKBOX, RADIOBUTTON, SLIDER
 }
