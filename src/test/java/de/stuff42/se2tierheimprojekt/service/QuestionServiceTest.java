@@ -168,6 +168,12 @@ public class QuestionServiceTest {
                         new HashSet<>(Arrays.asList(AnimalCost.values())),
                         new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
+                new AnswerContent("Dummy answer, return half.",
+                        new HashSet<>(Arrays.asList(AnimalType.CAT)),
+                        null,
+                        null,
+                        null,
+                        null),
                 new AnswerContent("Dummy answer, return all.",
                         null,
                         null,
@@ -187,10 +193,13 @@ public class QuestionServiceTest {
 
         logger.info("Get answers in dummy question");
         AnswerModel dummyAnswerNothing = dummyQuestion.answers.get(0);
-        AnswerModel dummyAnswerAll = dummyQuestion.answers.get(1);
+        AnswerModel dummyAnswerHalf = dummyQuestion.answers.get(1);
+        AnswerModel dummyAnswerAll = dummyQuestion.answers.get(2);
         assertNotNull(dummyAnswerNothing);
+        assertNotNull(dummyAnswerHalf);
         assertNotNull(dummyAnswerAll);
         logger.info(dummyAnswerNothing.text);
+        logger.info(dummyAnswerHalf.text);
         logger.info(dummyAnswerAll.text);
 
         logger.info("Create maps to evaluate from question and answers");
@@ -198,6 +207,12 @@ public class QuestionServiceTest {
         List<Long> listNothing = new ArrayList<>();
         listNothing.add(dummyAnswerNothing.id);
         mapNothing.put(dummyQuestion.id, listNothing);
+
+        Map<Long, List<Long>> mapHalf = new HashMap<>();
+        List<Long> listHalf = new ArrayList<>();
+        listHalf.add(dummyAnswerHalf.id);
+        listHalf.add(dummyAnswerNothing.id);
+        mapHalf.put(dummyQuestion.id, listHalf);
 
         Map<Long, List<Long>> mapAll = new HashMap<>();
         List<Long> listAll = new ArrayList<>();
@@ -211,11 +226,23 @@ public class QuestionServiceTest {
         assertNotNull(resultNothing.foundAnimals);
         assertTrue(resultNothing.foundAnimals.isEmpty());
 
+        logger.info("Result with half answers");
+        ResultModel resultHalf = questionService.evaluateQuestionnaire(mapHalf);
+        assertNotNull(resultHalf);
+        assertNotNull(resultHalf.foundAnimals);
+        assertEquals(1, resultHalf.foundAnimals.size());
+
+        logger.info("Print half Result");
+        for (AnimalModel entry : resultHalf.foundAnimals) {
+            assertNotNull(entry);
+            logger.info(entry.name);
+        }
+
         logger.info("Result with answers");
         ResultModel resultAll = questionService.evaluateQuestionnaire(mapAll);
         assertNotNull(resultAll);
         assertNotNull(resultAll.foundAnimals);
-        assertFalse(resultAll.foundAnimals.isEmpty());
+        assertEquals(2, resultAll.foundAnimals.size());
 
         logger.info("Print Result");
         for (AnimalModel entry : resultAll.foundAnimals) {
