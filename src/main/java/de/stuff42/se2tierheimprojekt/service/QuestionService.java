@@ -36,8 +36,6 @@ import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EnumType;
-
 @Service
 public class QuestionService extends BaseService {
 
@@ -165,43 +163,45 @@ public class QuestionService extends BaseService {
                 if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
 
             }else if(entry.getValue().size() > 1){
-                // TODO: Buttontype check if different possibil
                 Set<AnswerEntity> answerList = new HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
                     // Evaluate
-                // if (all AnswerEntities.EnumSet are not null)
-                //     remove allEnumTyp.values from
-                //         (get) all shared values from answers
+                /*
+                // Example for better evaluate, maybe inside retainEvaluate (rename than)
+                switch(questionDAO.findOne(entry.getKey()).ENUM){
+                    case ENUM.retainAnswers:
+                    case ENUM.removeAllAnswers:
+                }*/
                 if (answerList.stream().allMatch(ele -> ele.animalType != null)){
                     animalType.removeAll(
-                            evaluateHelper(
+                            retainEvaluate(
                                     AnimalType.values(),
                                     answerList.stream().map(ele -> ele.animalType).collect(Collectors.toList()))
                     );
                 }
                 if (answerList.stream().allMatch(ele -> ele.cost != null)){
                     cost.removeAll(
-                            evaluateHelper(
+                            retainEvaluate(
                                     AnimalCost.values(),
                                     answerList.stream().map(ele -> ele.cost).collect(Collectors.toList()))
                     );
                 }
                 if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
                     size.removeAll(
-                            evaluateHelper(
+                            retainEvaluate(
                                     AnimalSize.values(),
                                     answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toList()))
                     );
                 }
                 if (answerList.stream().allMatch(ele -> ele.garden != null)){
                     garden.removeAll(
-                            evaluateHelper(
+                            retainEvaluate(
                                     AnimalGardenSpace.values(),
                                     answerList.stream().map(ele -> ele.garden).collect(Collectors.toList()))
                     );
                 }
                 if (answerList.stream().allMatch(ele -> ele.needCare != null)){
                     needSpecialCare.removeAll(
-                            evaluateHelper(
+                            retainEvaluate(
                                     AnimalCareTyp.values(),
                                     answerList.stream().map(ele -> ele.needCare).collect(Collectors.toList()))
                     );
@@ -218,7 +218,7 @@ public class QuestionService extends BaseService {
     }
 
     //TODO: ADD DOC!! && with interface?
-    private <T> Set<T> evaluateHelper(T[] enumValues, List<Set<T>> attributeSets){
+    private <T> Set<T> retainEvaluate(T[] enumValues, List<Set<T>> attributeSets){
         Set<T> result = new HashSet<>(Arrays.asList(enumValues));
         for (Set<T> answer : attributeSets){
             result.retainAll(answer);
