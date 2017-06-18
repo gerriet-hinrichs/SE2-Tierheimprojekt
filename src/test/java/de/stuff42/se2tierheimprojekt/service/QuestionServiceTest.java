@@ -87,12 +87,12 @@ public class QuestionServiceTest {
 
         logger.info("Setup Database");
         databaseSetupService.clean();
-        databaseSetupService.addQuestionWithAnswers("Dummy question one",
+        databaseSetupService.addQuestionWithAnswers("Dummy question one", AnswerType.CHECKBOX,
                 new AnswerContent("Dummy answer one, from Question one.",
                         null, null, null, null, null),
                 new AnswerContent("Dummy answer two, from Question one.",
                         null, null, null, null, null));
-        databaseSetupService.addQuestionWithAnswers("Dummy question two",
+        databaseSetupService.addQuestionWithAnswers("Dummy question two", AnswerType.CHECKBOX,
                 new AnswerContent("Dummy answer one, from Question two.",
                         null, null, null, null, null),
                 new AnswerContent("Dummy answer two, from Question two.",
@@ -161,7 +161,7 @@ public class QuestionServiceTest {
 
         logger.info("Setup Database");
         databaseSetupService.clean();
-        databaseSetupService.addQuestionWithAnswers("Dummy question, all or nothing?",
+        databaseSetupService.addQuestionWithAnswers("Dummy question, all or nothing?", AnswerType.CHECKBOX,
                 new AnswerContent("Dummy answer, return nothing.",
                         new HashSet<>(Arrays.asList(AnimalType.values())),
                         new HashSet<>(Arrays.asList(AnimalSize.values())),
@@ -176,9 +176,9 @@ public class QuestionServiceTest {
                         null)
         );
         databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
         databaseSetupService.addAnimal("DummyCat", "DummyCat", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE);
+                AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
 
         logger.info("Get dummy question");
         QuestionModel dummyQuestion = questionService.getFirstWithAnswers();
