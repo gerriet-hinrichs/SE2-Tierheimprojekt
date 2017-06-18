@@ -158,7 +158,7 @@ public class QuestionServiceTest {
     @Test
     public void evaluateQuestionnaire(){
         logger.info("evaluateQuestionnaire");
-
+        // TODO: negativ checks, maybe split checks
         logger.info("Setup Database");
         databaseSetupService.clean();
         databaseSetupService.addQuestionWithAnswers("Dummy question, all or nothing?", AnswerType.CHECKBOX,
@@ -169,7 +169,7 @@ public class QuestionServiceTest {
                         new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
                 new AnswerContent("Dummy answer, return half.",
-                        new HashSet<>(Arrays.asList(AnimalType.CAT)),
+                        new HashSet<>(Collections.singletonList(AnimalType.CAT)),
                         null,
                         null,
                         null,
