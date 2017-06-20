@@ -28,6 +28,7 @@ import java.util.*;
 import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
 
+import org.apache.commons.math3.analysis.function.Add;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -244,16 +245,73 @@ public class DatabaseSetupService extends BaseService {
         		AnimalType.DOG, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "jimbo.jpg");
         addAnimal("Bowee", "Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.MEDIUM,
         		AnimalCost.EXPENSIVE, AnimalCareTyp.SOME, AnimalGardenSpace.MEDIUM, mainpath + "bowee.jpg");
+        addAnimal("Joschi", "Jagdterrier-Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.SMALL, AnimalType.DOG, AnimalSize.SMALL,
+        		AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "joschi.jpg");
+        addAnimal("Annelie", "Mischling", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.SMALL, AnimalType.DOG, AnimalSize.SMALL,
+        		AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "annelie.jpg");
+        addAnimal("Willie", "Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM, AnimalType.DOG, AnimalSize.MEDIUM,
+        		AnimalCost.MEDIUM, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "willie.jpg");
+        addAnimal("Ozzy", "Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalGardenSpace.NONE, AnimalType.DOG, AnimalSize.SMALL,
+        		AnimalCost.CHEAP, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE, mainpath + "ozzy.jpg");
+        addAnimal("Pia", "Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM, AnimalType.DOG, AnimalSize.MEDIUM,
+        		AnimalCost.MEDIUM, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "pia.jpg");
+        addAnimal("Belinda", "Mischling", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.MEDIUM, AnimalType.DOG, AnimalSize.MEDIUM,
+        		AnimalCost.MEDIUM, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "belinda.jpg");
+        addAnimal("Jazz", "Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.HUGE,
+        		AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.HUGE, mainpath + "jazz.jpg");
+        addAnimal("Gwenny", "Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.HUGE,
+        		AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "gwenny.jpg");
+        addAnimal("Sheila", "American-Staffordshire-Terrier-Mischling", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.HUGE,
+        		AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "sheila.jpg");
+        addAnimal("Pancho", "Schäferhund-Mischling", AnimalSex.MALE, AnimalAge.YOUNG, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.HUGE,
+        		AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "pancho.jpg");
+        addAnimal("Schnipsel", "Staffordshire-Bullterrier-Mischling", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.HUGE, AnimalType.DOG, AnimalSize.MEDIUM,
+        		AnimalCost.MEDIUM, AnimalCareTyp.MUCH, AnimalGardenSpace.MEDIUM, mainpath + "schnipsel.jpg");
+        
 
         // Cats
+        final String euroKurz = "Europ" +ae+ "isch Kurzhaar";
         addAnimal("Tobi", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "tobi.jpg");
         addAnimal("Mia", "Siam", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "mia.jpg");
-        addAnimal("Lisa", "Kartaeuser-Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.SMALL,
+        addAnimal("Lisa", "Karth" +ae+ "user-Mischling", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "lisa.jpg");
         addAnimal("Jerry", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.SMALL,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "jerry.jpg");
+        addAnimal("Paul", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.SMALL,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "paul.jpg");
+        addAnimal("Sir Simon", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.HUGE, mainpath + "sir_simon.jpg");
+        addAnimal("P" +ue+ "nktchen", "Europ" +ae+ "isch Kurzhaar", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.SOME, AnimalGardenSpace.MEDIUM, mainpath + "puenktchen.jpg");
+        addAnimal("Rocko", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.CHEAP, AnimalCareTyp.SOME, AnimalGardenSpace.SMALL, mainpath + "rocko.jpg");
+        addAnimal("Karlchen", "Europ" +ae+ "isch Kurzhaar", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath);
+        addAnimal("Foxi", euroKurz, AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE, mainpath + "foxi.jpg");
+        addAnimal("Casper", euroKurz, AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE, mainpath + "casper.jpg");
+        addAnimal("General", "Orientalisch Kurzhaar Mischling", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "general.jpg");
+        addAnimal("Mauli", euroKurz, AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.SMALL,
+        		AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.HUGE, mainpath + "mauli.jpg");
+        addAnimal("Wilma", euroKurz, AnimalSex.FEMALE, AnimalAge.OLD, AnimalGardenSpace.SMALL,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "wilma.jpg");
+        addAnimal("Katharina", euroKurz, AnimalSex.FEMALE, AnimalAge.OLD, AnimalGardenSpace.SMALL,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "katharina.jpg");
+        addAnimal("Ronja", euroKurz, AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "ronja.jpg");
+        addAnimal("Mary", euroKurz, AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.SOME, AnimalGardenSpace.MEDIUM, mainpath + "mary.jpg");
+        addAnimal("Mira", euroKurz, AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.SMALL,
+        		AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "mira.jpg");
+        addAnimal("Graf Zahl", euroKurz, AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.EXPENSIVE, AnimalCareTyp.SOME, AnimalGardenSpace.MEDIUM, mainpath + "graf_zahl.jpg");
+        addAnimal("Buddy", euroKurz, AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+        		AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.SMALL, mainpath + "buddy.jpg");
+        
 
         // Bunnies
         addAnimal("Peach", "Kaninchen", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.SMALL,
@@ -286,7 +344,11 @@ public class DatabaseSetupService extends BaseService {
                 AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "noah.jpg");
         addAnimal("Horst", "Bartagamme", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.SMALL,
                 AnimalType.REPTILE, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, mainpath + "horst.jpg");
-        addAnimal("Chinesische Dreikielschildkr" +oe+ "ten", "Mauremys reevesii", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM, AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.MEDIUM, mainpath + "chin-schildkroeten.jpg");
+        addAnimal("Chinesische Dreikielschildkr" +oe+ "ten", "Mauremys reevesii", AnimalSex.FEMALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+        		AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.CHEAP, AnimalCareTyp.NONE, AnimalGardenSpace.MEDIUM, mainpath + "chin-schildkroeten.jpg");
+        addAnimal("Yeti", "Menschenaffe", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.HUGE,
+        		AnimalType.REPTILE, AnimalSize.HUGE, AnimalCost.EXPENSIVE, AnimalCareTyp.MUCH, AnimalGardenSpace.HUGE, mainpath + "yeti.jpg");
+        
     }
 
     /**
