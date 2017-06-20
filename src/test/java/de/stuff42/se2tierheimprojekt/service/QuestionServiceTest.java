@@ -53,9 +53,12 @@ import static org.junit.Assert.*;
 @Transactional
 public class QuestionServiceTest {
 
+    @Autowired
+    private QuestionService questionService;
 
-    @Autowired private QuestionService questionService;
-    @Autowired private DatabaseSetupService databaseSetupService;
+    @Autowired
+    private DatabaseSetupService databaseSetupService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Before
@@ -156,7 +159,7 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void evaluateQuestionnaire(){
+    public void evaluateQuestionnaire() {
         logger.info("evaluateQuestionnaire");
 
         logger.info("Setup Database");
@@ -181,10 +184,10 @@ public class QuestionServiceTest {
                         null,
                         null)
         );
-        databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
-        databaseSetupService.addAnimal("DummyCat", "DummyCat", AnimalSex.MALE, AnimalAge.MATURE, AnimalSpace.MEDIUM,
-                AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM , AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
+        databaseSetupService.addAnimal("DummyBunny", "DummyRace", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+                AnimalType.BUNNY, AnimalSize.MEDIUM, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
+        databaseSetupService.addAnimal("DummyCat", "DummyCat", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
+                AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.MEDIUM, AnimalCareTyp.NONE, AnimalGardenSpace.NONE, "");
 
         logger.info("Get dummy question");
         QuestionModel dummyQuestion = questionService.getFirstWithAnswers();
