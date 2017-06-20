@@ -28,7 +28,6 @@ import {Sidebar, SidebarItem} from "../components/Sidebar";
 import {QuestionApi} from "../clientApi/QuestionApi";
 import QuestionModel = Api.QuestionModel;
 import AnswerModel = Api.AnswerModel;
-import QuestionAndAnswerIDModel = Api.QuestionAndAnswerIDModel;
 import {App} from "../App";
 
 export interface IFragebogenParams {
@@ -148,13 +147,10 @@ export class Fragebogen {
     }
 
     public continue(q: question) {
-        let params = {
-            questionID: q.id,
-            answerID: q.selectedAnswer()
-        } as QuestionAndAnswerIDModel;
-
         this.IsBusy(true);
-        QuestionApi.getNextForAnswer(params).done((r: QuestionModel) => {
+
+        // TODO send all known answers
+        QuestionApi.getNextForAnswer({}).done((r: QuestionModel) => {
 
             // Build up sidebar
             let sItem = {

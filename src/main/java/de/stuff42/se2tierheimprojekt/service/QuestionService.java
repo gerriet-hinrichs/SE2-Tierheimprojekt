@@ -25,16 +25,17 @@ package de.stuff42.se2tierheimprojekt.service;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
-import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
+import de.stuff42.se2tierheimprojekt.model.EvaluationResult;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class QuestionService extends BaseService {
@@ -65,6 +66,7 @@ public class QuestionService extends BaseService {
      * Returns the question with the ID and all of its answers.
      *
      * @param id the ID of the wanted question.
+     *
      * @return the question with the ID or null if there is no question with this ID.
      */
     public QuestionModel getByIDWithAnswers(long id) {
@@ -73,29 +75,6 @@ public class QuestionService extends BaseService {
             return null;
         }
         return new QuestionModel(questionEntity);
-    }
-
-    /**
-     * Returns the next question for the given answer in the questionnaire.
-     *
-     * @param questionId ID of the answered question.
-     * @param answerId   ID of the answer of the last question.
-     * @return Next question
-     */
-    public QuestionModel getNextForAnswer(long questionId, long answerId) {
-
-        // TODO: Load next question based on answer and not only on sort order.
-
-        QuestionEntity lastQuestionEntity = questionDAO.findOne(questionId);
-        if (lastQuestionEntity == null) {
-            return null;
-        }
-
-        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
-        if (nextQuestionEntity == null) {
-            return null;
-        }
-        return new QuestionModel(nextQuestionEntity);
     }
 
     /**
@@ -118,6 +97,7 @@ public class QuestionService extends BaseService {
      * Returns a List with all answers of the question with the specified ID
      *
      * @param questionId ID of the question
+     *
      * @return List with all answers of the question or null if the question doesn't exist
      */
     public List<AnswerModel> getAnswersForQuestion(long questionId) {
@@ -132,97 +112,144 @@ public class QuestionService extends BaseService {
     }
 
     /**
+     * Returns the next question for the given answers.
+     *
+     * @param answers All selected answers of the questionnaire.
+     *
+     * @return The next question.
+     */
+    public QuestionModel getNextForAnswers(Map<Long, List<Long>> answers) {
+
+        // special case: empty set: return first question
+        if (answers.isEmpty()) {
+            return getFirstWithAnswers();
+        }
+
+        // evaluate input
+        EvaluationResult evaluationResult = evaluate(answers);
+
+        // only query database if we can get a result
+        if (evaluationResult.isEmpty()) {
+            return null;
+        }
+
+        // load next question
+        QuestionEntity nextQuestion = questionDAO.getNextQuestion(answers.keySet(), evaluationResult);
+
+        // if there is no next question, return null
+        if (nextQuestion == null) {
+            return null;
+        }
+
+        return new QuestionModel(nextQuestion);
+    }
+
+    /**
      * Gets all answers of the Questionnaire and returns the Evaluation.
      *
      * @param answers All selected answers of the questionnaire
+     *
      * @return Evaluation result.
      */
     public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
-        //Create and fill Result Lists
-        List<AnimalType> animalType = new LinkedList<>();
-        animalType.addAll(Arrays.asList(AnimalType.values()));
-        List<AnimalCost> cost = new LinkedList<>();
-        cost.addAll(Arrays.asList(AnimalCost.values()));
-        List<AnimalSize> size = new LinkedList<>();
-        size.addAll(Arrays.asList(AnimalSize.values()));
-        List<AnimalGardenSpace> garden = new LinkedList<>();
-        garden.addAll(Arrays.asList(AnimalGardenSpace.values()));
-        List<AnimalCareTyp> needSpecialCare = new LinkedList<>();
-        needSpecialCare.addAll(Arrays.asList(AnimalCareTyp.values()));
 
-            //Get all answers
+        // evaluate input
+        EvaluationResult evaluationResult = evaluate(answers);
+
+        // only query database if it's required
+        if (evaluationResult.isEmpty()) {
+            return new ResultModel(new LinkedList<>());
+        }
+        return new ResultModel(animalDAO.getFittingAnimals(evaluationResult));
+    }
+
+    /**
+     * Performs evaluation on the given answers and returns the evaluation result.
+     *
+     * @param answers All selected answers of the questionnaire.
+     *
+     * @return Evaluation result.
+     */
+    private EvaluationResult evaluate(Map<Long, List<Long>> answers) {
+
+        // create result model with all properties
+        EvaluationResult evaluationResult = new EvaluationResult(true);
+
+        // handle all questions
         for (Entry<Long, List<Long>> entry : answers.entrySet()) {
 
-            if(entry.getValue().size() == 1){
-                AnswerEntity answerEntry = answerDAO.findOne(entry.getValue().get(0));
-                    // Evaluate
-                if (answerEntry.animalType != null) { animalType.removeAll(answerEntry.animalType); }
-                if (answerEntry.cost       != null) { cost.removeAll(answerEntry.cost); }
-                if (answerEntry.animalSize != null) { size.removeAll(answerEntry.animalSize); }
-                if (answerEntry.garden     != null) { garden.removeAll(answerEntry.garden); }
-                if (answerEntry.needCare   != null) { needSpecialCare.removeAll(answerEntry.needCare); }
+            // extract answer ids
+            List<Long> answerIds = entry.getValue();
 
-            }else if(entry.getValue().size() > 1){
-                Set<AnswerEntity> answerList = new HashSet<>((Collection<? extends AnswerEntity>) answerDAO.findAll(entry.getValue()));
-                    // Evaluate
-                /*
-                // Example for better evaluate, maybe inside retainEvaluate (rename than)
-                switch(questionDAO.findOne(entry.getKey()).ENUM){
-                    case ENUM.retainAnswers:
-                    case ENUM.removeAllAnswers:
-                }*/
-                if (answerList.stream().allMatch(ele -> ele.animalType != null)){
-                    animalType.removeAll(
-                            retainEvaluate(
-                                    AnimalType.values(),
-                                    answerList.stream().map(ele -> ele.animalType).collect(Collectors.toList()))
-                    );
-                }
-                if (answerList.stream().allMatch(ele -> ele.cost != null)){
-                    cost.removeAll(
-                            retainEvaluate(
-                                    AnimalCost.values(),
-                                    answerList.stream().map(ele -> ele.cost).collect(Collectors.toList()))
-                    );
-                }
-                if (answerList.stream().allMatch(ele -> ele.animalSize != null)){
-                    size.removeAll(
-                            retainEvaluate(
-                                    AnimalSize.values(),
-                                    answerList.stream().map(ele -> ele.animalSize).collect(Collectors.toList()))
-                    );
-                }
-                if (answerList.stream().allMatch(ele -> ele.garden != null)){
-                    garden.removeAll(
-                            retainEvaluate(
-                                    AnimalGardenSpace.values(),
-                                    answerList.stream().map(ele -> ele.garden).collect(Collectors.toList()))
-                    );
-                }
-                if (answerList.stream().allMatch(ele -> ele.needCare != null)){
-                    needSpecialCare.removeAll(
-                            retainEvaluate(
-                                    AnimalCareTyp.values(),
-                                    answerList.stream().map(ele -> ele.needCare).collect(Collectors.toList()))
-                    );
-                }
-            }else{
-                logger.error("EvaluateQuestionnaire, Question without answers! " + questionDAO.findOne(entry.getKey()).toString());
+            // check if we have at least one answer
+            if (answerIds.isEmpty()) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+            }
+
+            // load question (and ensure it's valid)
+            QuestionEntity questionEntity = questionDAO.findOne(entry.getKey());
+            if (questionEntity == null) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+            }
+
+            // check how answers should be handled
+            switch (questionEntity.answerType) {
+
+                // multi answer (remove only properties that are excluded by all given answers)
+                case CHECKBOX:
+
+                    // create partial result without data
+                    EvaluationResult partialEvaluationResult = new EvaluationResult(false);
+
+                    // iterate over all answers
+                    boolean first = true;
+                    for (Long answerId : entry.getValue()) {
+
+                        // load selected answer (and ensure it's valid)
+                        AnswerEntity answerEntry = answerDAO.findOne(answerId);
+                        if (answerEntry == null) {
+                            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                        }
+
+                        if (first) {
+
+                            // handle first given answer differently (add all stuff to model)
+                            partialEvaluationResult.add(answerEntry);
+                            first = false;
+                        } else {
+
+                            // we want to have the intersection of possible answers
+                            partialEvaluationResult.intersect(answerEntry);
+                        }
+                    }
+
+                    // evaluate partial result
+                    evaluationResult.remove(partialEvaluationResult);
+
+                    break;
+
+                // single answer
+                case RADIO_BUTTON:
+                case SLIDER:
+
+                    // ensure only one answer is given
+                    if (answerIds.size() != 1) {
+                        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                    }
+
+                    // load selected answer (and ensure it's valid)
+                    AnswerEntity answerEntry = answerDAO.findOne(answerIds.get(0));
+                    if (answerEntry == null) {
+                        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                    }
+
+                    // evaluate answer
+                    evaluationResult.remove(answerEntry);
+                    break;
             }
         }
 
-        if (animalType.isEmpty() || cost.isEmpty() || size.isEmpty() || garden.isEmpty() || needSpecialCare.isEmpty()) {
-            return new ResultModel(new LinkedList<>());
-        }
-        return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
-    }
-
-    //TODO: ADD DOC!! && with interface?
-    private <T> Set<T> retainEvaluate(T[] enumValues, List<Set<T>> attributeSets){
-        Set<T> result = new HashSet<>(Arrays.asList(enumValues));
-        for (Set<T> answer : attributeSets){
-            result.retainAll(answer);
-        }
-        return result;
+        // return the evaluation result
+        return evaluationResult;
     }
 }

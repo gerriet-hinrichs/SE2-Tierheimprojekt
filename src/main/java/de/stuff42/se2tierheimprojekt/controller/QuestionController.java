@@ -24,12 +24,11 @@
 
 package de.stuff42.se2tierheimprojekt.controller;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.stuff42.apigenerator.annotation.GenerateClientApi;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
-import de.stuff42.se2tierheimprojekt.model.rest.QuestionAndAnswerIDModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import de.stuff42.se2tierheimprojekt.service.QuestionService;
@@ -72,13 +71,13 @@ public class QuestionController extends BaseController<QuestionService> {
     /**
      * Returns the next question for the given answer in the questionnaire.
      *
-     * @param ids Question with selected answer.
+     * @param answers All selected answers of the questionnaire.
      *
      * @return Next question
      */
-    @RequestMapping(value = "/Question/answer", method = RequestMethod.POST)
-    public QuestionModel getNextForAnswer(@RequestBody QuestionAndAnswerIDModel ids) {
-        return service.getNextForAnswer(ids.questionID, ids.answerID);
+    @RequestMapping(value = "/Questions/answer", method = RequestMethod.POST)
+    public QuestionModel getNextForAnswer(@RequestBody HashMap<Long, List<Long>> answers) {
+        return service.getNextForAnswers(answers);
     }
 
     /**
@@ -111,7 +110,7 @@ public class QuestionController extends BaseController<QuestionService> {
      * @return Evaluation for given answers.
      */
     @RequestMapping(value = "/Questions/evaluate", method = RequestMethod.POST)
-    public ResultModel evaluateQuestionnaire(@RequestBody Map<Long, List<Long>> answers) {
+    public ResultModel evaluateQuestionnaire(@RequestBody HashMap<Long, List<Long>> answers) {
         return service.evaluateQuestionnaire(answers);
     }
 

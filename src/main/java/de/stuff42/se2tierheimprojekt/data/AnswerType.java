@@ -24,5 +24,5 @@
 package de.stuff42.se2tierheimprojekt.data;
 
 public enum AnswerType {
-	CHECKBOX, RADIOBUTTON, SLIDER
+	CHECKBOX, RADIO_BUTTON, SLIDER
 }
