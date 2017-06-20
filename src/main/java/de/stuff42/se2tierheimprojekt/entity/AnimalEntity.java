@@ -53,7 +53,7 @@ public class AnimalEntity {
     public AnimalAge age = AnimalAge.YOUNG;
 
     @NotNull
-    public AnimalSpace requiredSpace = AnimalSpace.HUGE;
+    public AnimalGardenSpace requiredSpace = AnimalGardenSpace.HUGE;
 
     // Search properties
     @NotNull
@@ -70,7 +70,7 @@ public class AnimalEntity {
 
     @NotNull
     public AnimalGardenSpace garden;
-    
+
     @NotNull
     public String picturePath = "";
 
@@ -79,7 +79,7 @@ public class AnimalEntity {
         // it shouldn't be used directly
     }
 
-    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
+    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalGardenSpace requiredSpace,
                         @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, @NotNull AnimalCareTyp needCare, @NotNull AnimalGardenSpace garden, @NotNull String picturePath) {
         this.name = name;
         this.race = race;
