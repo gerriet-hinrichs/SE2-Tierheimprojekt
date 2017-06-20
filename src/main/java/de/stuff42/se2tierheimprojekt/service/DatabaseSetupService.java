@@ -70,7 +70,7 @@ public class DatabaseSetupService extends BaseService {
     	final String AE = "\u00c4", ae = "\u00e4", OE = "\u00d6", oe = "\u00f6", UE = "\u00dc", ue = "\u00fc", ss = "\u00df";
     	
         // Questions & Answers
-        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungef" +ae+ "hr f" +ue+ "r die Tierhaltung zur Verf" +ue+ "gung?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Wieviele Quadratmeter stehen ungef" +ae+ "hr f" +ue+ "r die Tierhaltung zur Verf" +ue+ "gung?", AnswerType.RADIO_BUTTON,
                 new AnswerContent(" Weniger als 35",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -90,7 +90,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Kann das Tier auch im Garten gehalten werden?", AnswerType.RADIO_BUTTON,
                 new AnswerContent("Ja",
                         null,
                         null,
@@ -104,7 +104,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.SMALL, AnimalGardenSpace.MEDIUM, AnimalGardenSpace.HUGE)))
         );
-        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("In welcher Umgebung wird das Tier gehalten?", AnswerType.RADIO_BUTTON,
                 new AnswerContent("Land / Dorf",
                         null,
                         null,
@@ -124,7 +124,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich t" +ae+ "glich Zeit f" +ue+ "r das Tier?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Wieviele Stunden hast du durchschnittlich t" +ae+ "glich Zeit f" +ue+ "r das Tier?", AnswerType.RADIO_BUTTON,
                 new AnswerContent("Bis zu 1",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT, AnimalType.BIRD)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),
@@ -150,7 +150,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Soll das Tier auch von Kindern geplegt werden?", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Soll das Tier auch von Kindern geplegt werden?", AnswerType.RADIO_BUTTON,
                 new AnswerContent("Ja",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.BIRD, AnimalType.BUNNY)),
                         null,
@@ -164,7 +164,7 @@ public class DatabaseSetupService extends BaseService {
                         null,
                         null)
         );
-        addQuestionWithAnswers("Wie hoch sollten ungef" +ae+ "hr die monatlichen Kosten sein? (Ohne Grundausstattung)", AnswerType.RADIOBUTTON,
+        addQuestionWithAnswers("Wie hoch sollten ungef" +ae+ "hr die monatlichen Kosten sein? (Ohne Grundausstattung)", AnswerType.RADIO_BUTTON,
                 new AnswerContent("20-30",
                         new HashSet<>(Arrays.asList(AnimalType.DOG, AnimalType.CAT)),
                         new HashSet<>(Arrays.asList(AnimalSize.MEDIUM, AnimalSize.HUGE)),

@@ -24,6 +24,10 @@
 package de.stuff42.se2tierheimprojekt.entity;
 
 import java.util.List;
+import java.util.Set;
+
+import de.stuff42.se2tierheimprojekt.data.*;
+import de.stuff42.se2tierheimprojekt.model.EvaluationResult;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +38,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
 
-    @Query("select q from QuestionEntity q order by q.sortOrder")
+    @Query("SELECT q FROM QuestionEntity q ORDER BY q.sortOrder")
     Page<QuestionEntity> getFirstQuestions(Pageable pageable);
 
     default QuestionEntity getFirstQuestion() {
@@ -45,14 +49,36 @@ public interface QuestionDAO extends CrudRepository<QuestionEntity, Long> {
         return result.get(0);
     }
 
-    @Query("select q from QuestionEntity q order by q.sortOrder")
+    @Query("SELECT q FROM QuestionEntity q ORDER BY q.sortOrder")
     List<QuestionEntity> getSortedList();
 
-    @Query("select q from QuestionEntity q where q.sortOrder > :lastQuestionSortOrder order by q.sortOrder")
-    Page<QuestionEntity> getNextQuestions(@Param("lastQuestionSortOrder") int lastQuestionSortOrder, Pageable pageable);
+    @Query("SELECT DISTINCT question FROM QuestionEntity question" +
+            " JOIN question.answers answer" +
+            " WHERE question.id NOT IN :questionIds" +
+            " AND (EXISTS (SELECT 1 FROM answer.animalType animalType WHERE animalType IN :animalType)" +
+            " OR EXISTS (SELECT 1 FROM answer.animalSize animalSize WHERE animalSize IN :animalSize)" +
+            " OR EXISTS (SELECT 1 FROM answer.cost cost WHERE cost IN :cost)" +
+            " OR EXISTS (SELECT 1 FROM answer.needCare needCare WHERE needCare IN :needCare)" +
+            " OR EXISTS (SELECT 1 FROM answer.garden garden WHERE garden IN :garden))" +
+            " ORDER BY question.sortOrder")
+    Page<QuestionEntity> getNextQuestions(
+            @Param("questionIds") Set<Long> questionIds,
+            @Param("animalType") List<AnimalType> animalType,
+            @Param("animalSize") List<AnimalSize> animalSize,
+            @Param("cost") List<AnimalCost> cost,
+            @Param("needCare") List<AnimalCareTyp> needCare,
+            @Param("garden") List<AnimalGardenSpace> garden,
+            Pageable pageable);
 
-    default QuestionEntity getNextQuestion(int lastQuestionSortOrder) {
-        List<QuestionEntity> result = getNextQuestions(lastQuestionSortOrder, new PageRequest(0, 1)).getContent();
+    default QuestionEntity getNextQuestion(Set<Long> questionIds, EvaluationResult evaluationResult) {
+        List<QuestionEntity> result = getNextQuestions(
+                questionIds,
+                evaluationResult.animalTypes,
+                evaluationResult.animalSizes,
+                evaluationResult.animalCosts,
+                evaluationResult.animalCareTypes,
+                evaluationResult.animalGardenSpaces,
+                new PageRequest(0, 1)).getContent();
         if (result.isEmpty()) {
             return null;
         }
