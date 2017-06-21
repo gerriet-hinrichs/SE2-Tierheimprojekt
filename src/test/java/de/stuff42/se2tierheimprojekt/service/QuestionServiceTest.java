@@ -115,15 +115,6 @@ public class QuestionServiceTest {
         logger.info("Answer two: " + methodReturnValue.answers.get(1).text);
     }
 
-    //@Test
-    public void getByIDWithAnswers() {
-        //TODO: Missing
-        logger.info("getByIDWithAnswers");
-        QuestionModel methodReturnValue = questionService.getByIDWithAnswers(0L);
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
-        assertNotNull(methodReturnValue);
-    }
-
     @Test
     public void getList() {
         logger.info("getList");
@@ -156,47 +147,6 @@ public class QuestionServiceTest {
 
         logger.info("Check number of returned quests");
         assertEquals(3, returnList.size());
-    }
-
-    //@Test
-    public void getAnswersForQuestion() {
-        logger.info("getAnswersForQuestion");
-
-        logger.info("Setup Database");
-        databaseSetupService.clean();
-        databaseSetupService.addQuestionWithAnswers("Dummy question one", AnswerType.CHECKBOX,
-                new AnswerContent("Dummy answer one, from Question one.",
-                        null, null, null, null, null),
-                new AnswerContent("Dummy answer two, from Question one.",
-                        null, null, null, null, null));
-        databaseSetupService.addQuestionWithAnswers("Dummy question two", AnswerType.CHECKBOX,
-                new AnswerContent("Dummy answer one, from Question two.",
-                        null, null, null, null, null),
-                new AnswerContent("Dummy answer two, from Question two.",
-                        null, null, null, null, null));
-        databaseSetupService.addQuestionWithAnswers("Dummy question tree", AnswerType.CHECKBOX,
-                new AnswerContent("Dummy answer one, from Question tree.",
-                        null, null, null, null, null),
-                new AnswerContent("Dummy answer two, from Question tree.",
-                        null, null, null, null, null));
-
-        logger.info("Get all questions");
-        List<QuestionModel>  returnList = questionService.getList();
-        assertNotNull(returnList);
-        for(QuestionModel question : returnList){
-            assertNotNull(question);
-            logger.info("Question: " + question.text);
-        }
-
-        //TODO: Missing
-        /*
-        logger.info("Get dummy questions");
-        for(QuestionModel question : returnList){
-            logger.info(questionService.getAnswersForQuestion(question.id).toString());
-            logger.info(question.answers.toString());
-            assertEquals(questionService.getAnswersForQuestion(question.id), question.answers);
-        }
-        */
     }
 
     @Test
