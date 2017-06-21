@@ -123,14 +123,6 @@ public class QuestionServiceTest {
     }
 
     //@Test
-    public void getNextforAnswer() {
-        logger.info("getNextForAnswer");
-        QuestionModel methodReturnValue = questionService.getNextForAnswer(0L, 0L);
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
-        assertNotNull(methodReturnValue);
-    }
-
-    //@Test
     public void getList() {
         logger.info("getList");
         List<QuestionModel> methodReturnValue = questionService.getList();
