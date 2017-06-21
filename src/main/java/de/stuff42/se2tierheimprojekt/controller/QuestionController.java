@@ -33,6 +33,7 @@ import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 import de.stuff42.se2tierheimprojekt.service.QuestionService;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +77,7 @@ public class QuestionController extends BaseController<QuestionService> {
      * @return Next question
      */
     @RequestMapping(value = "/Questions/answer", method = RequestMethod.POST)
-    public QuestionModel getNextForAnswer(@RequestBody HashMap<Long, List<Long>> answers) {
+    public QuestionModel getNextForAnswers(@RequestBody @NotNull HashMap<Long, List<Long>> answers) {
         return service.getNextForAnswers(answers);
     }
 

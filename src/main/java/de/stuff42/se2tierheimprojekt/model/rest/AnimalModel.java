@@ -35,6 +35,9 @@ import org.jetbrains.annotations.NotNull;
 public class AnimalModel {
 
     @NotNull
+    public Long id;
+
+    @NotNull
     public String name;
 
     @NotNull
@@ -60,7 +63,8 @@ public class AnimalModel {
      * @param age           <code>""</code> or <code>attributeText</code>.
      * @param requiredSpace <code>""</code> or <code>attributeText</code>.
      */
-    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalGardenSpace requiredSpace, @NotNull String picturePath) {
+    public AnimalModel(@NotNull Long id, @NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalGardenSpace requiredSpace, @NotNull String picturePath) {
+        this.id = id;
         this.name = name;
         this.race = race;
         this.sex = sex;

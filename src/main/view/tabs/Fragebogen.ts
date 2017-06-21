@@ -29,6 +29,7 @@ import {QuestionApi} from "../clientApi/QuestionApi";
 import QuestionModel = Api.QuestionModel;
 import AnswerModel = Api.AnswerModel;
 import {App} from "../App";
+import QuestionApi$getNextForAnswer$answers = Alias.QuestionApi$getNextForAnswers$answers;
 
 export interface IFragebogenParams {
     questionList: KnockoutObservableArray<question>;
@@ -38,6 +39,7 @@ export type question = QuestionModel & {
     answerList: KnockoutObservableArray<AnswerModel>;
     isAnswered: KnockoutComputed<boolean>;
     selectedAnswer: KnockoutObservable<number>;
+    selectedAnswers: KnockoutObservableArray<number>;
 }
 
 export class Fragebogen {
@@ -130,28 +132,36 @@ export class Fragebogen {
                 answerList.push(aItem);
             });
 
-
             let selectedAnswerObservable = ko.observable<number>();
+            let selectedAnswersObservableArray = ko.observableArray<number>();
             let qItem = {
                 id: q.id,
                 text: q.text,
                 sortOrder: q.sortOrder,
                 answers: q.answers,
+                answerType: q.answerType,
                 answerList: answerList,
-                isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
-                selectedAnswer: selectedAnswerObservable
+                isAnswered: ko.pureComputed<boolean>(() => selectedAnswersObservableArray().length > 0 || !!selectedAnswerObservable()),
+                selectedAnswer: selectedAnswerObservable,
+                selectedAnswers: selectedAnswersObservableArray
             } as question;
             this.items.push(qItem);
 
         }).always(() => this.IsBusy(false));
     }
 
-    public continue(q: question) {
+    public continue() {
         this.IsBusy(true);
 
-        // TODO send all known answers
-        QuestionApi.getNextForAnswer({}).done((r: QuestionModel) => {
+        // Build up right parameters to pass to service for next question
+        let answers: QuestionApi$getNextForAnswer$answers = {};
 
+        let q = this.items();
+        for (let question of q) {
+            answers[question.id] =  question.answerType == "RADIO_BUTTON" ? [question.selectedAnswer()] : question.selectedAnswers();
+        }
+
+        QuestionApi.getNextForAnswers(answers).done((r: QuestionModel) => {
             // Build up sidebar
             let sItem = {
                 Name: "Frage #" + r.sortOrder,
@@ -163,14 +173,17 @@ export class Fragebogen {
             let answerList = ko.observableArray<AnswerModel | null>(r.answers);
 
             let selectedAnswerObservable = ko.observable<number>();
+            let selectedAnswersObservableArray = ko.observableArray<number>();
             let qItem = {
                 id: r.id,
                 text: r.text,
                 sortOrder: r.sortOrder,
                 answers: r.answers,
+                answerType: r.answerType,
                 answerList: answerList,
-                isAnswered: ko.pureComputed<boolean>(() => selectedAnswerObservable() != null),
-                selectedAnswer: selectedAnswerObservable
+                isAnswered: ko.pureComputed<boolean>(() => selectedAnswersObservableArray().length > 0 || !!selectedAnswerObservable()),
+                selectedAnswer: selectedAnswerObservable,
+                selectedAnswers: selectedAnswersObservableArray
             } as question;
             this.items.push(qItem);
 
@@ -185,11 +198,8 @@ export class Fragebogen {
     }
 
     public next(parent: App) {
-        let q = this.lastQuestion();
-        if(q != null) {
-            parent.questionList = this.items;
-            this.continue(q);
-        }
+        parent.questionList = this.items;
+        this.continue();
     }
 
     public scrollTo(anker: string) {

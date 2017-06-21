@@ -9,7 +9,7 @@
 <div class="column grow">
     {{#with: questionnaireResult}}
     <div id="auswertung" class="content inner-content column" foreach="{{foundAnimals}}">
-        <div data-bind="name: $data"></div>
+        <div data-bind="text: name, attr: { 'id': 'a' + id }"></div>
     </div>
     {{/with}}
 </div>
