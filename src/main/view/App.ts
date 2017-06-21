@@ -65,6 +65,12 @@ export class App {
      */
     public index = 0;
 
+    /**
+     * Footer information
+     */
+    public copyrightYear = BuildTime.getFullYear();
+    public appVersion = BuildVersion;
+
     public constructor() {
         // Initializing
         this.currentComponent = ko.observable<string>("Start");
