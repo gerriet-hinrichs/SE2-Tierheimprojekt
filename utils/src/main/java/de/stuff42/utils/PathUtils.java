@@ -20,11 +20,16 @@
 package de.stuff42.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import de.stuff42.utils.data.Lazy;
+import org.slf4j.LoggerFactory;
 
 /**
  * Path related utility functions.
@@ -40,9 +45,20 @@ public final class PathUtils {
         Path path;
         try {
 
+            // special handling of nested jar files (as e.g. created by spring boot with embedded server)
+            URL jarUrl = PathUtils.class.getProtectionDomain().getCodeSource().getLocation();
+            while (jarUrl.getProtocol().equals("jar")) {
+                try {
+                    jarUrl = ((JarURLConnection) jarUrl.openConnection()).getJarFileURL();
+                } catch (IOException e) {
+
+                    // continue with the last valid path
+                    break;
+                }
+            }
+
             // try to get path from jar file
-            path = new File(PathUtils.class.getProtectionDomain().getCodeSource()
-                    .getLocation().toURI().getPath()).toPath().getParent().toAbsolutePath();
+            path = new File(jarUrl.toURI().getPath()).toPath().getParent().toAbsolutePath();
         } catch (URISyntaxException e) {
 
             // use the current directory otherwise
