@@ -115,46 +115,44 @@ public class QuestionServiceTest {
         logger.info("Answer two: " + methodReturnValue.answers.get(1).text);
     }
 
-    //@Test
-    public void getByIDWithAnswers() {
-        logger.info("getByIDWithAnswers");
-        QuestionModel methodReturnValue = questionService.getByIDWithAnswers(0L);
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
-        assertNotNull(methodReturnValue);
-    }
-
-    //@Test
+    @Test
     public void getList() {
         logger.info("getList");
-        List<QuestionModel> methodReturnValue = questionService.getList();
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
-        assertNotNull(methodReturnValue);
-        logger.info("ListContent: ");
-        assertFalse(methodReturnValue.isEmpty());
-        for (QuestionModel entry : methodReturnValue) {
-            logger.info("  EntryContent: " + entry.toString());
-            assertNotNull(entry);
-        }
-    }
 
-    //@Test
-    public void getAnswersForQuestion() {
-        logger.info("getAnswersForQuestion");
-        List<AnswerModel> methodReturnValue = questionService.getAnswersForQuestion(0);
-        logger.info("methodReturnValue: " + methodReturnValue.toString());
-        assertNotNull(methodReturnValue);
-        logger.info("ListContent: ");
-        assertFalse(methodReturnValue.isEmpty());
-        for (AnswerModel entry : methodReturnValue) {
-            logger.info("  EntryContent: " + entry.toString());
-            assertNotNull(entry);
+        logger.info("Setup Database");
+        databaseSetupService.clean();
+        databaseSetupService.addQuestionWithAnswers("Dummy question one", AnswerType.CHECKBOX,
+                new AnswerContent("Dummy answer one, from Question one.",
+                        null, null, null, null, null),
+                new AnswerContent("Dummy answer two, from Question one.",
+                        null, null, null, null, null));
+        databaseSetupService.addQuestionWithAnswers("Dummy question two", AnswerType.CHECKBOX,
+                new AnswerContent("Dummy answer one, from Question two.",
+                        null, null, null, null, null),
+                new AnswerContent("Dummy answer two, from Question two.",
+                        null, null, null, null, null));
+        databaseSetupService.addQuestionWithAnswers("Dummy question tree", AnswerType.CHECKBOX,
+                new AnswerContent("Dummy answer one, from Question tree.",
+                        null, null, null, null, null),
+                new AnswerContent("Dummy answer two, from Question tree.",
+                        null, null, null, null, null));
+
+        logger.info("Get all questions");
+        List<QuestionModel>  returnList = questionService.getList();
+        assertNotNull(returnList);
+        for(QuestionModel question : returnList){
+            assertNotNull(question);
+            logger.info("Question: " + question.text);
         }
+
+        logger.info("Check number of returned quests");
+        assertEquals(3, returnList.size());
     }
 
     @Test
     public void evaluateQuestionnaire() {
         logger.info("evaluateQuestionnaire");
-
+        // TODO: negativ checks, maybe split checks
         logger.info("Setup Database");
         databaseSetupService.clean();
         databaseSetupService.addQuestionWithAnswers("Dummy question, all or nothing?", AnswerType.CHECKBOX,
@@ -165,7 +163,7 @@ public class QuestionServiceTest {
                         new HashSet<>(Arrays.asList(AnimalCareTyp.values())),
                         new HashSet<>(Arrays.asList(AnimalGardenSpace.values()))),
                 new AnswerContent("Dummy answer, return half.",
-                        new HashSet<>(Arrays.asList(AnimalType.CAT)),
+                        new HashSet<>(Collections.singletonList(AnimalType.CAT)),
                         null,
                         null,
                         null,
