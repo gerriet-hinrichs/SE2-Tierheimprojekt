@@ -28,15 +28,17 @@ import * as ko from "knockout";
 import "knockout.punches";
 import "knockout-amd-helpers";
 import {NavigationItem} from "./components/Navigation";
-import {QuestionData} from "./components/Question";
+import ResultModel = Api.ResultModel;
+import AnswerModel = Api.AnswerModel;
+import QuestionModel = Api.QuestionModel;
+import {question} from "./tabs/Fragebogen";
 
 // app class
 export class App {
     /**
      * Items for navigation and sidebar
      */
-    public navigationItems = ko.observableArray<NavigationItem>();
-    public questionItems = ko.observableArray<QuestionData>();
+    public navigationItems = ko.observableArray<NavigationItem>([]);
 
     /**
      * Current component name for intern pseudo routing via module binding.
@@ -45,9 +47,10 @@ export class App {
     public currentComponent: KnockoutObservable<string>;
 
     /**
-     * Sidebar to display
+     * Global progress store to bypass parameter passing through components
      */
-    public IsSidebarVisible: KnockoutObservable<boolean>;
+    public questionList: KnockoutObservableArray<question>;
+    public questionnaireResult: KnockoutObservable<ResultModel>;
 
     /**
      * Margins for app-body to create moderate centered view
@@ -62,13 +65,20 @@ export class App {
      */
     public index = 0;
 
+    /**
+     * Footer information
+     */
+    public copyrightYear = BuildTime.getFullYear();
+    public appVersion = BuildVersion;
+
     public constructor() {
+        // Initializing
         this.currentComponent = ko.observable<string>("Start");
-        this.IsSidebarVisible = ko.observable<boolean>(false);
+        this.questionList = ko.observableArray<question>([]);
+        this.questionnaireResult = ko.observable<ResultModel>(null);
 
         this.setViewPort();
         this.prepareNavigationItems();
-        this.prepareQuestionItems();
 
         // Automatic slide show icon
         //this.slideShow();
@@ -105,49 +115,6 @@ export class App {
                 Title: "Über uns",
                 IsSelected: ko.observable<boolean>(false)
             });
-    }
-
-    public prepareQuestionItems() {
-        this.questionItems.push({
-            Name: "Question 1",
-            Description: "This is question #1"
-        }, {
-            Name: "Question 2",
-            Description: "This is question #2"
-        }, {
-            Name: "Question 3",
-            Description: "This is question #3"
-        }, {
-            Name: "Question 4",
-            Description: "This is question #4"
-        });
-    }
-
-    /**
-     * Automatic slide show for logo
-     */
-    public slideShow() {
-        let container = document.getElementById("logo-icon");
-
-        console.log("container", container);
-
-        if (!!container) {
-            if (this.index == 0) {
-                $("#logo-icon").fadeIn("slow");
-                container.style.backgroundImage = "url('/static/images/logo_1.png')";
-
-                this.index = 1;
-            } else {
-                container.style.backgroundImage = "url('/static/images/logo_2.png')";
-                this.index = 0;
-            }
-        }
-
-        $('#logo-icon').fadeIn("slow");
-
-        setTimeout(function () {
-            this.slideShow()
-        }.bind(this), 2000);
     }
 }
 

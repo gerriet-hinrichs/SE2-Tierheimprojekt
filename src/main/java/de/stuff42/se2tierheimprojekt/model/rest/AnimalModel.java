@@ -1,12 +1,12 @@
 /*
  * Application to help putting pets from animal shelter across.
  * Copyright (C) 2017
- *     Felix Koch <felix.koch@haw-hamburg.de>,
- *     Kristian Exss <Kristian.Exss@HAW-Hamburg.de>,
- *     Adrian Bostelmann <Adrian.Bostelmann@HAW-Hamburg.de>,
- *     Karsten Boehringer <Karsten.Boehringer@HAW-Hamburg.de>,
- *     Gehui Xu <Gehui.Xu@HAW-Hamburg.de>,
- *     Gerriet Hinrichs <gerriet.hinrichs@haw-hamburg.de>.
+ *     Felix Koch <code>felix.koch@haw-hamburg.de</code>,
+ *     Kristian Exss <code>Kristian.Exss@HAW-Hamburg.de</code>,
+ *     Adrian Bostelmann <code>Adrian.Bostelmann@HAW-Hamburg.de</code>,
+ *     Karsten Boehringer <code>Karsten.Boehringer@HAW-Hamburg.de</code>,
+ *     Gehui Xu <code>Gehui.Xu@HAW-Hamburg.de</code>,
+ *     Gerriet Hinrichs <code>gerriet.hinrichs@haw-hamburg.de</code>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 package de.stuff42.se2tierheimprojekt.model.rest;
 
 import de.stuff42.se2tierheimprojekt.data.AnimalAge;
+import de.stuff42.se2tierheimprojekt.data.AnimalGardenSpace;
 import de.stuff42.se2tierheimprojekt.data.AnimalSex;
-import de.stuff42.se2tierheimprojekt.data.AnimalSpace;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +33,9 @@ import org.jetbrains.annotations.NotNull;
  * An single Animal with his attributes.
  */
 public class AnimalModel {
+
+    @NotNull
+    public Long id;
 
     @NotNull
     public String name;
@@ -46,23 +49,33 @@ public class AnimalModel {
     public AnimalAge age;
 
     @NotNull
-    public AnimalSpace requiredSpace;
+    public AnimalGardenSpace requiredSpace;
+
+    public String picturePath = "";
 
     /**
      * An single Animal.
      * Empty String or Text.
      *
-     * @param name          <""> or <attributeText>.
-     * @param race          <""> or <attributeText>.
-     * @param sex           <""> or <attributeText>.
-     * @param age           <""> or <attributeText>.
-     * @param requiredSpace <""> or <attributeText>.
+     * @param name          <code>""</code> or <code>attributeText</code>.
+     * @param race          <code>""</code> or <code>attributeText</code>.
+     * @param sex           <code>""</code> or <code>attributeText</code>.
+     * @param age           <code>""</code> or <code>attributeText</code>.
+     * @param requiredSpace <code>""</code> or <code>attributeText</code>.
      */
-    public AnimalModel(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalSpace requiredSpace) {
+    public AnimalModel(@NotNull Long id, @NotNull String name, @NotNull String race, @NotNull AnimalSex sex, AnimalAge age, @NotNull AnimalGardenSpace requiredSpace, @NotNull String picturePath) {
+        this.id = id;
         this.name = name;
         this.race = race;
         this.sex = sex;
         this.age = age;
         this.requiredSpace = requiredSpace;
+        this.picturePath = picturePath;
+    }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public AnimalModel() {
     }
 }

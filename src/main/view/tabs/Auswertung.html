@@ -1,1 +1,43 @@
-<div>Auswertung</div>
+{{#if: !!IsSidebarVisible() && !!hasItems}}
+<div id="sidebar" class="column"
+     data-bind="module: { name: 'components/Sidebar', data: { items: sidebarItems } }"></div>
+{{/if}}
+
+<div data-bind="click: loadAsync($parent)"></div>
+
+{{#if: !!hasItems}}
+<div class="column grow">
+    <h3 style="padding-bottom: 8px;">Diese Tiere würden zu dir passen!</h3>
+    {{#with: questionnaireResult}}
+    <div id="auswertung" class="content inner-content column" foreach="{{foundAnimals}}">
+        <div class="animal-container">
+            <fieldset>
+                <legend>
+                    <span data-bind="text: race"></span>
+                </legend>
+                <div data-bind="text: 'Name: ' + name, attr: { 'id': 'a' + id }"></div>
+                <div data-bind="text: 'Alter: ' + $module.getDisplayAge(age)"></div>
+                <div data-bind="text: 'Geschlecht: ' + $module.getDisplaySex(sex)"></div>
+            </fieldset>
+            <div class="animal-picture" data-bind="style: { backgroundImage: 'url(\'' + picturePath + '\'), url(\'/static/images/shelter_animals/placeholder.jpg\')' }"></div>
+        </div>
+    </div>
+    {{/with}}
+</div>
+{{/if}}
+
+{{#if: !hasItems}}
+<div class="content centered">Deine Anfrage liefert leider kein Ergebnis. Versuche es gleich nochmal!</div>
+{{/if}}
+
+<!--
+{{#if: IsBusy()}}
+<div class="busy-indicator">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>
+{{/if}}
+-->

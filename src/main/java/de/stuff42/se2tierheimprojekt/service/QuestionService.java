@@ -26,16 +26,16 @@ package de.stuff42.se2tierheimprojekt.service;
 import java.util.*;
 import java.util.Map.Entry;
 
-import de.stuff42.se2tierheimprojekt.data.AnimalCost;
-import de.stuff42.se2tierheimprojekt.data.AnimalSize;
-import de.stuff42.se2tierheimprojekt.data.AnimalType;
 import de.stuff42.se2tierheimprojekt.entity.*;
+import de.stuff42.se2tierheimprojekt.model.EvaluationResult;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;
 import de.stuff42.se2tierheimprojekt.model.rest.ResultModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class QuestionService extends BaseService {
@@ -78,31 +78,6 @@ public class QuestionService extends BaseService {
     }
 
     /**
-     * Returns the next question for the given answer in the questionnaire.
-     *
-     * @param questionId ID of the answered question.
-     * @param answerId   ID of the answer of the last question.
-     *
-     * @return Next question
-     */
-    public QuestionModel getNextForAnswer(long questionId, long answerId) {
-
-        // TODO: Load next question based on answer and not only on sort order.
-
-        QuestionEntity lastQuestionEntity = questionDAO.findOne(questionId);
-        if (lastQuestionEntity == null) {
-            return null;
-        }
-
-        QuestionEntity nextQuestionEntity = questionDAO.getNextQuestion(lastQuestionEntity.sortOrder);
-        if (nextQuestionEntity == null) {
-            return null;
-        }
-
-        return new QuestionModel(nextQuestionEntity);
-    }
-
-    /**
      * Returns a list with all questions of the questionnaire.
      *
      * @return List with all questions.
@@ -137,6 +112,39 @@ public class QuestionService extends BaseService {
     }
 
     /**
+     * Returns the next question for the given answers.
+     *
+     * @param answers All selected answers of the questionnaire.
+     *
+     * @return The next question.
+     */
+    public QuestionModel getNextForAnswers(Map<Long, List<Long>> answers) {
+
+        // special case: empty set: return first question
+        if (answers.isEmpty()) {
+            return getFirstWithAnswers();
+        }
+
+        // evaluate input
+        EvaluationResult evaluationResult = evaluate(answers);
+
+        // only query database if we can get a result
+        if (evaluationResult.isEmpty()) {
+            return null;
+        }
+
+        // load next question
+        QuestionEntity nextQuestion = questionDAO.getNextQuestion(answers.keySet(), evaluationResult);
+
+        // if there is no next question, return null
+        if (nextQuestion == null) {
+            return null;
+        }
+
+        return new QuestionModel(nextQuestion);
+    }
+
+    /**
      * Gets all answers of the Questionnaire and returns the Evaluation.
      *
      * @param answers All selected answers of the questionnaire
@@ -144,50 +152,104 @@ public class QuestionService extends BaseService {
      * @return Evaluation result.
      */
     public ResultModel evaluateQuestionnaire(Map<Long, List<Long>> answers) {
-        List<AnswerEntity> answerList = new LinkedList<>();
 
-        //Get all answers
+        // evaluate input
+        EvaluationResult evaluationResult = evaluate(answers);
+
+        // only query database if it's required
+        if (evaluationResult.isEmpty()) {
+            return new ResultModel(new LinkedList<>());
+        }
+        return new ResultModel(animalDAO.getFittingAnimals(evaluationResult));
+    }
+
+    /**
+     * Performs evaluation on the given answers and returns the evaluation result.
+     *
+     * @param answers All selected answers of the questionnaire.
+     *
+     * @return Evaluation result.
+     */
+    private EvaluationResult evaluate(Map<Long, List<Long>> answers) {
+
+        // create result model with all properties
+        EvaluationResult evaluationResult = new EvaluationResult(true);
+
+        // handle all questions
         for (Entry<Long, List<Long>> entry : answers.entrySet()) {
-            long questionId = entry.getKey();
+
+            // extract answer ids
             List<Long> answerIds = entry.getValue();
-            for (Long answerId : answerIds) {
-                answerList.add(answerDAO.getAnswer(questionId, answerId));
+
+            // check if we have at least one answer
+            if (answerIds.isEmpty()) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+            }
+
+            // load question (and ensure it's valid)
+            QuestionEntity questionEntity = questionDAO.findOne(entry.getKey());
+            if (questionEntity == null) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+            }
+
+            // check how answers should be handled
+            switch (questionEntity.answerType) {
+
+                // multi answer (remove only properties that are excluded by all given answers)
+                case CHECKBOX:
+
+                    // create partial result without data
+                    EvaluationResult partialEvaluationResult = new EvaluationResult(false);
+
+                    // iterate over all answers
+                    boolean first = true;
+                    for (Long answerId : entry.getValue()) {
+
+                        // load selected answer (and ensure it's valid)
+                        AnswerEntity answerEntry = answerDAO.findOne(answerId);
+                        if (answerEntry == null) {
+                            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                        }
+
+                        if (first) {
+
+                            // handle first given answer differently (add all stuff to model)
+                            partialEvaluationResult.add(answerEntry);
+                            first = false;
+                        } else {
+
+                            // we want to have the intersection of possible answers
+                            partialEvaluationResult.intersect(answerEntry);
+                        }
+                    }
+
+                    // evaluate partial result
+                    evaluationResult.remove(partialEvaluationResult);
+
+                    break;
+
+                // single answer
+                case RADIO_BUTTON:
+                case SLIDER:
+
+                    // ensure only one answer is given
+                    if (answerIds.size() != 1) {
+                        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                    }
+
+                    // load selected answer (and ensure it's valid)
+                    AnswerEntity answerEntry = answerDAO.findOne(answerIds.get(0));
+                    if (answerEntry == null) {
+                        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+                    }
+
+                    // evaluate answer
+                    evaluationResult.remove(answerEntry);
+                    break;
             }
         }
 
-        //Create and fill Result Lists
-        List<AnimalType> animalType = new LinkedList<>();
-        animalType.addAll(Arrays.asList(AnimalType.values()));
-        List<AnimalCost> cost = new LinkedList<>();
-        cost.addAll(Arrays.asList(AnimalCost.values()));
-        List<AnimalSize> size = new LinkedList<>();
-        size.addAll(Arrays.asList(AnimalSize.values()));
-        boolean garden = true;
-        boolean needSpecialCare = true;
-
-        //Remove results
-        for (AnswerEntity answer : answerList) {
-            if (answer.animalType != null) {
-                animalType.removeAll(answer.animalType);
-            }
-
-            if (answer.cost != null) {
-                cost.removeAll(answer.cost);
-            }
-
-            if (answer.animalSize != null) {
-                size.removeAll(answer.animalSize);
-            }
-
-            if (answer.garden) {
-                garden = false;
-            }
-
-            if (answer.needCare) {
-                needSpecialCare = false;
-            }
-        }
-
-        return new ResultModel(animalDAO.getFittingAnimals(animalType, size, cost, needSpecialCare, garden));
+        // return the evaluation result
+        return evaluationResult;
     }
 }

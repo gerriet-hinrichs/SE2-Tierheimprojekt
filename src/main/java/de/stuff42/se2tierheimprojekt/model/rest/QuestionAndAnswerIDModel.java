@@ -41,4 +41,9 @@ public class QuestionAndAnswerIDModel {
         this.questionID = questionID;
     }
 
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public QuestionAndAnswerIDModel() {}
+
 }

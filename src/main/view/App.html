@@ -4,12 +4,15 @@
     {{#module: { name: 'components/Logo', data: { isAnimated: false, isVisible: true } } /}}
 </div>
 <div id="navigation" data-bind="module: { name: 'components/Navigation',
-    data: { items: navigationItems, currentComponent: currentComponent } }"></div>
+    data: { items: navigationItems, currentComponent: currentComponent,
+        questionList: questionList } }">
+</div>
 
 <!-- Pseudo routing via component bindings (modules) -->
-<div class="content" data-bind="module: './tabs/' + currentComponent()"></div>
+<div class="content" data-bind="module: { name: './tabs/' + currentComponent(),
+    data: { questionList: questionList } }"></div>
 <!-- /////////////////////////////////////////////// -->
 
 <div class="footer">
-    <span>Tierheimprojekt &copy;</span>
+    <span>Tierheimprojekt <small>v{{appVersion}}</small> &copy; {{copyrightYear}}</span>
 </div>

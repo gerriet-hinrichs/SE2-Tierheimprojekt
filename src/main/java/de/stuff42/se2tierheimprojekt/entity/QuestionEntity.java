@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import de.stuff42.se2tierheimprojekt.data.AnswerType;
+
 @Entity
 public class QuestionEntity {
 
@@ -37,6 +39,8 @@ public class QuestionEntity {
     public int sortOrder;
 
     public String text;
+    
+    public AnswerType answerType;
 
     @OneToMany(mappedBy = "question")
     public List<AnswerEntity> answers;
@@ -46,9 +50,10 @@ public class QuestionEntity {
         // this one is protected since it shouldn't be used directly
     }
 
-    public QuestionEntity(int sortOrder, String text) {
+    public QuestionEntity(int sortOrder, String text, AnswerType answerType) {
         this.sortOrder = sortOrder;
         this.text = text;
+        this.answerType = answerType;
         answers = new ArrayList<>();
     }
 }

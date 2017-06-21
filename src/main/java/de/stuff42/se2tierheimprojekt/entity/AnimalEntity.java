@@ -53,7 +53,7 @@ public class AnimalEntity {
     public AnimalAge age = AnimalAge.YOUNG;
 
     @NotNull
-    public AnimalSpace requiredSpace = AnimalSpace.HUGE;
+    public AnimalGardenSpace requiredSpace = AnimalGardenSpace.HUGE;
 
     // Search properties
     @NotNull
@@ -63,19 +63,24 @@ public class AnimalEntity {
     public AnimalSize animalSize = AnimalSize.HUGE;
 
     @NotNull
-    public AnimalCost cost = AnimalCost.CHEAP;
+    public AnimalCost animalCost;
 
-    public boolean needCare;
+    @NotNull
+    public AnimalCareTyp needCare;
 
-    public boolean garden;
+    @NotNull
+    public AnimalGardenSpace garden;
+
+    @NotNull
+    public String picturePath = "";
 
     public AnimalEntity() {
         // no-args constructor required by JPA spec
         // it shouldn't be used directly
     }
 
-    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalSpace requiredSpace,
-                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost cost, boolean needCare, boolean garden) {
+    public AnimalEntity(@NotNull String name, @NotNull String race, @NotNull AnimalSex sex, @NotNull AnimalAge age, @NotNull AnimalGardenSpace requiredSpace,
+                        @NotNull AnimalType animalType, @NotNull AnimalSize animalSize, @NotNull AnimalCost animalCost, @NotNull AnimalCareTyp needCare, @NotNull AnimalGardenSpace garden, @NotNull String picturePath) {
         this.name = name;
         this.race = race;
         this.sex = sex;
@@ -83,8 +88,9 @@ public class AnimalEntity {
         this.requiredSpace = requiredSpace;
         this.animalType = animalType;
         this.animalSize = animalSize;
-        this.cost = cost;
+        this.animalCost = animalCost;
         this.needCare = needCare;
         this.garden = garden;
+        this.picturePath = picturePath;
     }
 }

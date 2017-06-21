@@ -393,3 +393,80 @@ assemble.dependsOn buildTypescriptTests
 check.dependsOn assemble
 check.dependsOn test
 check.dependsOn testClient
+
+/*
+ * Task to create zip file with all required data for an online deploy.
+ */
+
+// copy build output jar to deploy directory
+task loadBuildJar(type: Copy) {
+    from "${project.buildDir}/libs"
+    include "*.jar"
+    into "${project.buildDir}/deploy"
+}
+loadBuildJar.dependsOn build
+
+// create startup script that calls the proper jar file
+task createStartupScript() {
+    doLast {
+        def builder = new StringBuilder()
+
+        // load jar file name
+        def springBootJar = fileTree(dir: "${project.buildDir}/deploy", include: "*.jar").getSingleFile()
+
+        // generate stuff
+        builder.append("#!/bin/sh\n")
+        builder.append("java -jar ./${springBootJar.getName()}\n")
+
+        // write stuff to file
+        def file = new File("${project.buildDir}/deploy/startup")
+        file.write(builder.toString())
+
+        // mark file as executable
+        file.setExecutable(true, false)
+    }
+}
+createStartupScript.dependsOn loadBuildJar
+
+// copy database ini to deploy directory
+task loadDatabaseConfig(type: Copy) {
+    from "${project.projectDir}/database/"
+    include "travis.ini"
+    include "database.ini"
+    into "${project.buildDir}/deploy/database"
+}
+loadDatabaseConfig.dependsOn createDatabaseIniForTravis
+
+// copy system ini to deploy directory
+task loadSystemIni(type: Copy) {
+    from project.projectDir
+    include "system.ini"
+    into "${project.buildDir}/deploy"
+}
+loadSystemIni.dependsOn generateSystemIni
+
+// copy static files to deploy directory
+task loadClientFiles(type: Copy) {
+    from "${project.projectDir}/static-files"
+    include "*"
+    include "**/*"
+    exclude "*.map"
+    exclude "**/*.map"
+    into "${project.buildDir}/deploy/static-files"
+    includeEmptyDirs = false
+}
+loadClientFiles.dependsOn client
+
+// create zip file from deploy directory
+task createDeployZip(type: Zip) {
+    from "${project.buildDir}/deploy"
+    include "*"
+    include "**/*"
+    archiveName "deploy.zip"
+    destinationDir project.buildDir
+}
+createDeployZip.dependsOn loadBuildJar
+createDeployZip.dependsOn createStartupScript
+createDeployZip.dependsOn loadDatabaseConfig
+createDeployZip.dependsOn loadSystemIni
+createDeployZip.dependsOn loadClientFiles

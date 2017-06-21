@@ -24,6 +24,7 @@
 /**
  *  Navigation component
  */
+import QuestionModel = Api.QuestionModel;
 export type NavigationItem = {
     Name: string;
     Title: string;
@@ -33,23 +34,33 @@ export type NavigationItem = {
 export interface INavigationParams {
     items: KnockoutObservableArray<NavigationItem>;
     currentComponent: KnockoutObservable<string>;
+    questionList: KnockoutObservableArray<QuestionModel>;
 }
 
 export class Navigation {
     public itemList: KnockoutObservableArray<NavigationItem>;
     public currentComponent: KnockoutObservable<string>;
+    public questionList: KnockoutObservableArray<QuestionModel>;
 
     constructor(params: INavigationParams) {
         this.currentComponent = params.currentComponent;
         this.itemList = params.items;
+        this.questionList = params.questionList;
     }
 
     public navigate(item: NavigationItem) {
         for (let item of this.itemList()) {
-            item.IsSelected(false);// = ko.observable<boolean>(false);
+            item.IsSelected(false);
         }
 
         item.IsSelected(true);
-        this.currentComponent(item.Name);
+
+        // Fallback if questionnaire just started and wanna continue
+        // In this case, go to questionnaire instead of 'Fragen' component
+        if (item.Name == "Fragen" && this.questionList().length > 0) {
+            this.currentComponent("Fragebogen");
+        } else {
+            this.currentComponent(item.Name);
+        }
     }
 }

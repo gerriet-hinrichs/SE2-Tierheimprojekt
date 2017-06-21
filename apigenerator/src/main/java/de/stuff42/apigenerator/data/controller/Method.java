@@ -95,8 +95,9 @@ public class Method extends DataElement<ExecutableElement> {
     public void generateTypescript(StringBuilder sb, int level, String indentation) {
 
         // inner indentation info
-        String indentationSingle = Utilities.getIndentationString(level + 1);
-        String indentationDouble = Utilities.getIndentationString(level + 2);
+        String indentation1 = Utilities.getIndentationString(level + 1);
+        String indentation2 = Utilities.getIndentationString(level + 2);
+        String indentation3 = Utilities.getIndentationString(level + 3);
 
         // method header
         sb.append(indentation).append("public static ").append(element.getSimpleName()).append("(");
@@ -114,24 +115,30 @@ public class Method extends DataElement<ExecutableElement> {
         ).append("> {\n");
 
         // method body
-        sb.append(indentationSingle).append("return <any>jQuery.ajax({\n");
+        sb.append(indentation1).append("return <any>jQuery.ajax({\n");
 
         // method & route
-        sb.append(indentationDouble).append("method: \"").append(route.value().getMethod()).append("\",\n");
-        sb.append(indentationDouble).append("url: ");
+        sb.append(indentation2).append("method: \"").append(route.value().getMethod()).append("\",\n");
+        sb.append(indentation2).append("url: ");
         route.value().generateTypescript(sb, 0, "");
         sb.append(",\n");
 
         // optional body
         if (bodyVariableName != null) {
-            sb.append(indentationDouble).append("data: JSON.stringify(").append(bodyVariableName).append("),\n");
+            sb.append(indentation2).append("data: JSON.stringify(").append(bodyVariableName).append("),\n");
         }
 
         // configuration
-        sb.append(indentationDouble).append("dataType: \"json\",\n");
-        sb.append(indentationDouble).append("mimeType: \"application/json\",\n");
+        sb.append(indentation2).append("processData: false,\n");
+        sb.append(indentation2).append("dataType: \"json\",\n");
+        sb.append(indentation2).append("mimeType: \"application/json\",\n");
+        sb.append(indentation2).append("headers: {\n");
 
-        sb.append(indentationSingle).append("});\n");
+        sb.append(indentation3).append("\"Content-Type\": \"application/json\",\n");
+        sb.append(indentation3).append("\"X-Requested-With\": \"SE2-Tierheimprojekt Generated API\",\n");
+
+        sb.append(indentation2).append("},\n");
+        sb.append(indentation1).append("});\n");
 
         // method end
         sb.append(indentation).append("}\n");

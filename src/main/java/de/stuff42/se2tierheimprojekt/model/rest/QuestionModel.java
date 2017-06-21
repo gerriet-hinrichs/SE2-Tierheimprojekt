@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import de.stuff42.se2tierheimprojekt.data.AnswerType;
 import de.stuff42.se2tierheimprojekt.entity.AnswerEntity;
 import de.stuff42.se2tierheimprojekt.entity.QuestionEntity;
 
@@ -49,6 +50,11 @@ public class QuestionModel {
      * Sorting order.
      */
     public int sortOrder;
+    
+    /**
+     * Type of Answers.
+     */
+    public AnswerType answerType;
 
     /**
      * Matching answers.
@@ -74,6 +80,7 @@ public class QuestionModel {
         this.id = entity.id;
         this.text = entity.text;
         this.sortOrder = entity.sortOrder;
+        this.answerType = entity.answerType;
 
         if (includeAnswers) {
             // load answer model list
@@ -86,4 +93,9 @@ public class QuestionModel {
             answers.sort(Comparator.comparingInt(a -> a.sortOrder));
         }
     }
+
+    /**
+     * Default constructor needed due to JSON de-serializing
+     */
+    public QuestionModel() {}
 }

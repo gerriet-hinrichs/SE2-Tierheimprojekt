@@ -5,29 +5,74 @@
 
 {{#if: !!hasItems}}
 <div class="column grow">
-    <div id="fragebogen" class="content inner-content column" foreach="{{questionList}}">
+    <div id="fragebogen" class="content inner-content column">
         <!-- Question -->
-        <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + sortOrder }"></div>
-        <div class="column answer">
-            <!-- Answers -->
-            {{#foreach: answerList}}
-            <div class="row">
-                <input class="clickable" type="radio" name="sortOrder" data-bind="checked: isChecked"/>
-                <span data-bind="text: text"></span>
+        {{#foreach: items}}
+        <div class="question-container">
+            <div class="question" data-bind="text: sortOrder + '. ' + text, attr: { 'id': 'f' + id }"></div>
+            <div class="row answer">
+                <div class="column">
+                    <!-- Answers -->
+                    {{#foreach: answerList}}
+                    <div class="row">
+                        {{#if: $parent.answerType == "RADIO_BUTTON"}}
+                        <input class="clickable"
+                               type="radio"
+                               name="{{'frage#' + $parent.id}}"
+                               value="{{id}}"
+                               disabled="{{$parent.id != $parents[1].lastQuestion().id}}"
+                               checked="{{$parent.selectedAnswer}}"/>
+                        <span data-bind="text: text"></span>
+                        {{/if}}
+                        {{#if: $parent.answerType == "CHECKBOX"}}
+                        <input class="clickable"
+                               type="checkbox"
+                               name="{{'frage#' + $parent.id}}"
+                               value="{{id}}"
+                               disabled="{{$parent.id != $parents[1].lastQuestion().id}}"
+                               checked="{{$parent.selectedAnswers}}"/>
+                        <span data-bind="text: text"></span>
+                        {{/if}}
+                    </div>
+                    {{/foreach}}
+                </div>
             </div>
-            {{/foreach}}
         </div>
+        {{/foreach}}
     </div>
     <div class="auswertung">
         <button class="button-auswerten"
-                click="{{function() { evaluate($parent.currentComponent) } }}"
+                click="{{function() { evaluate($parent) } }}"
                 title="Click mich und ich werte deine Antworten aus!">
             Auswerten!
         </button>
+        {{#if: showNextButton()}}
+        <button class="button-auswerten"
+                click="{{function() { next($parent) } }}"
+                title="Nächste Frage, bitte!">
+            Nächste Frage
+        </button>
+        {{/if}}
+        {{#if: !showNextButton() && isLastQuestion()}}
+        <span>Du hast alle Fragen beantwortet!</span>
+        {{/if}}
     </div>
+</div>
 </div>
 {{/if}}
 
 {{#if: !hasItems}}
 <div class="content centered">No questions available</div>
 {{/if}}
+
+<!--
+{{#if: IsBusy()}}
+<div class="busy-indicator">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>
+{{/if}}
+-->
