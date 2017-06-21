@@ -27,6 +27,7 @@
 <html>
 <head>
     <title>SE 2 Tierheimprojekt</title>
+    <link rel="shortcut icon" type="image/x-icon" href="static/images/favicon.png" />
     <link rel="stylesheet" type="text/css" href="static/app.css">
     <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 </head>
