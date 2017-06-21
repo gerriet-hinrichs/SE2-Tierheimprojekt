@@ -53,7 +53,7 @@ export class Auswertung {
     public IsBusy = ko.observable<boolean>(false);
 
     public get hasItems() {
-        return !!this.questionnaireResult();
+        return !!this.questionnaireResult() && this.questionnaireResult().foundAnimals.length > 0;
     }
 
     constructor(params: IAuswertungParams) {
@@ -75,6 +75,8 @@ export class Auswertung {
 
         this.IsBusy(true);
         QuestionApi.evaluateQuestionnaire(answers).done((result: ResultModel) => {
+
+
             this.questionnaireResult(result);
 
             result.foundAnimals.forEach((animal: any) => {
