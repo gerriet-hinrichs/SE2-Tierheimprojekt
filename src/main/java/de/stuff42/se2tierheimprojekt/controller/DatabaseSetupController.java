@@ -25,6 +25,7 @@ package de.stuff42.se2tierheimprojekt.controller;
 
 import de.stuff42.se2tierheimprojekt.service.DatabaseSetupService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,6 +42,7 @@ public class DatabaseSetupController extends BaseController<DatabaseSetupService
      *
      * @param serviceInstance Service instance.
      */
+    @Autowired
     public DatabaseSetupController(DatabaseSetupService serviceInstance) {
         super(serviceInstance);
     }
