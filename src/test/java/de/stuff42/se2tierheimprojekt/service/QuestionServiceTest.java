@@ -28,6 +28,7 @@ import java.util.*;
 import de.stuff42.se2tierheimprojekt.Application;
 import de.stuff42.se2tierheimprojekt.configuration.TestApplicationInitializer;
 import de.stuff42.se2tierheimprojekt.data.*;
+import de.stuff42.se2tierheimprojekt.model.AnswerContent;
 import de.stuff42.se2tierheimprojekt.model.rest.AnimalModel;
 import de.stuff42.se2tierheimprojekt.model.rest.AnswerModel;
 import de.stuff42.se2tierheimprojekt.model.rest.QuestionModel;

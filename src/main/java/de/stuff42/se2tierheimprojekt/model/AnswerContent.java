@@ -21,35 +21,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.stuff42.se2tierheimprojekt.entity;
+package de.stuff42.se2tierheimprojekt.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import de.stuff42.se2tierheimprojekt.data.*;
 
-@Entity
-public class OtherFakeEntity {
+import java.util.Set;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+/**
+ * Answer content helper class.
+ */
+public class AnswerContent {
 
-    public String name;
+    public String text;
 
-    protected OtherFakeEntity() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
+    public Set<AnimalType> animalType;
 
-    public OtherFakeEntity(String name) {
-        this.name = name;
-    }
+    public Set<AnimalSize> animalSize;
 
-    @Override
-    public String toString() {
-        return String.format(
-                "<%s>[id=%d, Name=%s]",
-                this.getClass().getSimpleName(), id, name);
+    public Set<AnimalCost> cost;
+
+    public Set<AnimalCareTyp> needCare;
+
+    public Set<AnimalGardenSpace> garden;
+
+    public AnswerContent(String answerText, Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, Set<AnimalCareTyp> needCare, Set<AnimalGardenSpace> garden) {
+        this.text = answerText;
+        this.animalType = animalType;
+        this.animalSize = animalSize;
+        this.cost = cost;
+        this.needCare = needCare;
+        this.garden = garden;
     }
 }
