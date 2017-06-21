@@ -43,7 +43,7 @@
     window["BuildTime"] = ${model.buildTimeJS};
 </script>
 <script type="application/javascript"
-        src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"
+        src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"
         data-main="static/view/config"></script>
 </body>
 </html>
