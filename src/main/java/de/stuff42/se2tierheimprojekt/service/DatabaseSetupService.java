@@ -28,7 +28,7 @@ import java.util.*;
 import de.stuff42.se2tierheimprojekt.data.*;
 import de.stuff42.se2tierheimprojekt.entity.*;
 
-import org.apache.commons.math3.analysis.function.Add;
+import de.stuff42.se2tierheimprojekt.model.AnswerContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -376,26 +376,3 @@ public class DatabaseSetupService extends BaseService {
     }
 }
 
-class AnswerContent {
-
-    String text;
-
-    Set<AnimalType> animalType;
-
-    Set<AnimalSize> animalSize;
-
-    Set<AnimalCost> cost;
-
-    Set<AnimalCareTyp> needCare;
-
-    Set<AnimalGardenSpace> garden;
-
-    AnswerContent(String answerText, Set<AnimalType> animalType, Set<AnimalSize> animalSize, Set<AnimalCost> cost, Set<AnimalCareTyp> needCare, Set<AnimalGardenSpace> garden) {
-        this.text = answerText;
-        this.animalType = animalType;
-        this.animalSize = animalSize;
-        this.cost = cost;
-        this.needCare = needCare;
-        this.garden = garden;
-    }
-}
