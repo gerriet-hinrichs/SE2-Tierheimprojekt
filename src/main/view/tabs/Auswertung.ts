@@ -75,11 +75,9 @@ export class Auswertung {
 
         this.IsBusy(true);
         QuestionApi.evaluateQuestionnaire(answers).done((result: ResultModel) => {
-
-
             this.questionnaireResult(result);
 
-            result.foundAnimals.forEach((animal: any) => {
+            result.foundAnimals.forEach((animal: Api.AnimalModel) => {
                 this.sidebarItems.push({
                     Name: animal.name,
                     Title: animal.race,
@@ -90,5 +88,31 @@ export class Auswertung {
 
             parent.questionnaireResult = this.questionnaireResult;
         }).always(() => this.IsBusy(false));
+    }
+
+    // used within view template
+    public getDisplaySex(sex: Api.AnimalSex) {
+        switch (sex) {
+            case "MALE":
+                return "Männlich";
+            case "FEMALE":
+                return "Weiblich";
+            default:
+                return "n/a";
+        }
+    }
+
+    // used within view template
+    public getDisplayAge(age: Api.AnimalAge) {
+        switch (age) {
+            case "YOUNG":
+                return "Jungtier";
+            case "MATURE":
+                return "Ausgewachsen";
+            case "OLD":
+                return "Alt";
+            default:
+                return "n/a";
+        }
     }
 }

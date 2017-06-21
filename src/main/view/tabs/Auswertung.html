@@ -16,8 +16,8 @@
                     <span data-bind="text: race"></span>
                 </legend>
                 <div data-bind="text: 'Name: ' + name, attr: { 'id': 'a' + id }"></div>
-                <div data-bind="text: 'Alter: ' + age"></div>
-                <div data-bind="text: 'Geschlecht: ' + sex"></div>
+                <div data-bind="text: 'Alter: ' + $module.getDisplayAge(age)"></div>
+                <div data-bind="text: 'Geschlecht: ' + $module.getDisplaySex(sex)"></div>
             </fieldset>
             <div class="animal-picture" data-bind="style: { backgroundImage: 'url(\'' + picturePath + '\'), url(\'/static/images/shelter_animals/placeholder.jpg\')' }"></div>
         </div>
