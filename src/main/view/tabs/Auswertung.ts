@@ -61,7 +61,7 @@ export class Auswertung {
         this.IsSidebarVisible = ko.observable<boolean>(true);
     }
 
-    public loadAsync() {
+    public loadAsync(parent: App) {
         // Build up the answers object for passing to evaluation
         // Map: [QUESTION_ID] -> ANSWER_ID[]
         let answers: QuestionApi$evaluateQuestionnaire$answers = {};
@@ -85,6 +85,8 @@ export class Auswertung {
                     IsSelected: ko.observable<boolean>(false)
                 });
             });
+
+            parent.questionnaireResult = this.questionnaireResult;
         }).always(() => this.IsBusy(false));
     }
 }

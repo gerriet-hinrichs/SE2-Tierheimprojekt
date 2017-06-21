@@ -2,13 +2,13 @@
     <div class="inner-content banner"></div>
     <h2>Finde heraus welches Tier zu dir passt!</h2>
 
-    {{#if: $parent.questionList().length > 0 && $parent.questionnaireResult() == null}}
+    {{#if: $parent.questionList().length > 0 && !$parent.questionnaireResult()}}
     <span class="questionnaire-in-progress">
             Du hast deinen Fragebogen bereits angefangen!
     </span>
     {{/if}}
 
-    {{#if: $parent.questionnaireResult() != null}}
+    {{#if: !!$parent.questionnaireResult()}}
     <span class="questionnaire-in-progress">
             Du hast deinen Fragebogen bereits beendet!
     </span>
@@ -32,7 +32,7 @@
     <button click="{{function() { showEvaluation($parent.currentComponent) } }}"
             class="button-fragebogen"
             title="Hier gehts zur Auswertung!">
-        Zum Fragebogen
+        Zur Auswertung
     </button>
     {{/if}}
 </div>
