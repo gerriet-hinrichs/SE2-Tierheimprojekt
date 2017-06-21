@@ -15,6 +15,7 @@
                     <!-- Answers -->
                     {{#foreach: answerList}}
                     <div class="row">
+                        {{#if: $parent.answerType == "RADIO_BUTTON"}}
                         <input class="clickable"
                                type="radio"
                                name="{{'frage#' + $parent.id}}"
@@ -22,6 +23,16 @@
                                disabled="{{$parent.id != $parents[1].lastQuestion().id}}"
                                checked="{{$parent.selectedAnswer}}"/>
                         <span data-bind="text: text"></span>
+                        {{/if}}
+                        {{#if: $parent.answerType == "CHECKBOX"}}
+                        <input class="clickable"
+                               type="checkbox"
+                               name="{{'frage#' + $parent.id}}"
+                               value="{{id}}"
+                               disabled="{{$parent.id != $parents[1].lastQuestion().id}}"
+                               checked="{{$parent.selectedAnswers}}"/>
+                        <span data-bind="text: text"></span>
+                        {{/if}}
                     </div>
                     {{/foreach}}
                 </div>
@@ -53,3 +64,15 @@
 {{#if: !hasItems}}
 <div class="content centered">No questions available</div>
 {{/if}}
+
+<!--
+{{#if: IsBusy()}}
+<div class="busy-indicator">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>
+{{/if}}
+-->

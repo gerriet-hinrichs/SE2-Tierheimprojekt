@@ -1,15 +1,38 @@
 <div id="fragen" class="column banner-container">
     <div class="inner-content banner"></div>
     <h2>Finde heraus welches Tier zu dir passt!</h2>
-    <span class="questionnaire-in-progress" if="{{$parent.questionList().length > 0}}">
+
+    {{#if: $parent.questionList().length > 0 && !$parent.questionnaireResult()}}
+    <span class="questionnaire-in-progress">
             Du hast deinen Fragebogen bereits angefangen!
     </span>
+    {{/if}}
+
+    {{#if: !!$parent.questionnaireResult()}}
+    <span class="questionnaire-in-progress">
+            Du hast deinen Fragebogen bereits beendet!
+    </span>
+    {{/if}}
+
+    {{#if: $parent.questionList().length > 0}}
     <span class="questionnaire-in-progress" if="{{$parent.questionList().length > 0}}">
         Wenn du einen neuen Fragebogen beginnen möchtest, lade diese Seite neu (F5)
     </span>
+    {{/if}}
+
+    {{#if: $parent.questionnaireResult() == null}}
     <button click="{{function() { showQuestions($parent.currentComponent) } }}"
             class="button-fragebogen"
             title="Hier gehts zum Fragebogen!">
         Zum Fragebogen
     </button>
+    {{/if}}
+
+    {{#if: $parent.questionnaireResult() != null}}
+    <button click="{{function() { showEvaluation($parent.currentComponent) } }}"
+            class="button-fragebogen"
+            title="Hier gehts zur Auswertung!">
+        Zur Auswertung
+    </button>
+    {{/if}}
 </div>

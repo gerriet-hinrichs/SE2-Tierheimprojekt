@@ -1,0 +1,22 @@
+@import "flexbox";
+
+div#auswertung {
+  background-color: rgba(0,0,0,0);
+}
+
+div.animal-container {
+  .flex-display();
+  .flex(0 0 auto);
+
+  > fieldset {
+    .flex(0 0 70%);
+  }
+
+  > div.animal-picture {
+    .flex(0 0 22%);
+
+    //background: url('/static/images/shelter_animals/placeholder.jpg');
+    background-size: cover;
+    margin-top: 8px;
+  }
+}

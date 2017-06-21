@@ -51,9 +51,6 @@ export class App {
      */
     public questionList: KnockoutObservableArray<question>;
     public questionnaireResult: KnockoutObservable<ResultModel>;
-    public isQuestionnaireInProgress = ko.pureComputed<boolean>(() => {
-        return this.questionList().length > 0;
-    });
 
     /**
      * Margins for app-body to create moderate centered view

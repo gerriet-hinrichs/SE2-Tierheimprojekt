@@ -50,7 +50,7 @@ public class ResultModel {
         List<AnimalModel> animals = new ArrayList<>();
 
         for (AnimalEntity entry : foundAnimals) {
-            animals.add(new AnimalModel(entry.name, entry.race, entry.sex, entry.age, entry.requiredSpace, entry.picturePath));
+            animals.add(new AnimalModel(entry.id, entry.name, entry.race, entry.sex, entry.age, entry.requiredSpace, entry.picturePath));
         }
 
         this.foundAnimals = animals;

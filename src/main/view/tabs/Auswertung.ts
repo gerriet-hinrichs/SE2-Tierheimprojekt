@@ -30,12 +30,17 @@ import {SidebarItem} from "../components/Sidebar";
 import {App} from "../App";
 import QuestionApi$evaluateQuestionnaire$answers = Alias.QuestionApi$evaluateQuestionnaire$answers;
 import QuestionModel = Api.QuestionModel;
+import AnswerModel = Api.AnswerModel;
+import {question} from "./Fragebogen";
 
-export type auswertung = ResultModel;
-export type question = QuestionModel;
+export type answer = AnswerModel;
+
+export interface IAuswertungParams {
+    questionList: KnockoutObservableArray<question>;
+}
 
 export class Auswertung {
-    public questionList = ko.observableArray<question>([]);
+    public questionList: KnockoutObservableArray<question>;
     public questionnaireResult = ko.observable<ResultModel>();
     public IsSidebarVisible: KnockoutObservable<boolean>;
 
@@ -48,41 +53,66 @@ export class Auswertung {
     public IsBusy = ko.observable<boolean>(false);
 
     public get hasItems() {
-        return !!this.questionnaireResult();
+        return !!this.questionnaireResult() && this.questionnaireResult().foundAnimals.length > 0;
     }
 
-    constructor() {
+    constructor(params: IAuswertungParams) {
+        this.questionList = params.questionList;
         this.IsSidebarVisible = ko.observable<boolean>(true);
     }
 
     public loadAsync(parent: App) {
-        let questions = parent.questionList();
-        this.questionList(questions);
-
         // Build up the answers object for passing to evaluation
         // Map: [QUESTION_ID] -> ANSWER_ID[]
         let answers: QuestionApi$evaluateQuestionnaire$answers = {};
 
-        // TODO: Rework without ANY cast
-        for (let question of questions) {
-            answers[question.id] = (<any>question).answers.map((a: any) => a.id);
+        let q = this.questionList();
+        for (let question of q) {
+            if (question.isAnswered()) {
+                answers[question.id] = question.answerType == "RADIO_BUTTON" ? [question.selectedAnswer()] : question.selectedAnswers();
+            }
         }
-
 
         this.IsBusy(true);
         QuestionApi.evaluateQuestionnaire(answers).done((result: ResultModel) => {
             this.questionnaireResult(result);
 
-            // TODO: Rework without ANY cast
-            result.foundAnimals.forEach((animal: any) => {
+            result.foundAnimals.forEach((animal: Api.AnimalModel) => {
                 this.sidebarItems.push({
                     Name: animal.name,
                     Title: animal.race,
-                    Anker: "",
+                    Anker: "#a" + animal.id,
                     IsSelected: ko.observable<boolean>(false)
                 });
             });
 
+            parent.questionnaireResult = this.questionnaireResult;
         }).always(() => this.IsBusy(false));
+    }
+
+    // used within view template
+    public getDisplaySex(sex: Api.AnimalSex) {
+        switch (sex) {
+            case "MALE":
+                return "Männlich";
+            case "FEMALE":
+                return "Weiblich";
+            default:
+                return "n/a";
+        }
+    }
+
+    // used within view template
+    public getDisplayAge(age: Api.AnimalAge) {
+        switch (age) {
+            case "YOUNG":
+                return "Jungtier";
+            case "MATURE":
+                return "Ausgewachsen";
+            case "OLD":
+                return "Alt";
+            default:
+                return "n/a";
+        }
     }
 }

@@ -67,7 +67,7 @@ public class DatabaseSetupService extends BaseService {
      */
     public void setup() {
 
-        final String mainpath = "/static-files/images/shelter_animals/";
+        final String mainpath = "/static/images/shelter_animals/";
 
         // Questions & Answers
         addQuestionWithAnswers("Wieviele Quadratmeter stehen ungefähr für die Tierhaltung zur Verfügung?", AnswerType.RADIO_BUTTON,
@@ -286,7 +286,7 @@ public class DatabaseSetupService extends BaseService {
         addAnimal("Rocko", "Europäisch Kurzhaar", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
                 AnimalType.CAT, AnimalSize.MEDIUM, AnimalCost.CHEAP, AnimalCareTyp.SOME, AnimalGardenSpace.SMALL, mainpath + "rocko.jpg");
         addAnimal("Karlchen", "Europäisch Kurzhaar", AnimalSex.MALE, AnimalAge.MATURE, AnimalGardenSpace.MEDIUM,
-                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath);
+                AnimalType.CAT, AnimalSize.SMALL, AnimalCost.MEDIUM, AnimalCareTyp.SOME, AnimalGardenSpace.NONE, mainpath + "karlchen.jpg");
         addAnimal("Foxi", "Europäisch Kurzhaar", AnimalSex.FEMALE, AnimalAge.YOUNG, AnimalGardenSpace.MEDIUM,
                 AnimalType.CAT, AnimalSize.SMALL, AnimalCost.CHEAP, AnimalCareTyp.MUCH, AnimalGardenSpace.NONE, mainpath + "foxi.jpg");
         addAnimal("Casper", "Europäisch Kurzhaar", AnimalSex.MALE, AnimalAge.OLD, AnimalGardenSpace.MEDIUM,

@@ -38,4 +38,8 @@ export class Fragen {
     public showQuestions(component: KnockoutObservable<string>) {
         component("Fragebogen");
     }
+
+    public showEvaluation(component: KnockoutObservable<string>) {
+        component("Auswertung");
+    }
 }
