@@ -237,10 +237,23 @@ task buildLessFiles(type: NodeTask, dependsOn: npmInstall) {
     inputs.files fileTree("${project.projectDir}/src/main/style").include("**/*.less")
 
     args = [
-            "--source-map",
             "--no-js",
             "${project.projectDir}/src/main/style/app.less",
-            "${project.projectDir}/static-files/app.css",
+            "${project.buildDir}/css/app.css",
+    ]
+}
+
+// add prefixes to generated css
+task addCssVendorPrefixes(type: NodeTask, dependsOn: buildLessFiles) {
+    script = new File(node.nodeModulesDir, 'node_modules/postcss-cli/bin/postcss')
+
+    inputs.files fileTree("${project.buildDir}/css/").include("**/*.css")
+
+    args = [
+            "${project.buildDir}/css/app.css",
+            "--use", "autoprefixer",
+            "--no-map", "true",
+            "-d", "${project.projectDir}/static-files/"
     ]
 }
 
@@ -261,7 +274,7 @@ task copyTemplates(type: Copy) {
 // client task
 task client {}
 client.dependsOn buildTypeScript
-client.dependsOn buildLessFiles
+client.dependsOn addCssVendorPrefixes
 client.dependsOn copyResources
 client.dependsOn copyTemplates
 
